@@ -266,7 +266,7 @@ void Spaceship::createBullets(SceneNode& node, const TextureHolder& textures) co
 
 void Spaceship::createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const
 {
-	std::unique_ptr<Projectile> projectile(new Projectile(type, textures));
+	auto  projectile(std::make_unique<Projectile>(type, textures));
 
 	sf::Vector2f offset(xOffset * mSprite.getGlobalBounds().width, yOffset * mSprite.getGlobalBounds().height);
 	sf::Vector2f velocity(0, projectile->getMaxSpeed());
