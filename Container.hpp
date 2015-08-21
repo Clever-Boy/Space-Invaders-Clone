@@ -33,6 +33,7 @@ namespace GUI
 		void				select(std::size_t index);
 		void				selectNext();
 		void				selectPrevious();
+		void				validateChild(sf::Vector2f position);
 
 
 	private:

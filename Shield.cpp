@@ -3,18 +3,15 @@
 #include "Utility.hpp"
 #include "ResourceHolder.hpp"
 
-
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
-
-#include <cmath>
-#include <cassert>
 
 
 namespace
 {
 	const std::vector<ShieldData> Table = initializeShieldData();
 }
+
 
 Shield::Shield(Type type, const TextureHolder& textures)
 	: Entity(3)

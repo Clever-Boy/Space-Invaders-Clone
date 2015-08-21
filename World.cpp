@@ -7,7 +7,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <iostream>
 
 
 namespace
@@ -487,7 +486,7 @@ void World::controlEnemyFire()
 	});
 
 	// Sort all enemies according to their y value, such that lower enemies are ready to fire
-	std::sort(mActiveEnemies.begin(), mActiveEnemies.end(), [&](Spaceship* lhs, Spaceship* rhs)
+	std::sort(mActiveEnemies.begin(), mActiveEnemies.end(), [this](const Spaceship* lhs, const Spaceship* rhs)
 	{
 		return lhs->getPosition().y > rhs->getPosition().y;
 	});

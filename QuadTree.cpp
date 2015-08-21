@@ -3,7 +3,7 @@
 #include <SFML\Graphics\RenderTarget.hpp>
 
 #include <cassert>
-#include <iostream>
+
 
 QuadTree::QuadTree()
 	: mBounds(sf::FloatRect())

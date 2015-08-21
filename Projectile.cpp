@@ -6,7 +6,6 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 
-#include <cmath>
 #include <cassert>
 
 

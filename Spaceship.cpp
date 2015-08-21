@@ -8,13 +8,13 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/Texture.hpp>
-#include <cmath>
-#include <iostream>
+
 
 namespace
 {
 	const std::vector<SpaceshipData> Table = initializeSpaceshipData();
 }
+
 
 Spaceship::Spaceship(Type type, const TextureHolder& textures)
 	: Entity(Table[type].hitpoints)
@@ -61,10 +61,12 @@ Spaceship::Spaceship(Type type, const TextureHolder& textures)
 	mFireCommand.category = Category::SceneSpaceLayer;
 	mFireCommand.action = std::bind(&Spaceship::createBullets, this, std::placeholders::_1, std::cref(textures));
 }
+
 void Spaceship::onHit()
 {
 	mIsHit = true;
 }
+
 void Spaceship::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	if (isDestroyed() && mShowExplosion)

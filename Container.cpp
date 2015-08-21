@@ -4,6 +4,7 @@
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
+
 namespace GUI
 {
 
@@ -54,13 +55,7 @@ namespace GUI
 		}
 		else if (event.type == sf::Event::MouseMoved)
 		{
-			for (auto i = 0u; i < mChildren.size(); ++i)
-			{
-				if (mChildren[i]->isSelectable() && mChildren[i]->contains(position))
-				{
-					select(i);
-				}
-			}
+			validateChild(position);
 
 			if (mChildren[mSelectedChild] != nullptr && mChildren[mSelectedChild] != mHovered)
 			{
@@ -132,5 +127,14 @@ namespace GUI
 
 		// Select that component
 		select(prev);
+	}
+
+	void Container::validateChild(sf::Vector2f position)
+	{
+		for (std::size_t i = 0; i < mChildren.size(); ++i)
+		{
+			if (mChildren[i]->isSelectable() && mChildren[i]->contains(position))
+				select(i);
+		}
 	}
 }

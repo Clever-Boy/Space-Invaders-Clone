@@ -2,8 +2,6 @@
 
 #include <SFML/Audio/Listener.hpp>
 
-#include <cmath>
-
 
 namespace
 {
