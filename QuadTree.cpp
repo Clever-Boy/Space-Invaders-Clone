@@ -24,11 +24,6 @@ QuadTree::QuadTree(std::size_t level, const sf::FloatRect &bounds)
 QuadTree::~QuadTree()
 {
 	clean();
-
-	if (mChildren[0])
-	{
-		std::cout << "i'm alive!\n";
-	}
 }
 
 void QuadTree::setBounds(const sf::FloatRect &bounds)
@@ -116,10 +111,10 @@ void QuadTree::split()
 	float x = mBounds.left;
 	float y = mBounds.top;
 
-	mChildren[0] = std::move(Ptr(new QuadTree(mLevel + 1, sf::FloatRect(x, y, subWidth, subHeight))));
-	mChildren[1] = std::move(Ptr(new QuadTree(mLevel + 1, sf::FloatRect(x + subWidth, y, subWidth, subHeight))));
-	mChildren[2] = std::move(Ptr(new QuadTree(mLevel + 1, sf::FloatRect(x, y + subHeight, subWidth, subHeight))));
-	mChildren[3] = std::move(Ptr(new QuadTree(mLevel + 1, sf::FloatRect(x + subWidth, y + subHeight, subWidth, subHeight))));
+	mChildren[0] = std::move(Ptr(std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x, y, subWidth, subHeight))));
+	mChildren[1] = std::move(Ptr(std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x + subWidth, y, subWidth, subHeight))));
+	mChildren[2] = std::move(Ptr(std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x, y + subHeight, subWidth, subHeight))));
+	mChildren[3] = std::move(Ptr(std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x + subWidth, y + subHeight, subWidth, subHeight))));
 }
 
 int QuadTree::getChildIndex(const sf::FloatRect &rect)

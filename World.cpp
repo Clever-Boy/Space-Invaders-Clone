@@ -187,7 +187,7 @@ void World::buildScene()
 	{
 		Category::Type category = (i == Space) ? Category::SceneSpaceLayer : Category::None;
 
-		SceneNode::Ptr layer(new SceneNode(category));
+		auto layer(std::make_unique<SceneNode>(category));
 		mSceneLayers[i] = layer.get();
 
 		mSceneGraph.attachChild(std::move(layer));
@@ -197,12 +197,12 @@ void World::buildScene()
 	sf::Texture& texture = mTextures.get(Textures::Background);
 
 	// Add the background sprite to the scene
-	std::unique_ptr<SpriteNode> backgroundSprite(new SpriteNode(texture));
+	auto backgroundSprite(std::make_unique<SpriteNode>(texture));
 	backgroundSprite->setPosition(mWorldBounds.left, mWorldBounds.top);
 	mSceneLayers[Background]->attachChild(std::move(backgroundSprite));
 
 	// Add player's spaceship
-	std::unique_ptr<Spaceship> leader(new Spaceship(Spaceship::Player, mTextures));
+	auto leader(std::make_unique<Spaceship>(Spaceship::Player, mTextures));
 	mPlayerShip = leader.get();
 	mPlayerShip->setPosition(mSpawnPosition + sf::Vector2f(0.f, 240.f));
 
@@ -218,7 +218,7 @@ void World::buildScene()
 	addShields();
 
 	// Add sound effect node
-	std::unique_ptr<SoundNode> soundNode(new SoundNode(mSounds));
+	auto soundNode(std::make_unique<SoundNode>(mSounds));
 	mSceneGraph.attachChild(std::move(soundNode));
 }
 
@@ -250,7 +250,7 @@ void World::adaptShieldPlaces(sf::Vector2f position)
 
 void World::addShield(Shield::Type type, float relX, float relY)
 {
-	std::unique_ptr<Shield> shield(new Shield(type, mTextures));
+	auto shield(std::make_unique<Shield>(type, mTextures));
 	shield->setPosition(mSpawnPosition.x + relX, mSpawnPosition.y + relY);
 	mSceneLayers[Space]->attachChild(std::move(shield));
 }
@@ -263,7 +263,7 @@ void World::addLifes()
 
 void World::addLife(float relX, float relY)
 {
-	std::unique_ptr<Life> life(new Life(Spaceship::Player, mTextures));
+	auto life(std::make_unique<Life>(Spaceship::Player, mTextures));
 	life->setPosition(mSpawnPosition + sf::Vector2f(relX, relY));
 
 	mLives.push_back(std::move(life));
@@ -320,7 +320,7 @@ void World::addEnemies()
 
 void World::addEnemy(Spaceship::Type type, float relX, float relY)
 {
-	std::unique_ptr<Spaceship> enemy(new Spaceship(type, mTextures));
+	auto enemy(std::make_unique<Spaceship>(type, mTextures));
 	enemy->setPosition(mSpawnPosition.x + relX, mSpawnPosition.y - relY);
 	mSceneLayers[Space]->attachChild(std::move(enemy));
 }
