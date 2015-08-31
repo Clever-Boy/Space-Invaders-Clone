@@ -24,10 +24,15 @@ void SceneNode::attachChild(Ptr child)
 
 SceneNode::Ptr SceneNode::detachChild(const SceneNode& node)
 {
-	auto found = std::find_if(mChildren.begin(), mChildren.end(), [&](Ptr& p) {return p.get() == &node;});
+	auto found = std::find_if(mChildren.begin(), mChildren.end(), 
+		[&](const auto& p) 
+	{
+		return(p.get() == &node);
+	});
+
 	assert(found != mChildren.end());
 
-	Ptr result = std::move(*found);
+	auto result = std::move(*found);
 	result->mParent = nullptr;
 	mChildren.erase(found);
 	return result;
@@ -79,8 +84,8 @@ sf::Transform SceneNode::getWorldTransform() const
 {
 	sf::Transform transform = sf::Transform::Identity;
 
-	for (const SceneNode* node = this; node != nullptr; node = node->mParent)
-		transform = node->getTransform() * transform;
+	for (const auto* node = this; node != nullptr; node = node->mParent)
+		transform *= node->getTransform();
 
 	return transform;
 }

@@ -7,7 +7,7 @@
 
 QuadTree::QuadTree()
 	: mBounds(sf::FloatRect())
-	, mLevel(1)
+	, mLevel()
 	, mChildren()
 {
 }
@@ -42,7 +42,7 @@ void QuadTree::setBounds(const sf::FloatRect &bounds)
 void QuadTree::insert(SceneNode* object)
 {
 	// If that QuadTree node has children, we give them the object
-	if (hasChildren())
+	if (mChildren.empty())
 	{
 		int index = getChildIndex(object->getBoundingRect());
 
@@ -59,12 +59,11 @@ void QuadTree::insert(SceneNode* object)
 
 void QuadTree::getCloseObjects(SceneNode* from, ObjectsContainer& returnedObjects)
 {
-	// If there's no children or children cannot carry the objet
 	if (!mObjects.empty())
+	{
 		returnedObjects.insert(returnedObjects.end(), mObjects.begin(), mObjects.end());
-
-	// If that QuadTree node has children, search in them too
-	if (hasChildren())
+	}
+	else
 	{
 		int index = getChildIndex(from->getBoundingRect());
 
@@ -103,7 +102,7 @@ void QuadTree::split()
 {
 	assert(!isFinal());
 
-	if (hasChildren())
+	if (mChildren.empty())
 		return;
 
 	float subWidth = mBounds.width / 2.f;
@@ -121,7 +120,7 @@ int QuadTree::getChildIndex(const sf::FloatRect &rect)
 {
 	int index = -1;
 
-	if (!hasChildren())
+	if (!mChildren.empty())
 		return index;
 
 	for (std::size_t i = 0; i < mChildren.size(); ++i)
@@ -142,9 +141,4 @@ const sf::FloatRect &QuadTree::getBounds() const
 bool QuadTree::isFinal() const
 {
 	return mLevel >= mMaxLevel;
-}
-
-bool QuadTree::hasChildren() const
-{
-	return mChildren[0] != nullptr;
 }

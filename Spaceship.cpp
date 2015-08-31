@@ -321,11 +321,6 @@ void Spaceship::playLocalSound(CommandQueue& commands, SoundEffect::ID effect)
 
 	Command command;
 	command.category = Category::SoundEffect;
-	command.action = derivedAction<SoundNode>(
-		[effect, worldPosition](SoundNode& node)
-	{
-		node.playSound(effect, worldPosition);
-	});
-
+	command.action = derivedAction<SoundNode>(std::bind(&SoundNode::playSound, std::placeholders::_1, effect, worldPosition));
 	commands.push(command);
 }

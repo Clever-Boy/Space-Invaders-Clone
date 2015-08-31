@@ -31,16 +31,16 @@ public:
 
 private:
 	bool						isFinal() const;
-	bool						hasChildren() const;
 
 	void						split();
 	int							getChildIndex(const sf::FloatRect& rect);
 
 
 private:
+	static const std::size_t	mMaxLevel = 4;
+
 	sf::FloatRect				mBounds;
 	std::size_t                 mLevel;
-	static const std::size_t	mMaxLevel = 4;
 	ObjectsContainer			mObjects;
 	std::array<Ptr, mMaxLevel>	mChildren;
 };

@@ -36,6 +36,8 @@ namespace
 	{
 		return lhs.getBoundingRect().intersects(rhs.getBoundingRect());
 	}
+
+	const float borderDistance = 40.f;
 }
 
 World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds)
@@ -58,7 +60,6 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mScoreText()
 	, mLivesText()
 	, mSounds(sounds)
-	//, mGameOver(false)
 {
 	mStaticScoreText.setString("Score: ");
 	mStaticScoreText.setFont(mFonts.get(Fonts::Main));
@@ -92,11 +93,11 @@ sf::FloatRect World::getViewBounds() const
 sf::FloatRect World::getBattlefieldBounds() const
 {
 	sf::FloatRect bounds = getViewBounds();
-	bounds.top += 40.f;
-	bounds.height -= 40.f * 2;
+	bounds.top += borderDistance;
+	bounds.height -= borderDistance * 2;
 
-	bounds.left += 40.f;
-	bounds.width -= 40.f * 2;
+	bounds.left += borderDistance;
+	bounds.width -= borderDistance * 2;
 
 	return bounds;
 }
@@ -329,11 +330,12 @@ void World::adaptPlayerPosition()
 {
 	// Keep player's position inside the screen bounds, at least borderDistance units from the border
 	sf::FloatRect viewBounds(mWorldView.getCenter() - mWorldView.getSize() / 2.f, mWorldView.getSize());
-	const float borderDistance = 40.f;
 
 	sf::Vector2f position = mPlayerShip->getPosition();
+
 	position.x = std::max(position.x, viewBounds.left + borderDistance);
-	position.x = std::min(position.x, viewBounds.left + viewBounds.width - borderDistance);
+	position.x = std::min(position.x, viewBounds.left + viewBounds.width - borderDistance - 5.f);
+
 	mPlayerShip->setPosition(position);
 }
 
@@ -341,7 +343,7 @@ void World::destroyEntitiesOutsideView()
 {
 	Command command;
 	command.category = Category::Projectile;
-	command.action = derivedAction<Entity>([this](Entity& entity)
+	command.action = derivedAction<Entity>([this](auto& entity)
 	{
 		if (!getBattlefieldBounds().intersects(entity.getBoundingRect()))
 			entity.remove();
@@ -359,7 +361,7 @@ void World::checkForCollision()
 
 	Command command;
 	command.category = Category::All;
-	command.action = [this](SceneNode& node)
+	command.action = [this](auto& node)
 	{
 		mQuadTree.insert(&node);
 		mCollidableNodes.push_back(&node);
@@ -373,13 +375,13 @@ void World::handleCollisions()
 	std::deque<SceneNode*> proxim;
 	std::set<SceneNode::Pair> checked;
 
-	for (SceneNode* node1 : mCollidableNodes)
+	for (auto* node1 : mCollidableNodes)
 	{
 		proxim.clear();
 		mQuadTree.getCloseObjects(node1, proxim);
 
 		// Check proxim collisions here
-		for (SceneNode* node2 : proxim)
+		for (auto* node2 : proxim)
 		{
 			if (node1 == node2)
 				continue;
@@ -454,8 +456,7 @@ void World::handleCollisions()
 				case Spaceship::Enemy3:
 					mScore += 10;
 					break;
-				default:
-					break;
+				default:break;
 				}
 				enemy.damage(projectile.getDamage());
 				projectile.destroy();
@@ -471,7 +472,7 @@ bool World::hasAlivePlayer() const
 
 bool World::hasPlayerWon() const
 {
-	return mActiveEnemies.size() == 0;
+	return mActiveEnemies.empty();
 }
 
 void World::controlEnemyFire()
@@ -479,14 +480,16 @@ void World::controlEnemyFire()
 	// Setup command that stores all enemies in mActiveEnemies
 	Command enemyCollector;
 	enemyCollector.category = Category::EnemySpaceship;
-	enemyCollector.action = derivedAction<Spaceship>([this](Spaceship& enemy)
+	enemyCollector.action = derivedAction<Spaceship>(
+		[this](auto& enemy)
 	{
 		if (!enemy.isDestroyed())
 			mActiveEnemies.push_back(&enemy);
 	});
 
 	// Sort all enemies according to their y value, such that lower enemies are ready to fire
-	std::sort(mActiveEnemies.begin(), mActiveEnemies.end(), [this](const Spaceship* lhs, const Spaceship* rhs)
+	std::sort(mActiveEnemies.begin(), mActiveEnemies.end(), 
+		[this](const auto& lhs, const auto& rhs)
 	{
 		return lhs->getPosition().y > rhs->getPosition().y;
 	});
@@ -496,12 +499,12 @@ void World::controlEnemyFire()
 
 	// control fire and speed notify when alain reach the end screen 
 	std::for_each(mActiveEnemies.begin(), mActiveEnemies.end(),
-		[this, &j](Spaceship* i)
+		[this, &j](const auto& i)
 	{
 
 		if (i->getWorldPosition().y >= mDeadLine - 20.f)
 		{
-			mPlayerShip->destroy();// = true;
+			mPlayerShip->destroy();
 		}
 
 
