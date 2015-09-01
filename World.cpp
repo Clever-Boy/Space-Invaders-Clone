@@ -50,7 +50,7 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mWorldBounds(0.f, 0.f, mWorldView.getSize().x, mWorldView.getSize().y)
 	, mSpawnPosition(mWorldView.getSize().x / 2.f, mWorldView.getSize().y / 2.f)
 	, mPlayerShip(nullptr)
-	, mQuadTree()
+	, mQuadTree(1, mWorldBounds)
 	, mCollidableNodes()
 	, mActiveEnemies()
 	, mLives()
@@ -115,7 +115,7 @@ void World::update(sf::Time dt)
 
 	// Update quadtree
 	checkForCollision();
-
+	//mQuadTree.update();
 	// Forward commands to scene graph
 	while (!mCommandQueue.isEmpty())
 		mSceneGraph.onCommand(mCommandQueue.pop());
@@ -162,6 +162,11 @@ void World::draw()
 	mTarget.draw(mStaticScoreText);
 	mTarget.draw(mScoreText);
 	mTarget.draw(mLivesText);
+
+#ifdef DEBUG
+	mQuadTree.draw(mTarget);
+#endif
+
 }
 
 CommandQueue& World::getCommandQueue()
@@ -354,7 +359,7 @@ void World::destroyEntitiesOutsideView()
 
 void World::checkForCollision()
 {
-	mQuadTree.setBounds(getViewBounds());
+	//mQuadTree.setBounds(getViewBounds());
 
 	mQuadTree.clear();
 	mCollidableNodes.clear();

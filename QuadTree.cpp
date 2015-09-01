@@ -1,16 +1,10 @@
 #include "QuadTree.hpp"
 
+#include <SFML\Graphics\RectangleShape.hpp>
 #include <SFML\Graphics\RenderTarget.hpp>
 
 #include <cassert>
 
-
-QuadTree::QuadTree()
-	: mBounds(sf::FloatRect())
-	, mLevel(1)
-	, mChildren()
-{
-}
 
 QuadTree::QuadTree(std::size_t level, const sf::FloatRect &bounds)
 	: mBounds(bounds)
@@ -42,7 +36,7 @@ void QuadTree::setBounds(const sf::FloatRect &bounds)
 void QuadTree::insert(SceneNode* object)
 {
 	// If that QuadTree node has children, we give them the object
-	if (mChildren.empty())
+	if (hasChildren())
 	{
 		int index = getChildIndex(object->getBoundingRect());
 
@@ -59,17 +53,22 @@ void QuadTree::insert(SceneNode* object)
 
 void QuadTree::getCloseObjects(SceneNode* from, ObjectsContainer& returnedObjects)
 {
+	// If there's no children or children cannot carry the objet
+	//if (!mObjects.empty())
+	//	returnedObjects.insert(returnedObjects.end(), mObjects.begin(), mObjects.end());
 	if (!mObjects.empty())
 	{
-		std::copy_if(mObjects.begin(), mObjects.end(), std::back_inserter(returnedObjects), 
-			[&](const auto* i) 
+		std::copy_if(mObjects.begin(), mObjects.end(), std::back_inserter(returnedObjects),
+			[&](const auto* i)
 		{
 			return !(i->getCategory() & from->getCategory());
 		});
 	}
-	else
+
+	// If that QuadTree node has children, search in them too
+	if (hasChildren())
 	{
-		std::size_t index = getChildIndex(from->getBoundingRect());
+		int index = getChildIndex(from->getBoundingRect());
 
 		if (index >= 0)
 		{
@@ -97,7 +96,8 @@ void QuadTree::clean()
 	{
 		if (child)
 		{
-			child.release();
+			//child.release();
+			child.reset(nullptr);
 		}
 	}
 }
@@ -106,7 +106,7 @@ void QuadTree::split()
 {
 	assert(!isFinal());
 
-	if (mChildren.empty())
+	if (hasChildren())
 		return;
 
 	float subWidth = mBounds.width / 2.f;
@@ -114,22 +114,23 @@ void QuadTree::split()
 	float x = mBounds.left;
 	float y = mBounds.top;
 
-	mChildren[0] = std::move(Ptr(std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x, y, subWidth, subHeight))));
-	mChildren[1] = std::move(Ptr(std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x + subWidth, y, subWidth, subHeight))));
-	mChildren[2] = std::move(Ptr(std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x, y + subHeight, subWidth, subHeight))));
-	mChildren[3] = std::move(Ptr(std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x + subWidth, y + subHeight, subWidth, subHeight))));
+	mChildren[0] = std::move(Ptr(new QuadTree(mLevel + 1, sf::FloatRect(x, y, subWidth, subHeight))));
+	mChildren[1] = std::move(Ptr(new QuadTree(mLevel + 1, sf::FloatRect(x + subWidth, y, subWidth, subHeight))));
+	mChildren[2] = std::move(Ptr(new QuadTree(mLevel + 1, sf::FloatRect(x, y + subHeight, subWidth, subHeight))));
+	mChildren[3] = std::move(Ptr(new QuadTree(mLevel + 1, sf::FloatRect(x + subWidth, y + subHeight, subWidth, subHeight))));
 }
 
 int QuadTree::getChildIndex(const sf::FloatRect &rect)
 {
 	int index = -1;
 
-	if (!mChildren.empty())
+	if (!hasChildren())
 		return index;
 
 	for (std::size_t i = 0; i < mChildren.size(); ++i)
 	{
 		const sf::FloatRect& bounds = mChildren[i]->getBounds();
+
 		if (bounds.contains(sf::Vector2f(rect.left, rect.top)) && bounds.contains(sf::Vector2f(rect.left + rect.width, rect.top + rect.height)))
 			return i;
 	}
@@ -146,3 +147,31 @@ bool QuadTree::isFinal() const
 {
 	return mLevel >= mMaxLevel;
 }
+
+bool QuadTree::hasChildren() const
+{
+	return mChildren[0] != nullptr;
+}
+
+#ifdef DEBUG
+void QuadTree::draw(sf::RenderTarget& target)
+{
+	sf::RectangleShape shape(sf::Vector2f(mBounds.width, mBounds.height));
+	shape.setPosition(mBounds.left, mBounds.top);
+	if (mObjects.empty())
+		shape.setFillColor(sf::Color(0, 0, 0, 0));
+	else
+		shape.setFillColor(sf::Color(255, 125, 125, 100));
+	shape.setOutlineThickness(1);
+	shape.setOutlineColor(sf::Color(255, 255, 255));
+	target.draw(shape);
+
+	if (hasChildren())
+	{
+		for (auto& child : mChildren)
+			if(child)
+			child->draw(target);
+	}
+}
+
+#endif
