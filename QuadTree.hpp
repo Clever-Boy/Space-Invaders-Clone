@@ -14,6 +14,7 @@ public:
 	using Ptr = std::unique_ptr<QuadTree>;
 	using ObjectsContainer = std::deque<SceneNode*>;
 
+
 public:
 	explicit QuadTree(std::size_t level, const sf::FloatRect& bounds);
 	~QuadTree();

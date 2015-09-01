@@ -155,8 +155,7 @@ void World::draw()
 		sf::Vertex(sf::Vector2f(getBattlefieldBounds().left + getBattlefieldBounds().width, getBattlefieldBounds().top + getBattlefieldBounds().height))
 	};
 
-	line[0].color = sf::Color::Green;
-	line[1].color = sf::Color::Green;
+	line[0].color = line[1].color = sf::Color::Green;
 
 	mTarget.draw(line, 2, sf::Lines);
 	mTarget.draw(mStaticScoreText);
@@ -391,8 +390,8 @@ void World::handleCollisions()
 		// Check proxim collisions here
 		for (auto* node2 : proxim)
 		{
-			if (node1 == node2)
-				continue;
+			//if (node1 == node2)
+			//	continue;
 
 			if (node1->isDestroyed() || node2->isDestroyed())
 				continue;

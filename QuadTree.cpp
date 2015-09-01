@@ -54,14 +54,12 @@ void QuadTree::insert(SceneNode* object)
 void QuadTree::getCloseObjects(SceneNode* from, ObjectsContainer& returnedObjects)
 {
 	// If there's no children or children cannot carry the objet
-	//if (!mObjects.empty())
-	//	returnedObjects.insert(returnedObjects.end(), mObjects.begin(), mObjects.end());
 	if (!mObjects.empty())
 	{
 		std::copy_if(mObjects.begin(), mObjects.end(), std::back_inserter(returnedObjects),
 			[&](const auto* i)
 		{
-			return !(i->getCategory() & from->getCategory());
+			return !(i->getCategory() & from->getCategory()) && (i != from);
 		});
 	}
 
