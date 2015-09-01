@@ -7,7 +7,7 @@
 
 QuadTree::QuadTree()
 	: mBounds(sf::FloatRect())
-	, mLevel()
+	, mLevel(1)
 	, mChildren()
 {
 }
@@ -61,11 +61,15 @@ void QuadTree::getCloseObjects(SceneNode* from, ObjectsContainer& returnedObject
 {
 	if (!mObjects.empty())
 	{
-		returnedObjects.insert(returnedObjects.end(), mObjects.begin(), mObjects.end());
+		std::copy_if(mObjects.begin(), mObjects.end(), std::back_inserter(returnedObjects), 
+			[&](const auto* i) 
+		{
+			return !(i->getCategory() & from->getCategory());
+		});
 	}
 	else
 	{
-		int index = getChildIndex(from->getBoundingRect());
+		std::size_t index = getChildIndex(from->getBoundingRect());
 
 		if (index >= 0)
 		{

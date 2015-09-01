@@ -377,6 +377,9 @@ void World::handleCollisions()
 
 	for (auto* node1 : mCollidableNodes)
 	{
+		if (node1->isDestroyed())
+			continue;
+
 		proxim.clear();
 		mQuadTree.getCloseObjects(node1, proxim);
 

@@ -4,13 +4,14 @@
 #include "Command.hpp"
 
 #include <SFML/Window/Event.hpp>
+#include <SFML/System/NonCopyable.hpp>
 
 #include <map>
 
 
 class CommandQueue;
 
-class Player
+class Player : private sf::NonCopyable
 {
 public:
 	enum Action

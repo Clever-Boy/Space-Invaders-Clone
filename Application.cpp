@@ -22,6 +22,7 @@ Application::Application()
 	, mStateStack(State::Context(mWindow, mTextures, mFonts, mPlayer, mMusic, mSounds))
 {
 	mWindow.setKeyRepeatEnabled(false);
+	mWindow.setVerticalSyncEnabled(true);
 
 	mFonts.load(Fonts::Main, "Media/Sansation.ttf");
 
@@ -33,6 +34,7 @@ Application::Application()
 	mStateStack.pushState(States::Title);
 
 	mMusic.setVolume(20.f);
+
 }
 
 void Application::run()
