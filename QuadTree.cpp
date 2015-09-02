@@ -161,8 +161,10 @@ void QuadTree::draw(sf::RenderTarget& target)
 	if (mChildren[0] != nullptr)
 	{
 		for (const auto& child : mChildren)
-			if(child)
-			child->draw(target);
+		{
+			if (child)
+				child->draw(target);
+		}
 	}
 }
 #endif
