@@ -3,8 +3,6 @@
 #include <SFML\Graphics\RectangleShape.hpp>
 #include <SFML\Graphics\RenderTarget.hpp>
 
-#include <cassert>
-
 
 QuadTree::QuadTree(std::size_t Level, const sf::FloatRect& Bounds)
 	: mObjects()
@@ -13,6 +11,7 @@ QuadTree::QuadTree(std::size_t Level, const sf::FloatRect& Bounds)
 	, mlevel(Level)
 {
 }
+
 QuadTree::~QuadTree()
 {
 	clear();
@@ -39,10 +38,10 @@ void QuadTree::split()
 	float x = mBounds.left;
 	float y = mBounds.top;
 
-	mChildren[0] = std::move(Ptr(new QuadTree(mlevel + 1, sf::FloatRect(x + subWidth, y, subWidth, subHeight))));
-	mChildren[1] = std::move(Ptr(new QuadTree(mlevel + 1, sf::FloatRect(x, y, subWidth, subHeight))));
-	mChildren[2] = std::move(Ptr(new QuadTree(mlevel + 1, sf::FloatRect(x, y + subHeight, subWidth, subHeight))));
-	mChildren[3] = std::move(Ptr(new QuadTree(mlevel + 1, sf::FloatRect(x + subWidth, y + subHeight, subWidth, subHeight))));
+	mChildren[0] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x + subWidth, y, subWidth, subHeight)));
+	mChildren[1] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x, y, subWidth, subHeight)));
+	mChildren[2] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x, y + subHeight, subWidth, subHeight)));
+	mChildren[3] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x + subWidth, y + subHeight, subWidth, subHeight)));
 }
 
 int QuadTree::getIndex(const sf::FloatRect &Rect)
@@ -70,6 +69,7 @@ int QuadTree::getIndex(const sf::FloatRect &Rect)
 			index = 2;
 		}
 	}
+
 	// Object can completely fit within the right quadrants
 	else if (Rect.left > verticalMidpoint)
 	{
@@ -165,5 +165,4 @@ void QuadTree::draw(sf::RenderTarget& target)
 			child->draw(target);
 	}
 }
-
 #endif
