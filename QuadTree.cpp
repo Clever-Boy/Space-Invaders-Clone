@@ -6,95 +6,27 @@
 #include <cassert>
 
 
-QuadTree::QuadTree(std::size_t level, const sf::FloatRect &bounds)
-	: mBounds(bounds)
-	, mLevel(level)
+QuadTree::QuadTree(std::size_t Level, const sf::FloatRect& Bounds)
+	: mObjects()
 	, mChildren()
+	, mBounds(Bounds)
+	, mlevel(Level)
 {
-	if (!isFinal())
-		split();
 }
-
 QuadTree::~QuadTree()
 {
-	clean();
-}
-
-void QuadTree::setBounds(const sf::FloatRect &bounds)
-{
-	mBounds = bounds;
-
-	for (auto&& child : mChildren)
-	{
-		child.release();
-	}
-
-	if (!isFinal())
-		split();
-}
-
-void QuadTree::insert(SceneNode* object)
-{
-	// If that QuadTree node has children, we give them the object
-	if (hasChildren())
-	{
-		int index = getChildIndex(object->getBoundingRect());
-
-		if (index >= 0)
-		{
-			mChildren[index]->insert(object);
-			return;
-		}
-	}
-
-	// If there's no children or children cannot carry the objet
-	mObjects.push_back(object);
-}
-
-void QuadTree::getCloseObjects(SceneNode* from, ObjectsContainer& returnedObjects)
-{
-	// If there's no children or children cannot carry the objet
-	if (!mObjects.empty())
-	{
-		std::copy_if(mObjects.begin(), mObjects.end(), std::back_inserter(returnedObjects),
-			[&](const auto* i)
-		{
-			return !(i->getCategory() & from->getCategory()) && (i != from);
-		});
-	}
-
-	// If that QuadTree node has children, search in them too
-	if (hasChildren())
-	{
-		int index = getChildIndex(from->getBoundingRect());
-
-		if (index >= 0)
-		{
-			mChildren[index]->getCloseObjects(from, returnedObjects);
-		}
-	}
+	clear();
 }
 
 void QuadTree::clear()
 {
 	mObjects.clear();
-	for (const auto& child : mChildren)
-	{
-		if (child)
-		{
-			child->clear();
-		}
-	}
-}
 
-void QuadTree::clean()
-{
-	mObjects.clear();
 	for (auto&& child : mChildren)
 	{
-		if (child)
+		if (child != nullptr)
 		{
-			//child.release();
+			child->clear();
 			child.reset(nullptr);
 		}
 	}
@@ -102,53 +34,112 @@ void QuadTree::clean()
 
 void QuadTree::split()
 {
-	assert(!isFinal());
-
-	if (hasChildren())
-		return;
-
 	float subWidth = mBounds.width / 2.f;
 	float subHeight = mBounds.height / 2.f;
 	float x = mBounds.left;
 	float y = mBounds.top;
 
-	mChildren[0] = std::move(Ptr(new QuadTree(mLevel + 1, sf::FloatRect(x, y, subWidth, subHeight))));
-	mChildren[1] = std::move(Ptr(new QuadTree(mLevel + 1, sf::FloatRect(x + subWidth, y, subWidth, subHeight))));
-	mChildren[2] = std::move(Ptr(new QuadTree(mLevel + 1, sf::FloatRect(x, y + subHeight, subWidth, subHeight))));
-	mChildren[3] = std::move(Ptr(new QuadTree(mLevel + 1, sf::FloatRect(x + subWidth, y + subHeight, subWidth, subHeight))));
+	mChildren[0] = std::move(Ptr(new QuadTree(mlevel + 1, sf::FloatRect(x + subWidth, y, subWidth, subHeight))));
+	mChildren[1] = std::move(Ptr(new QuadTree(mlevel + 1, sf::FloatRect(x, y, subWidth, subHeight))));
+	mChildren[2] = std::move(Ptr(new QuadTree(mlevel + 1, sf::FloatRect(x, y + subHeight, subWidth, subHeight))));
+	mChildren[3] = std::move(Ptr(new QuadTree(mlevel + 1, sf::FloatRect(x + subWidth, y + subHeight, subWidth, subHeight))));
 }
 
-int QuadTree::getChildIndex(const sf::FloatRect &rect)
+int QuadTree::getIndex(const sf::FloatRect &Rect)
 {
 	int index = -1;
 
-	if (!hasChildren())
-		return index;
+	float verticalMidpoint = mBounds.left + (mBounds.width / 2);
+	float horizontalMidpoint = mBounds.top + (mBounds.height / 2);
 
-	for (std::size_t i = 0; i < mChildren.size(); ++i)
+	// Object can completely fit within the top quadrants
+	bool topQuadrant = (Rect.top < horizontalMidpoint && Rect.top + Rect.height < horizontalMidpoint);
+
+	// Object can completely fit within the bottom quadrants
+	bool bottomQuadrant = (Rect.top > horizontalMidpoint);
+
+	// Object can completely fit within the left quadrants
+	if (Rect.left < verticalMidpoint && Rect.left + Rect.width < verticalMidpoint)
 	{
-		const sf::FloatRect& bounds = mChildren[i]->getBounds();
-
-		if (bounds.contains(sf::Vector2f(rect.left, rect.top)) && bounds.contains(sf::Vector2f(rect.left + rect.width, rect.top + rect.height)))
-			return i;
+		if (topQuadrant)
+		{
+			index = 1;
+		}
+		else if (bottomQuadrant)
+		{
+			index = 2;
+		}
+	}
+	// Object can completely fit within the right quadrants
+	else if (Rect.left > verticalMidpoint)
+	{
+		if (topQuadrant)
+		{
+			index = 0;
+		}
+		else if (bottomQuadrant)
+		{
+			index = 3;
+		}
 	}
 
 	return index;
 }
 
-const sf::FloatRect &QuadTree::getBounds() const
+void QuadTree::insert(SceneNode* object)
 {
-	return mBounds;
+	if (mChildren[0] != nullptr)
+	{
+		int index = getIndex(object->getBoundingRect());
+
+		if (index != -1)
+		{
+			mChildren[index]->insert(object);
+
+			return;
+		}
+	}
+
+	mObjects.push_back(object);
+
+	if (mObjects.size() > MAX_OBJECTS && mlevel < MAX_LEVELS)
+	{
+		if (mChildren[0] == nullptr)
+		{
+			split();
+		}
+
+		for (auto i = mObjects.cbegin(); i != mObjects.cend();)
+		{
+			int index = getIndex((*i)->getBoundingRect());
+			if (index != -1)
+			{
+				SceneNode* temp = *i;
+				i = mObjects.erase(i);
+				mChildren[index]->insert(temp);
+			}
+			else
+			{
+				++i;
+			}
+		}
+	}
 }
 
-bool QuadTree::isFinal() const
+void QuadTree::getCloseObjects(SceneNode* from, std::deque<SceneNode*>& returnObjects)
 {
-	return mLevel >= mMaxLevel;
-}
+	int index = getIndex(from->getBoundingRect());
 
-bool QuadTree::hasChildren() const
-{
-	return mChildren[0] != nullptr;
+	if (index != -1 && mChildren[0] != nullptr)
+	{
+		mChildren[index]->getCloseObjects(from, returnObjects);
+	}
+
+	std::copy_if(mObjects.begin(), mObjects.end(), std::back_inserter(returnObjects),
+		[&](const auto* i)
+	{
+		return !(i->getCategory() & from->getCategory()) && (i != from);
+	});
 }
 
 #ifdef DEBUG
@@ -156,17 +147,20 @@ void QuadTree::draw(sf::RenderTarget& target)
 {
 	sf::RectangleShape shape(sf::Vector2f(mBounds.width, mBounds.height));
 	shape.setPosition(mBounds.left, mBounds.top);
+
 	if (mObjects.empty())
 		shape.setFillColor(sf::Color(0, 0, 0, 0));
 	else
 		shape.setFillColor(sf::Color(255, 125, 125, 100));
+
 	shape.setOutlineThickness(1);
 	shape.setOutlineColor(sf::Color(255, 255, 255));
+
 	target.draw(shape);
 
-	if (hasChildren())
+	if (mChildren[0] != nullptr)
 	{
-		for (auto& child : mChildren)
+		for (const auto& child : mChildren)
 			if(child)
 			child->draw(target);
 	}

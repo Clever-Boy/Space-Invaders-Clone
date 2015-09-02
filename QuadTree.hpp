@@ -8,43 +8,65 @@
 #include <memory>
 
 
-class QuadTree : private sf::NonCopyable
+class QuadTree final : private sf::NonCopyable
 {
 public:
 	using Ptr = std::unique_ptr<QuadTree>;
-	using ObjectsContainer = std::deque<SceneNode*>;
 
 
 public:
-	explicit QuadTree(std::size_t level, const sf::FloatRect& bounds);
+	explicit QuadTree(std::size_t Level, const sf::FloatRect& Bounds);
 	~QuadTree();
 
-	void                    setBounds(const sf::FloatRect& bounds);
+	///////////////////////////////////////////////////////////////////
+	// Clears the quadtree                                           //
+	///////////////////////////////////////////////////////////////////
+	void								clear();
 
-	void                    insert(SceneNode *object);
 
-	void                    clear();
-	const sf::FloatRect&    getBounds() const;
-	void					clean();
-	void                    getCloseObjects(SceneNode* from, ObjectsContainer& returnedObjects);
+	///////////////////////////////////////////////////////////////////
+	// Insert the object into the quadtree. If the node              //
+	// exceeds the capacity, it will split and add all               //
+	// objects to their corresponding nodes.                         //
+	///////////////////////////////////////////////////////////////////
+	void								insert(SceneNode* object);
+
+
+	///////////////////////////////////////////////////////////////////
+	// Return all objects that could collide with the given object   //
+	///////////////////////////////////////////////////////////////////
+	void								getCloseObjects(SceneNode* from, std::deque<SceneNode*>& returnObjects);
+
 
 #ifdef DEBUG
-	void    draw(sf::RenderTarget& target);
+	void								draw(sf::RenderTarget& target);
 #endif
 
 
 private:
-	bool                    isFinal() const;
-	bool                    hasChildren() const;
 
-	void                    split();
-	int                     getChildIndex(const sf::FloatRect& rect);
+	///////////////////////////////////////////////////////////////////
+	// Splits the node into 4 subnodes                               //
+	///////////////////////////////////////////////////////////////////
+	void								split();
+
+
+	///////////////////////////////////////////////////////////////////
+	// Determine which node the object belongs to. -1 means          //
+	// object cannot completely fit within a child node and is part  //
+	// of the parent node                                            //
+	///////////////////////////////////////////////////////////////////
+	int									getIndex(const sf::FloatRect &Rect);
 
 
 private:
-	sf::FloatRect				mBounds;
-	std::size_t                 mLevel;
-	static const std::size_t	mMaxLevel = 4;
-	ObjectsContainer			mObjects;
-	std::array<Ptr, mMaxLevel>	mChildren;
+	static const std::size_t			MAX_LEVELS		= 5; //defines the deepest level subnode
+	static const std::size_t			MAX_OBJECTS		= 2; //defines how many objects a node can hold before it splits
+	static const std::size_t			DEFAULT_NODES	= 4;
+
+	sf::FloatRect						mBounds;
+	std::size_t							mlevel;
+
+	std::deque<SceneNode*>				mObjects;
+	std::array<Ptr, DEFAULT_NODES>		mChildren;
 };

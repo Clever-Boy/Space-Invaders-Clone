@@ -93,6 +93,7 @@ sf::FloatRect World::getViewBounds() const
 sf::FloatRect World::getBattlefieldBounds() const
 {
 	sf::FloatRect bounds = getViewBounds();
+
 	bounds.top += borderDistance;
 	bounds.height -= borderDistance * 2;
 
@@ -115,7 +116,7 @@ void World::update(sf::Time dt)
 
 	// Update quadtree
 	checkForCollision();
-	//mQuadTree.update();
+
 	// Forward commands to scene graph
 	while (!mCommandQueue.isEmpty())
 		mSceneGraph.onCommand(mCommandQueue.pop());
@@ -358,8 +359,6 @@ void World::destroyEntitiesOutsideView()
 
 void World::checkForCollision()
 {
-	//mQuadTree.setBounds(getViewBounds());
-
 	mQuadTree.clear();
 	mCollidableNodes.clear();
 
@@ -390,9 +389,6 @@ void World::handleCollisions()
 		// Check proxim collisions here
 		for (auto* node2 : proxim)
 		{
-			//if (node1 == node2)
-			//	continue;
-
 			if (node1->isDestroyed() || node2->isDestroyed())
 				continue;
 
