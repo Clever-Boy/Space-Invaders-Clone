@@ -3,9 +3,7 @@
 
 #include "SceneNode.hpp"
 
-#include <deque>
 #include <array>
-#include <memory>
 
 
 class QuadTree final : private sf::NonCopyable
@@ -15,8 +13,8 @@ public:
 
 
 public:
-	explicit QuadTree(std::size_t Level, const sf::FloatRect& Bounds);
-	~QuadTree();
+	explicit							QuadTree(std::size_t Level, const sf::FloatRect& Bounds);
+										~QuadTree();
 
 	///////////////////////////////////////////////////////////////////
 	// Clears the quadtree                                           //
@@ -35,7 +33,7 @@ public:
 	///////////////////////////////////////////////////////////////////
 	// Return all objects that could collide with the given object   //
 	///////////////////////////////////////////////////////////////////
-	void								getCloseObjects(SceneNode* from, std::deque<SceneNode*>& returnObjects);
+	void								getCloseObjects(SceneNode* from, std::vector<SceneNode*>& returnObjects);
 
 
 #ifdef DEBUG
@@ -67,6 +65,6 @@ private:
 	sf::FloatRect						mBounds;
 	std::size_t							mlevel;
 
-	std::deque<SceneNode*>				mObjects;
+	std::vector<SceneNode*>				mObjects;
 	std::array<Ptr, DEFAULT_NODES>		mChildren;
 };

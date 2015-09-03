@@ -126,7 +126,7 @@ void QuadTree::insert(SceneNode* object)
 	}
 }
 
-void QuadTree::getCloseObjects(SceneNode* from, std::deque<SceneNode*>& returnObjects)
+void QuadTree::getCloseObjects(SceneNode* from, std::vector<SceneNode*>& returnObjects)
 {
 	int index = getIndex(from->getBoundingRect());
 

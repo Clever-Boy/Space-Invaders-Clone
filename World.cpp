@@ -375,7 +375,7 @@ void World::checkForCollision()
 
 void World::handleCollisions()
 {
-	std::deque<SceneNode*> proxim;
+	std::vector<SceneNode*> proxim;
 	std::set<SceneNode::Pair> checked;
 
 	for (const auto& node1 : mCollidableNodes)
