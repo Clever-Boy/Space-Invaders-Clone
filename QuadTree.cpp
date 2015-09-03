@@ -138,7 +138,7 @@ void QuadTree::getCloseObjects(SceneNode* from, std::vector<SceneNode*>& returnO
 	std::copy_if(mObjects.begin(), mObjects.end(), std::back_inserter(returnObjects),
 		[&](const auto& i)
 	{
-		return !(i->getCategory() & from->getCategory()) && (i != from);
+		return !(i->getCategory() & from->getCategory());
 	});
 }
 
