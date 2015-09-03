@@ -60,9 +60,9 @@ private:
 
 
 private:
-	static const std::size_t			MAX_LEVELS		= 5; //defines the deepest level subnode
-	static const std::size_t			MAX_OBJECTS		= 2; //defines how many objects a node can hold before it splits
-	static const std::size_t			DEFAULT_NODES	= 4;
+	static constexpr std::size_t		MAX_LEVELS		= 5; //defines the deepest level subnode
+	static constexpr std::size_t		MAX_OBJECTS		= 2; //defines how many objects a node can hold before it splits
+	static constexpr std::size_t		DEFAULT_NODES	= 4;
 
 	sf::FloatRect						mBounds;
 	std::size_t							mlevel;

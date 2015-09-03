@@ -37,7 +37,7 @@ namespace
 		return lhs.getBoundingRect().intersects(rhs.getBoundingRect());
 	}
 
-	const float borderDistance = 40.f;
+	constexpr float borderDistance = 40.f;
 }
 
 World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds)
@@ -378,7 +378,7 @@ void World::handleCollisions()
 	std::deque<SceneNode*> proxim;
 	std::set<SceneNode::Pair> checked;
 
-	for (auto* node1 : mCollidableNodes)
+	for (const auto& node1 : mCollidableNodes)
 	{
 		if (node1->isDestroyed())
 			continue;
@@ -387,7 +387,7 @@ void World::handleCollisions()
 		mQuadTree.getCloseObjects(node1, proxim);
 
 		// Check proxim collisions here
-		for (auto* node2 : proxim)
+		for (const auto& node2 : proxim)
 		{
 			if (node1->isDestroyed() || node2->isDestroyed())
 				continue;
@@ -491,7 +491,7 @@ void World::controlEnemyFire()
 	});
 
 	// Sort all enemies according to their y value, such that lower enemies are ready to fire
-	std::sort(mActiveEnemies.begin(), mActiveEnemies.end(), 
+	std::sort(mActiveEnemies.begin(), mActiveEnemies.end(),
 		[this](const auto& lhs, const auto& rhs)
 	{
 		return lhs->getPosition().y > rhs->getPosition().y;
