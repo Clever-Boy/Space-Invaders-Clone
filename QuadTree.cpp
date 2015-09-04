@@ -48,8 +48,8 @@ int QuadTree::getIndex(const sf::FloatRect &Rect)
 {
 	int index = -1;
 
-	float verticalMidpoint = mBounds.left + (mBounds.width / 2);
-	float horizontalMidpoint = mBounds.top + (mBounds.height / 2);
+	float verticalMidpoint = mBounds.left + mBounds.width / 2.f;
+	float horizontalMidpoint = mBounds.top + mBounds.height / 2.f;
 
 	// Object can completely fit within the top quadrants
 	bool topQuadrant = (Rect.top < horizontalMidpoint && Rect.top + Rect.height < horizontalMidpoint);
@@ -102,26 +102,27 @@ void QuadTree::insert(SceneNode* object)
 
 	mObjects.push_back(object);
 
-	if (mObjects.size() > MAX_OBJECTS && mlevel < MAX_LEVELS)
-	{
-		if (mChildren[0] == nullptr)
-		{
-			split();
-		}
+	if (mObjects.size() < MAX_OBJECTS && mlevel > MAX_LEVELS)
+		return;
 
-		for (auto i = mObjects.cbegin(); i != mObjects.cend();)
+	if (mChildren[0] == nullptr)
+	{
+		split();
+	}
+
+	for (auto i = mObjects.cbegin(); i != mObjects.cend();)
+	{
+		int index = getIndex((*i)->getBoundingRect());
+		if (index != -1)
 		{
-			int index = getIndex((*i)->getBoundingRect());
-			if (index != -1)
-			{
-				SceneNode* temp = *i;
-				i = mObjects.erase(i);
-				mChildren[index]->insert(temp);
-			}
-			else
-			{
-				++i;
-			}
+			SceneNode* temp = *i;
+			i = mObjects.erase(i);
+			mChildren[index]->insert(temp);
+			temp = nullptr;
+		}
+		else
+		{
+			++i;
 		}
 	}
 }
