@@ -97,7 +97,7 @@ private:
 
 
 	QuadTree								mQuadTree;
-	std::vector<SceneNode*>					mCollidableNodes;
+	std::vector<SceneNode*>					mCollidableObjects;
 
 	std::vector<Spaceship*>					mActiveEnemies;
 	std::list<std::unique_ptr<Life>>		mLives;

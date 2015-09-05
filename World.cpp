@@ -50,7 +50,7 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mSpawnPosition(mWorldView.getSize().x / 2.f, mWorldView.getSize().y / 2.f)
 	, mPlayerShip(nullptr)
 	, mQuadTree(1, mWorldBounds)
-	, mCollidableNodes()
+	, mCollidableObjects()
 	, mActiveEnemies()
 	, mLives()
 	, mDeadLine(getBattlefieldBounds().height + getBattlefieldBounds().top)
@@ -359,14 +359,14 @@ void World::destroyEntitiesOutsideView()
 void World::checkForCollision()
 {
 	mQuadTree.clear();
-	mCollidableNodes.clear();
+	mCollidableObjects.clear();
 
 	Command command;
 	command.category = Category::All;
 	command.action = [this](auto& node)
 	{
 		mQuadTree.insert(node);
-		mCollidableNodes.push_back(&node);
+		mCollidableObjects.push_back(&node);
 	};
 
 	mCommandQueue.push(command);
@@ -377,24 +377,24 @@ void World::handleCollisions()
 	std::vector<SceneNode*> proxim;
 	std::set<SceneNode::Pair> checked;
 
-	for (const auto& node1 : mCollidableNodes)
+	for (const auto& object1 : mCollidableObjects)
 	{
-		if (node1->isDestroyed())
+		if (object1->isDestroyed())
 			continue;
 
 		proxim.clear();
-		mQuadTree.getCloseObjects(*node1, proxim);
+		mQuadTree.getCloseObjects(*object1, proxim);
 
 		// Check proxim collisions here
-		for (const auto& node2 : proxim)
+		for (const auto& object2 : proxim)
 		{
-			if (node1->isDestroyed() || node2->isDestroyed())
+			if (object1->isDestroyed() || object2->isDestroyed())
 				continue;
 
-			if (!collision(*node1, *node2))
+			if (!collision(*object1, *object2))
 				continue;
 
-			SceneNode::Pair pair(std::minmax(node1, node2));
+			SceneNode::Pair pair(std::minmax(object1, object2));
 
 			if (checked.find(pair) != checked.end())
 				continue;
