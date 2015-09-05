@@ -42,11 +42,7 @@ Spaceship::Spaceship(Type type, const TextureHolder& textures)
 		mExplosion.setTextureRect(Table[type].textureRectExplosion);
 		mExplosion.setColor(Table[type].color);
 		centerOrigin(mExplosion);
-<<<<<<< HEAD
 
-=======
-		
->>>>>>> origin/master
 		setScaleSize(mSprite, Table[type].size.x, Table[type].size.y);
 	}
 	else
@@ -54,11 +50,7 @@ Spaceship::Spaceship(Type type, const TextureHolder& textures)
 		mExplosion.setTexture(textures.get(Textures::EnemiesExplosion));
 		mExplosion.setColor(Table[type].color);
 		centerOrigin(mExplosion);
-<<<<<<< HEAD
 
-=======
-		
->>>>>>> origin/master
 		setScaleSize(mSprite, Table[type].size.x, Table[type].size.y);
 		mSprite.setColor(Table[type].color);
 	}
