@@ -11,7 +11,7 @@
 
 class CommandQueue;
 
-class Player : private sf::NonCopyable
+class Player final : private sf::NonCopyable
 {
 public:
 	enum Action

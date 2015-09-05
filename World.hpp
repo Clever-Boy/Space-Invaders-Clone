@@ -1,8 +1,6 @@
 #pragma once
 
 
-#include "ResourceHolder.hpp"
-#include "ResourceIdentifiers.hpp"
 #include "SceneNode.hpp"
 #include "SpriteNode.hpp"
 #include "Spaceship.hpp"
@@ -13,9 +11,7 @@
 #include "Shield.hpp"
 #include "SoundPlayer.hpp"
 
-#include <SFML\System\NonCopyable.hpp>
 #include <SFML\Graphics\View.hpp>
-#include <SFML\Graphics\Texture.hpp>
 #include <SFML\Graphics\Text.hpp>
 
 #include <array>

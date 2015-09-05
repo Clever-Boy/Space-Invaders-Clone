@@ -1,14 +1,11 @@
 #pragma once
 
 
-#include "ResourceHolder.hpp"
-#include "ResourceIdentifiers.hpp"
 #include "Player.hpp"
 #include "StateStack.hpp"
 #include "MusicPlayer.hpp"
 #include "SoundPlayer.hpp"
 
-#include <SFML/System/Time.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Text.hpp>
 

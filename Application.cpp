@@ -1,7 +1,5 @@
 #include "Application.hpp"
 #include "Utility.hpp"
-#include "State.hpp"
-#include "StateIdentifiers.hpp"
 #include "TitleState.hpp"
 #include "GameState.hpp"
 #include "MenuState.hpp"
