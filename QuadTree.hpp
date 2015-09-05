@@ -27,13 +27,13 @@ public:
 	// exceeds the capacity, it will split and add all               //
 	// objects to their corresponding nodes.                         //
 	///////////////////////////////////////////////////////////////////
-	void								insert(SceneNode* object);
+	void								insert(SceneNode& object);
 
 
 	///////////////////////////////////////////////////////////////////
 	// Return all objects that could collide with the given object   //
 	///////////////////////////////////////////////////////////////////
-	void								getCloseObjects(SceneNode* from, std::vector<SceneNode*>& returnObjects);
+	void								getCloseObjects(SceneNode& from, std::vector<SceneNode*>& returnObjects);
 
 
 #ifdef DEBUG

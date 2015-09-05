@@ -365,7 +365,7 @@ void World::checkForCollision()
 	command.category = Category::All;
 	command.action = [this](auto& node)
 	{
-		mQuadTree.insert(&node);
+		mQuadTree.insert(node);
 		mCollidableNodes.push_back(&node);
 	};
 
@@ -383,7 +383,7 @@ void World::handleCollisions()
 			continue;
 
 		proxim.clear();
-		mQuadTree.getCloseObjects(node1, proxim);
+		mQuadTree.getCloseObjects(*node1, proxim);
 
 		// Check proxim collisions here
 		for (const auto& node2 : proxim)

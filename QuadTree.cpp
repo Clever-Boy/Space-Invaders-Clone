@@ -91,11 +91,11 @@ int QuadTree::getIndex(const sf::FloatRect &Rect)
 	return index;
 }
 
-void QuadTree::insert(SceneNode* object)
+void QuadTree::insert(SceneNode& object)
 {
 	if (mChildren[0] != nullptr)
 	{
-		int index = getIndex(object->getBoundingRect());
+		int index = getIndex(object.getBoundingRect());
 
 		if (index != -1)
 		{
@@ -105,7 +105,7 @@ void QuadTree::insert(SceneNode* object)
 		}
 	}
 
-	mObjects.push_back(object);
+	mObjects.push_back(&object);
 
 	if (mObjects.size() < MaxObjects && mlevel > MaxLevels)
 		return;
@@ -120,10 +120,9 @@ void QuadTree::insert(SceneNode* object)
 		int index = getIndex((*i)->getBoundingRect());
 		if (index != -1)
 		{
-			SceneNode* temp = *i;
+			SceneNode& temp = **i;
 			i = mObjects.erase(i);
 			mChildren[index]->insert(temp);
-			temp = nullptr;
 		}
 		else
 		{
@@ -132,9 +131,9 @@ void QuadTree::insert(SceneNode* object)
 	}
 }
 
-void QuadTree::getCloseObjects(SceneNode* from, std::vector<SceneNode*>& returnObjects)
+void QuadTree::getCloseObjects(SceneNode& from, std::vector<SceneNode*>& returnObjects)
 {
-	int index = getIndex(from->getBoundingRect());
+	int index = getIndex(from.getBoundingRect());
 
 	if (index != -1 && mChildren[0] != nullptr)
 	{
@@ -144,7 +143,7 @@ void QuadTree::getCloseObjects(SceneNode* from, std::vector<SceneNode*>& returnO
 	std::copy_if(mObjects.begin(), mObjects.end(), std::back_inserter(returnObjects),
 		[&](const auto& i)
 	{
-		return !(i->getCategory() & from->getCategory());
+		return !(i->getCategory() & from.getCategory());
 	});
 }
 
