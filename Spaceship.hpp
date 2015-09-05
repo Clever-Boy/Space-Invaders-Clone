@@ -64,19 +64,23 @@ private:
 private:
 	Type					mType;
 	sf::Sprite				mSprite;
+
 	Command 				mFireCommand;
 	sf::Time				mFireCountdown;
 	bool 					mIsFiring;
 	bool 					mIsMarkedForRemoval;
 	int						mFireRateLevel;
+
 	float					mTravelledDistance;
 	std::size_t				mDirectionIndex;
+
 	int						mAnimateRate;
 	sf::Time				mAnimateCountdown;
 	sf::Time				mTimer;
 	bool 					mShowExplosion;
 	float					mMaxSpeed;
-	Animation				mExplosion;
+
+	sf::Sprite				mExplosion;
 	bool					mIsHit;
 	bool					mPlayedExplosionSound;
 };

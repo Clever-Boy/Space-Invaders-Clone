@@ -39,21 +39,17 @@ Spaceship::Spaceship(Type type, const TextureHolder& textures)
 	if (isAllied())
 	{
 		mExplosion.setTexture(textures.get(Textures::PlayerExplosion));
-		mExplosion.setFrameSize(sf::Vector2i(30, 20));
-		mExplosion.setNumFrames(2);
-		mExplosion.setRepeating(true);
-		mExplosion.setDuration(sf::seconds(0.125));
+		mExplosion.setTextureRect(Table[type].textureRectExplosion);
+		mExplosion.setColor(Table[type].color);
 		setScaleSize(mSprite, Table[type].size.x, Table[type].size.y);
 	}
 	else
 	{
 		mExplosion.setTexture(textures.get(Textures::EnemiesExplosion));
-		mExplosion.setFrameSize(sf::Vector2i(41, 34));
-		mExplosion.setNumFrames(1);
-		mExplosion.setDuration(sf::seconds(1.f));
+		mExplosion.setColor(Table[type].color);
+		centerOrigin(mExplosion);
 		setScaleSize(mSprite, Table[type].size.x, Table[type].size.y);
-		if (type == Boss)
-			mSprite.setColor(Table[type].color);
+		mSprite.setColor(Table[type].color);
 	}
 
 	centerOrigin(mSprite);
@@ -85,7 +81,6 @@ void Spaceship::updateCurrent(sf::Time dt, CommandQueue& commands)
 	// Entity has been destroyed: mark for removal
 	if (isDestroyed())
 	{
-		mExplosion.update(dt);
 		mIsMarkedForRemoval = true;
 
 		// Play explosion sound only once
@@ -130,6 +125,7 @@ void Spaceship::checkForHit(sf::Time dt)
 		mSprite.setTextureRect(textureRect);
 		// reset timer
 		mTimer = sf::Time::Zero;
+		mAnimateCountdown = sf::Time::Zero;
 	}
 }
 
