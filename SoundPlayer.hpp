@@ -23,7 +23,7 @@ public:
 	void						removeStoppedSounds();
 	void						setListenerPosition(sf::Vector2f position);
 	sf::Vector2f				getListenerPosition() const;
-	void removePlayingSounds();
+
 
 private:
 	SoundBufferHolder			mSoundBuffers;

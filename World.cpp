@@ -6,7 +6,6 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 
 #include <algorithm>
-#include <cmath>
 
 
 namespace
@@ -37,7 +36,7 @@ namespace
 		return lhs.getBoundingRect().intersects(rhs.getBoundingRect());
 	}
 
-	constexpr float PADDING = 40.f;
+	constexpr auto Padding = 40.f;
 }
 
 World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds)
@@ -94,11 +93,11 @@ sf::FloatRect World::getBattlefieldBounds() const
 {
 	sf::FloatRect bounds = getViewBounds();
 
-	bounds.top += PADDING;
-	bounds.height -= PADDING * 2;
+	bounds.top += Padding;
+	bounds.height -= Padding * 2;
 
-	bounds.left += PADDING;
-	bounds.width -= PADDING * 2;
+	bounds.left += Padding;
+	bounds.width -= Padding * 2;
 
 	return bounds;
 }
@@ -338,8 +337,8 @@ void World::adaptPlayerPosition()
 
 	sf::Vector2f position = mPlayerShip->getPosition();
 
-	position.x = std::max(position.x, viewBounds.left + PADDING);
-	position.x = std::min(position.x, viewBounds.left + viewBounds.width - PADDING - 5.f);
+	position.x = std::max(position.x, viewBounds.left + Padding);
+	position.x = std::min(position.x, viewBounds.left + viewBounds.width - Padding - 5.f);
 
 	mPlayerShip->setPosition(position);
 }

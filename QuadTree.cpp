@@ -3,6 +3,11 @@
 #include <SFML\Graphics\RectangleShape.hpp>
 #include <SFML\Graphics\RenderTarget.hpp>
 
+namespace
+{
+	constexpr auto	MaxLevels	= 5u; //defines the deepest level subnode
+	constexpr auto	MaxObjects	= 2u; //defines how many objects a node can hold before it splits
+}
 
 QuadTree::QuadTree(std::size_t Level, const sf::FloatRect& Bounds)
 	: mObjects()
@@ -102,7 +107,7 @@ void QuadTree::insert(SceneNode* object)
 
 	mObjects.push_back(object);
 
-	if (mObjects.size() < MAX_OBJECTS && mlevel > MAX_LEVELS)
+	if (mObjects.size() < MaxObjects && mlevel > MaxLevels)
 		return;
 
 	if (mChildren[0] == nullptr)
