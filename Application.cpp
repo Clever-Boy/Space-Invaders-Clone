@@ -11,7 +11,7 @@
 const sf::Time Application::TimePerFrame = sf::seconds(1.f / 60.f);
 
 Application::Application()
-	: mWindow(sf::VideoMode(800, 600), "Graphics", sf::Style::Close)
+	: mWindow(sf::VideoMode(800, 600), "Space Invaders", sf::Style::Close)
 	, mTextures()
 	, mFonts()
 	, mPlayer()

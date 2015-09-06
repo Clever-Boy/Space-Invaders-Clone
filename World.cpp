@@ -385,6 +385,9 @@ void World::handleCollisions()
 		proxim.clear();
 		mQuadTree.getCloseObjects(*object1, proxim);
 
+		if (proxim.empty())
+			continue;
+
 		// Check proxim collisions here
 		for (const auto& object2 : proxim)
 		{
