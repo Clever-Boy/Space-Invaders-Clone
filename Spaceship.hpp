@@ -3,13 +3,7 @@
 
 #include "Entity.hpp"
 #include "Command.hpp"
-#include "ResourceIdentifiers.hpp"
 #include "Projectile.hpp"
-#include "Animation.hpp"
-
-
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML\System\Clock.hpp>
 
 
 class Spaceship final : public Entity

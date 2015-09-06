@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SFML/System/NonCopyable.hpp>
+
 #include <map>
 #include <string>
 #include <memory>
@@ -8,7 +10,7 @@
 
 
 template <typename Resource, typename Identifier>
-class ResourceHolder
+class ResourceHolder final : private sf::NonCopyable
 {
 public:
 	void						load(Identifier id, const std::string& filename);

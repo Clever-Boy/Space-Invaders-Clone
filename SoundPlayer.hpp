@@ -12,7 +12,7 @@
 #include <list>
 
 
-class SoundPlayer : private sf::NonCopyable
+class SoundPlayer final : private sf::NonCopyable
 {
 public:
 	SoundPlayer();

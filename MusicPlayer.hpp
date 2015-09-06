@@ -10,7 +10,7 @@
 #include <string>
 
 
-class MusicPlayer : private sf::NonCopyable
+class MusicPlayer final : private sf::NonCopyable
 {
 public:
 	MusicPlayer();

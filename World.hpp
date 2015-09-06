@@ -1,11 +1,9 @@
 #pragma once
 
 
-#include "SceneNode.hpp"
 #include "SpriteNode.hpp"
 #include "Spaceship.hpp"
 #include "CommandQueue.hpp"
-#include "Command.hpp"
 #include "QuadTree.hpp"
 #include "Life.hpp"
 #include "Shield.hpp"
@@ -23,7 +21,7 @@ namespace sf
 	class RenderWindow;
 }
 
-class World : private sf::NonCopyable
+class World final : private sf::NonCopyable
 {
 public:
 	explicit							World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds);
