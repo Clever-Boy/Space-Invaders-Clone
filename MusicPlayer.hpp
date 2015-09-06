@@ -3,11 +3,7 @@
 #include "ResourceHolder.hpp"
 #include "ResourceIdentifiers.hpp"
 
-#include <SFML/System/NonCopyable.hpp>
 #include <SFML/Audio/Music.hpp>
-
-#include <map>
-#include <string>
 
 
 class MusicPlayer final : private sf::NonCopyable
