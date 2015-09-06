@@ -3,8 +3,6 @@
 
 #include "State.hpp"
 
-#include <SFML/System/NonCopyable.hpp>
-
 #include <vector>
 #include <utility>
 #include <functional>

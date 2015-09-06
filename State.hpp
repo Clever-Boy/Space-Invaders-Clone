@@ -4,6 +4,7 @@
 #include "StateIdentifiers.hpp"
 #include "ResourceIdentifiers.hpp"
 
+#include <SFML/System/NonCopyable.hpp>
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 
@@ -21,7 +22,7 @@ class MusicPlayer;
 class SoundPlayer;
 
 
-class State
+class State : private sf::NonCopyable
 {
 public:
 	using Ptr = std::unique_ptr<State>;
