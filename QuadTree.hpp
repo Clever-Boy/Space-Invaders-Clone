@@ -21,7 +21,7 @@ public:
 	void								getCloseObjects(const sf::FloatRect& Bounds, std::vector<SceneNode*>& returnObjects);
 
 
-#ifdef DEBUG
+#ifdef _DEBUG
 	void								draw(sf::RenderTarget& target);
 #endif
 
