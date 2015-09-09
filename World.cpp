@@ -49,8 +49,11 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mWorldBounds(0.f, 0.f, mWorldView.getSize().x, mWorldView.getSize().y)
 	, mSpawnPosition(mWorldView.getSize().x / 2.f, mWorldView.getSize().y / 2.f)
 	, mPlayerShip(nullptr)
-	, mQuadTree(1, mWorldBounds)
-	, mCollidableObjects()
+	, mQuadTreePrimary(1, mWorldBounds)
+	, mQuadTreeSecondary(1, mWorldBounds)
+	, mEnemyNodes()
+	, mPlayerBulletNodes()
+	, mEnemyBulletNodes()
 	, mActiveEnemies()
 	, mLives()
 	, mDeadLine(getBattlefieldBounds().height + getBattlefieldBounds().top)
@@ -358,15 +361,39 @@ void World::destroyEntitiesOutsideView()
 
 void World::checkForCollision()
 {
-	mQuadTree.clear();
-	mCollidableObjects.clear();
+	mQuadTreePrimary.clear();
+	mQuadTreeSecondary.clear();
+
+	mEnemyNodes.clear();
+	mPlayerBulletNodes.clear();
+	mEnemyBulletNodes.clear();
 
 	Command command;
 	command.category = Category::All;
 	command.action = [this](auto& node)
 	{
-		mQuadTree.insert(node);
-		mCollidableObjects.push_back(&node);
+		if (node.getCategory() == Category::PlayerProjectile)
+		{
+			mPlayerBulletNodes.push_back(&node);
+		}
+		else if (node.getCategory() == Category::EnemyProjectile)
+		{
+			mEnemyBulletNodes.push_back(&node);
+		}
+		else if (node.getCategory() == Category::EnemySpaceship)
+		{
+			mEnemyNodes.push_back(&node);
+			mQuadTreePrimary.insert(node);
+		}
+		else if (node.getCategory() == Category::Shield)
+		{
+			mQuadTreeSecondary.insert(node);
+			mQuadTreePrimary.insert(node);
+		}
+		else if (node.getCategory() == Category::PlayerSpaceship)
+		{
+			mQuadTreeSecondary.insert(node);
+		}
 	};
 
 	mCommandQueue.push(command);
@@ -374,73 +401,33 @@ void World::checkForCollision()
 
 void World::handleCollisions()
 {
-	std::vector<SceneNode*> proxim;
-	std::set<SceneNode::Pair> checked;
+	std::vector<SceneNode*> mCollidableNodes;
 
-	for (const auto& object1 : mCollidableObjects)
+	for (const auto& node1 : mPlayerBulletNodes)
 	{
-		if (object1->isDestroyed())
+		if (node1->isDestroyed())
 			continue;
 
-		proxim.clear();
-		mQuadTree.getCloseObjects(*object1, proxim);
+		mCollidableNodes.clear();
+		mQuadTreePrimary.getCloseObjects(node1->getBoundingRect(), mCollidableNodes);
 
-		if (proxim.empty())
-			continue;
-
-		// Check proxim collisions here
-		for (const auto& object2 : proxim)
+		for (const auto& node2 : mCollidableNodes)
 		{
-			if (object1->isDestroyed() || object2->isDestroyed())
+			if (node2->isDestroyed())
 				continue;
 
-			if (!collision(*object1, *object2))
+			if (!collision(*node1, *node2))
 				continue;
 
-			SceneNode::Pair pair(std::minmax(object1, object2));
+			SceneNode::Pair pair(std::minmax(node1, node2));
 
-			if (checked.find(pair) != checked.end())
-				continue;
-
-			checked.insert(pair);
-
-			if (matchesCategories(pair, Category::PlayerSpaceship, Category::EnemySpaceship))
-			{
-				auto& player = static_cast<Spaceship&>(*pair.first);
-				auto& enemy = static_cast<Spaceship&>(*pair.second);
-
-				player.damage(enemy.getHitpoints());
-				enemy.destroy();
-				if (!mLives.empty())
-					mLives.pop_back();
-			}
-			else if (matchesCategories(pair, Category::Shield, Category::EnemySpaceship))
-			{
-				auto& shield = static_cast<Shield&>(*pair.first);
-				auto& enemy = static_cast<Spaceship&>(*pair.second);
-
-				shield.damage(enemy.getHitpoints());
-				//enemy.destroy();
-			}
-			else if (matchesCategories(pair, Category::Shield, Category::PlayerProjectile)
-				|| matchesCategories(pair, Category::Shield, Category::EnemyProjectile))
+			if (matchesCategories(pair, Category::Shield, Category::PlayerProjectile))
 			{
 				auto& shield = static_cast<Shield&>(*pair.first);
 				auto& projectile = static_cast<Projectile&>(*pair.second);
 
 				shield.damage(projectile.getDamage());
 				projectile.destroy();
-			}
-			else if (matchesCategories(pair, Category::PlayerSpaceship, Category::EnemyProjectile))
-			{
-				auto& player = static_cast<Spaceship&>(*pair.first);
-				auto& projectile = static_cast<Projectile&>(*pair.second);
-
-				player.onHit();
-				player.damage(projectile.getDamage());
-				projectile.destroy();
-				if (!mLives.empty())
-					mLives.pop_back();
 			}
 			else if (matchesCategories(pair, Category::EnemySpaceship, Category::PlayerProjectile))
 			{
@@ -465,6 +452,89 @@ void World::handleCollisions()
 				}
 				enemy.damage(projectile.getDamage());
 				projectile.destroy();
+			}
+		}
+	}
+
+	mCollidableNodes.clear();
+
+	for (const auto& node1 : mEnemyBulletNodes)
+	{
+		if (node1->isDestroyed())
+			continue;
+
+		mCollidableNodes.clear();
+		mQuadTreeSecondary.getCloseObjects(node1->getBoundingRect(), mCollidableNodes);
+
+		for (const auto& node2 : mCollidableNodes)
+		{
+			if (node2->isDestroyed())
+				continue;
+
+			if (!collision(*node1, *node2))
+				continue;
+
+			SceneNode::Pair pair(std::minmax(node1, node2));
+
+			if (matchesCategories(pair, Category::Shield, Category::EnemyProjectile))
+			{
+				auto& shield = static_cast<Shield&>(*pair.first);
+				auto& projectile = static_cast<Projectile&>(*pair.second);
+
+				shield.damage(projectile.getDamage());
+				projectile.destroy();
+			}
+			else if (matchesCategories(pair, Category::PlayerSpaceship, Category::EnemyProjectile))
+			{
+				auto& player = static_cast<Spaceship&>(*pair.first);
+				auto& projectile = static_cast<Projectile&>(*pair.second);
+
+				player.onHit();
+				player.damage(projectile.getDamage());
+				projectile.destroy();
+				if (!mLives.empty())
+					mLives.pop_back();
+			}
+		}
+	}
+
+	mCollidableNodes.clear();
+
+	for (const auto& node1 : mEnemyNodes)
+	{
+		if (node1->isDestroyed())
+			continue;
+
+		mCollidableNodes.clear();
+		mQuadTreeSecondary.getCloseObjects(node1->getBoundingRect(), mCollidableNodes);
+
+		for (const auto& node2 : mCollidableNodes)
+		{
+			if (node2->isDestroyed())
+				continue;
+
+			if (!collision(*node1, *node2))
+				continue;
+
+			SceneNode::Pair pair(std::minmax(node1, node2));
+
+			if (matchesCategories(pair, Category::PlayerSpaceship, Category::EnemySpaceship))
+			{
+				auto& player = static_cast<Spaceship&>(*pair.first);
+				auto& enemy = static_cast<Spaceship&>(*pair.second);
+
+				player.damage(enemy.getHitpoints());
+				enemy.destroy();
+				if (!mLives.empty())
+					mLives.pop_back();
+			}
+			else if (matchesCategories(pair, Category::Shield, Category::EnemySpaceship))
+			{
+				auto& shield = static_cast<Shield&>(*pair.first);
+				auto& enemy = static_cast<Spaceship&>(*pair.second);
+
+				shield.damage(enemy.getHitpoints());
+				//enemy.destroy();
 			}
 		}
 	}
