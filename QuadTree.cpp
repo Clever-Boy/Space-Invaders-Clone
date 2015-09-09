@@ -143,7 +143,7 @@ void QuadTree::getCloseObjects(const sf::FloatRect& Bounds, std::vector<SceneNod
 	std::copy(mObjects.begin(), mObjects.end(), std::back_inserter(returnObjects));
 }
 
-#ifdef DEBUG
+#ifdef _DEBUG
 void QuadTree::draw(sf::RenderTarget& target)
 {
 	sf::RectangleShape shape(sf::Vector2f(mBounds.width, mBounds.height));
