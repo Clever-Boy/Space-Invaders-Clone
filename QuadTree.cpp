@@ -163,8 +163,7 @@ void QuadTree::draw(sf::RenderTarget& target)
 	{
 		for (const auto& child : mChildren)
 		{
-			if (child)
-				child->draw(target);
+			child->draw(target);
 		}
 	}
 }
