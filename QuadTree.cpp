@@ -131,20 +131,16 @@ void QuadTree::insert(SceneNode& object)
 	}
 }
 
-void QuadTree::getCloseObjects(SceneNode& from, std::vector<SceneNode*>& returnObjects)
+void QuadTree::getCloseObjects(const sf::FloatRect& Bounds, std::vector<SceneNode*>& returnObjects)
 {
-	int index = getIndex(from.getBoundingRect());
+	int index = getIndex(Bounds);
 
 	if (index != -1 && mChildren[0] != nullptr)
 	{
-		mChildren[index]->getCloseObjects(from, returnObjects);
+		mChildren[index]->getCloseObjects(Bounds, returnObjects);
 	}
 
-	std::copy_if(mObjects.begin(), mObjects.end(), std::back_inserter(returnObjects),
-		[&](const auto& i)
-	{
-		return !(i->getCategory() & from.getCategory());
-	});
+	std::copy(mObjects.begin(), mObjects.end(), std::back_inserter(returnObjects));
 }
 
 #ifdef DEBUG
