@@ -457,8 +457,6 @@ void World::handleCollisions()
 		}
 	}
 
-	mCollidableNodes.clear();
-
 	for (const auto& node1 : mEnemyBulletNodes)
 	{
 		if (node1->isDestroyed())
@@ -498,8 +496,6 @@ void World::handleCollisions()
 			}
 		}
 	}
-
-	mCollidableNodes.clear();
 
 	for (const auto& node1 : mEnemyNodes)
 	{
