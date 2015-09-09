@@ -166,7 +166,8 @@ void World::draw()
 	mTarget.draw(mLivesText);
 
 #ifdef DEBUG
-	mQuadTree.draw(mTarget);
+	//mQuadTreePrimary.draw(mTarget);
+	//mQuadTreeSecondary.draw(mTarget);
 #endif
 
 }
