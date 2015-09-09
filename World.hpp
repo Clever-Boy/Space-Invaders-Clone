@@ -12,9 +12,6 @@
 #include <SFML\Graphics\View.hpp>
 #include <SFML\Graphics\Text.hpp>
 
-#include <array>
-#include <list>
-
 // Forward declaration
 namespace sf
 {
@@ -90,8 +87,11 @@ private:
 	Spaceship*								mPlayerShip;
 
 
-	QuadTree								mQuadTree;
-	std::vector<SceneNode*>					mCollidableObjects;
+	QuadTree								mQuadTreePrimary;
+	QuadTree								mQuadTreeSecondary;
+	std::vector<SceneNode*>					mEnemyNodes;
+	std::vector<SceneNode*>					mPlayerBulletNodes;
+	std::vector<SceneNode*>					mEnemyBulletNodes;
 
 	std::vector<Spaceship*>					mActiveEnemies;
 	std::list<std::unique_ptr<Life>>		mLives;
@@ -103,3 +103,4 @@ private:
 	sf::Text								mLivesText;
 	SoundPlayer&							mSounds;
 };
+
