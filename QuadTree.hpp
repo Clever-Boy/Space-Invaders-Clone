@@ -33,7 +33,7 @@ public:
 	///////////////////////////////////////////////////////////////////
 	// Return all objects that could collide with the given object   //
 	///////////////////////////////////////////////////////////////////
-	void								getCloseObjects(SceneNode& from, std::vector<SceneNode*>& returnObjects);
+	void								getCloseObjects(const sf::FloatRect& Bounds, std::vector<SceneNode*>& returnObjects);
 
 
 #ifdef DEBUG
