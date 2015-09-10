@@ -170,7 +170,11 @@ void World::draw()
 	mTarget.draw(mScoreText);
 	mTarget.draw(mLivesText);
 
+<<<<<<< HEAD
 #ifdef _DEBUG
+=======
+#ifdef DEBUG
+>>>>>>> origin/master
 	//mQuadTreePrimary.draw(mTarget);
 	//mQuadTreeSecondary.draw(mTarget);
 #endif

@@ -13,9 +13,12 @@
 #include <SFML\Graphics\View.hpp>
 #include <SFML\Graphics\Text.hpp>
 
+<<<<<<< HEAD
 #include <cassert>
 
 
+=======
+>>>>>>> origin/master
 // Forward declaration
 namespace sf
 {
@@ -110,3 +113,4 @@ private:
 	SoundPlayer&							mSounds;
 	static World*							sInstance;
 };
+
