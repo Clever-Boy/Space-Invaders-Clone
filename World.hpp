@@ -88,7 +88,6 @@ private:
 
 	Spaceship*								mPlayerShip;
 
-
 	QuadTree								mQuadTreePrimary;
 	QuadTree								mQuadTreeSecondary;
 	std::vector<SceneNode*>					mEnemyNodes;
