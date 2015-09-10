@@ -1,12 +1,10 @@
 #include "SceneNode.hpp"
 #include "Command.hpp"
 #include "Utility.hpp"
+#include "World.hpp"
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
-
-#include <algorithm>
-#include <cassert>
 
 
 SceneNode::SceneNode(Category::Type category)
@@ -46,13 +44,16 @@ void SceneNode::update(sf::Time dt, CommandQueue& commands)
 
 void SceneNode::updateCurrent(sf::Time dt, CommandQueue& commands)
 {
-	// do nothing 
+	// do nothing
 }
 
 void SceneNode::updateChildren(sf::Time dt, CommandQueue& commands)
 {
 	for (const auto& child : mChildren)
+	{
+		World::get().fillCollisionData(*child);
 		child->update(dt, commands);
+	}
 }
 
 void SceneNode::draw(sf::RenderTarget& target, sf::RenderStates states) const

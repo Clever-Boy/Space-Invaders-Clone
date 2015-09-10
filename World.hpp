@@ -29,6 +29,9 @@ public:
 	bool 								hasAlivePlayer() const;
 	bool								hasPlayerWon() const;
 	CommandQueue&						getCommandQueue();
+	void								fillCollisionData(SceneNode& node);
+
+	static World&						get() { assert(sInstance); return *sInstance; }
 
 
 private:
@@ -43,13 +46,11 @@ private:
 
 	void								destroyEntitiesOutsideView();
 	void								handleCollisions();
-	void								checkForCollision();
 
 	void								controlEnemyFire();
 
 	void								addLifes();
 	void								addLife(float relX, float relY);
-
 
 	void								addShields();
 	void								adaptShieldPlaces(sf::Vector2f position);
@@ -103,4 +104,6 @@ private:
 	sf::Text								mStaticScoreText;
 	sf::Text								mLivesText;
 	SoundPlayer&							mSounds;
+
+	static World*							sInstance;
 };

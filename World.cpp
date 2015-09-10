@@ -39,6 +39,7 @@ namespace
 	constexpr auto Padding = 40.f;
 }
 
+World*	World::sInstance = nullptr;
 
 World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds)
 	: mTarget(outputTarget)
@@ -64,6 +65,8 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mLivesText()
 	, mSounds(sounds)
 {
+	sInstance = this;
+
 	mStaticScoreText.setString("Score: ");
 	mStaticScoreText.setFont(mFonts.get(Fonts::Main));
 	mStaticScoreText.setPosition(5.f, 5.f);
@@ -116,9 +119,6 @@ void World::update(sf::Time dt)
 
 	// Remove useless entities
 	destroyEntitiesOutsideView();
-
-	// Update quadtree
-	checkForCollision();
 
 	// Forward commands to scene graph
 	while (!mCommandQueue.isEmpty())
@@ -360,45 +360,31 @@ void World::destroyEntitiesOutsideView()
 
 	mCommandQueue.push(command);
 }
-
-void World::checkForCollision()
+void World::fillCollisionData(SceneNode& node)
 {
-	mQuadTreePrimary.clear();
-	mQuadTreeSecondary.clear();
-
-	mEnemyNodes.clear();
-	mPlayerBulletNodes.clear();
-	mEnemyBulletNodes.clear();
-
-	Command command;
-	command.category = Category::All;
-	command.action = [this](auto& node)
+	if (node.getCategory() == Category::PlayerProjectile)
 	{
-		if (node.getCategory() == Category::PlayerProjectile)
-		{
-			mPlayerBulletNodes.push_back(&node);
-		}
-		else if (node.getCategory() == Category::EnemyProjectile)
-		{
-			mEnemyBulletNodes.push_back(&node);
-		}
-		else if (node.getCategory() == Category::EnemySpaceship)
-		{
-			mEnemyNodes.push_back(&node);
-			mQuadTreePrimary.insert(node);
-		}
-		else if (node.getCategory() == Category::Shield)
-		{
-			mQuadTreeSecondary.insert(node);
-			mQuadTreePrimary.insert(node);
-		}
-		else if (node.getCategory() == Category::PlayerSpaceship)
-		{
-			mQuadTreeSecondary.insert(node);
-		}
-	};
+		mPlayerBulletNodes.push_back(&node);
+	}
+	else if (node.getCategory() == Category::EnemyProjectile)
+	{
+		mEnemyBulletNodes.push_back(&node);
+	}
+	else if (node.getCategory() == Category::EnemySpaceship)
+	{
+		mEnemyNodes.push_back(&node);
+		mQuadTreePrimary.insert(node);
+	}
+	else if (node.getCategory() == Category::Shield)
+	{
+		mQuadTreeSecondary.insert(node);
+		mQuadTreePrimary.insert(node);
+	}
+	else if (node.getCategory() == Category::PlayerSpaceship)
+	{
+		mQuadTreeSecondary.insert(node);
+	}
 
-	mCommandQueue.push(command);
 }
 
 void World::handleCollisions()
@@ -536,6 +522,13 @@ void World::handleCollisions()
 			}
 		}
 	}
+
+	mQuadTreePrimary.clear();
+	mQuadTreeSecondary.clear();
+
+	mEnemyNodes.clear();
+	mPlayerBulletNodes.clear();
+	mEnemyBulletNodes.clear();
 }
 
 bool World::hasAlivePlayer() const
