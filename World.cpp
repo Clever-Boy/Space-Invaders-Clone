@@ -108,9 +108,6 @@ void World::update(sf::Time dt)
 	// reset player velocity
 	mPlayerShip->setVelocity(0.f, 0.f);
 
-	// control enemy fires
-	controlEnemyFire();
-
 	// Remove useless entities
 	destroyEntitiesOutsideView();
 
@@ -120,6 +117,9 @@ void World::update(sf::Time dt)
 	// Forward commands to scene graph
 	while (!mCommandQueue.isEmpty())
 		mSceneGraph.onCommand(mCommandQueue.pop());
+
+	// control enemy fires
+	controlEnemyFire();
 
 	// Collision detection and response (may destroy entities)
 	handleCollisions();
@@ -558,9 +558,6 @@ void World::controlEnemyFire()
 
 	for (auto i = 0u; i < size; ++i)
 	{
-		if (mEnemyNodes[i] != nullptr)
-			continue;
-
 		Spaceship& enemy = static_cast<Spaceship&>(*mEnemyNodes[i]);
 
 		if (enemy.getWorldPosition().y >= mDeadLine - 20.f)
