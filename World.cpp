@@ -5,9 +5,6 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
-#include <algorithm>
-
-
 namespace
 {
 	bool matchesCategories(SceneNode::Pair& colliders, Category::Type type1, Category::Type type2)
@@ -549,28 +546,21 @@ void World::controlEnemyFire()
 		return lhs->getPosition().y > rhs->getPosition().y;
 	});
 
+	auto size = mEnemyNodes.size();
 
-	std::size_t j = 0;
-
-	// control fire and speed notify when alain reach the end screen 
-	std::for_each(mEnemyNodes.begin(), mEnemyNodes.end(),
-		[this, &j](const auto& i)
+	for (auto i = 0u; i < size; ++i)
 	{
-		Spaceship& enemy = static_cast<Spaceship&>(*i);
-		if (enemy.getWorldPosition().y >= mDeadLine - 20.f)
-		{
-			mPlayerShip->destroy();
-		}
+		Spaceship& enemy = static_cast<Spaceship&>(*mEnemyNodes[i]);
 
+		if (enemy.getWorldPosition().y >= mDeadLine - 20.f)
+			mPlayerShip->destroy();
 
 		if (mEnemyNodes.size() <= 3)
 			enemy.setMaxSpeed(enemy.getMaxSpeed() + 1.f);
 
-		if (j < 11)
+		if (i < 11)
 			enemy.fire();
-
-		++j;
-	});
+	}
 }
 
 void World::updateSounds()

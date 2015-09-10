@@ -3,6 +3,8 @@
 #include <SFML\Graphics\RectangleShape.hpp>
 #include <SFML\Graphics\RenderTarget.hpp>
 
+#include <algorithm> 
+
 namespace
 {
 	constexpr auto	MaxLevels	= 5u; //defines the deepest level subnode
