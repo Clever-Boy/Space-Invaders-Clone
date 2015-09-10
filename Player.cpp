@@ -2,9 +2,6 @@
 #include "CommandQueue.hpp"
 #include "Spaceship.hpp"
 
-#include <string>
-#include <algorithm>
-
 
 Player::Player()
 	: mCurrentMissionStatus(MissionRunning)
