@@ -3,10 +3,9 @@
 
 #include "Entity.hpp"
 
-#include <SFML\Graphics\RectangleShape.hpp>
 #include "ResourceIdentifiers.hpp"
-
 #include <SFML/Graphics/Sprite.hpp>
+
 
 class Shield final : public Entity
 {
