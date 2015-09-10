@@ -8,9 +8,13 @@
 #include "Life.hpp"
 #include "Shield.hpp"
 #include "SoundPlayer.hpp"
+#include "Aurora\Dispatch.hpp"
 
 #include <SFML\Graphics\View.hpp>
 #include <SFML\Graphics\Text.hpp>
+
+#include <cassert>
+
 
 // Forward declaration
 namespace sf
@@ -28,6 +32,8 @@ public:
 	bool 								hasAlivePlayer() const;
 	bool								hasPlayerWon() const;
 	CommandQueue&						getCommandQueue();
+
+	static World&						get() { assert(sInstance); return *sInstance; }
 
 
 private:
@@ -102,4 +108,5 @@ private:
 	sf::Text								mStaticScoreText;
 	sf::Text								mLivesText;
 	SoundPlayer&							mSounds;
+	static World*							sInstance;
 };

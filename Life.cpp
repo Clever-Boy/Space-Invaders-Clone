@@ -12,6 +12,7 @@ namespace
 
 Life::Life(Spaceship::Type type, const TextureHolder& textures)
 	: mSprite(textures.get(Table[type].texture), Table[type].textureRect)
+	, mDrity(true)
 {
 	centerOrigin(mSprite);
 	mSprite.setColor(Table[type].color);
@@ -20,6 +21,12 @@ Life::Life(Spaceship::Type type, const TextureHolder& textures)
 
 void Life::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform *= getTransform();
+	if (mDrity)
+	{
+		mTransform.combine(getTransform());
+		mDrity = false;
+	}
+
+	states.transform = mTransform;
 	target.draw(mSprite, states);
 }

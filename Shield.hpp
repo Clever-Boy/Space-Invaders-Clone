@@ -23,19 +23,21 @@ public:
 
 
 public:
-	explicit		Shield(Type type, const TextureHolder& textures);
+	explicit				Shield(Type type, const TextureHolder& textures);
 
 
-	unsigned int	getCategory() const override;
-	sf::FloatRect	getBoundingRect() const override;
+	unsigned int			getCategory() const override;
+	sf::FloatRect			getBoundingRect() const override;
 
 
 private:
-	void			drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const override;
-	void 			updateCurrent(sf::Time dt, CommandQueue& commands) override;
+	void					drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const override;
+	void 					updateCurrent(sf::Time dt, CommandQueue& commands) override;
 
 private:
-	Type			mType;
-	sf::Sprite		mSprite;
+	Type					mType;
+	sf::Sprite				mSprite;
+	mutable bool			mDrity;
+	mutable sf::Transform	mTransform;
 };
 

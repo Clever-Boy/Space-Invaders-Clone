@@ -17,6 +17,7 @@ Shield::Shield(Type type, const TextureHolder& textures)
 	: Entity(3)
 	, mType(type)
 	, mSprite(textures.get(Table[type].texture), Table[type].textureRect)
+	, mDrity(true)
 {
 	centerOrigin(mSprite);
 	setScaleSize(mSprite, Table[type].size.x, Table[0].size.y);
@@ -24,6 +25,12 @@ Shield::Shield(Type type, const TextureHolder& textures)
 
 void Shield::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	if (mDrity)
+	{
+		mTransform.combine(getTransform());
+		mDrity = false;
+	}
+	states.transform = mTransform;
 	target.draw(mSprite, states);
 }
 

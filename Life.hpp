@@ -6,6 +6,7 @@
 
 #include <SFML/Graphics/Sprite.hpp>
 
+
 class Life final : public sf::Drawable, public sf::Transformable
 {
 public:
@@ -18,4 +19,6 @@ private:
 
 private:
 	sf::Sprite 				mSprite;
+	mutable bool			mDrity;
+	mutable sf::Transform	mTransform;
 };

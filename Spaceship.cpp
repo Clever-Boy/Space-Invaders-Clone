@@ -68,6 +68,8 @@ void Spaceship::onHit()
 
 void Spaceship::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	states.transform.combine(getTransform());
+
 	if (isDestroyed() && mShowExplosion)
 		target.draw(mExplosion, states);
 	else

@@ -2,8 +2,6 @@
 #include "CommandQueue.hpp"
 #include "Spaceship.hpp"
 
-
-#include <map>
 #include <string>
 #include <algorithm>
 
@@ -86,9 +84,9 @@ void Player::initializeActions()
 {
 	using namespace std::placeholders;
 
-	mActionBinding[MoveLeft].action = derivedAction<Spaceship>(std::bind(&Spaceship::playerMover, _1, -1.f, 0.f));
-	mActionBinding[MoveRight].action = derivedAction<Spaceship>(std::bind(&Spaceship::playerMover, _1, 1.f, 0.f));
-	mActionBinding[Fire].action = derivedAction<Spaceship>(std::bind(&Spaceship::fire, _1));
+	mActionBinding[MoveLeft].action		= derivedAction<Spaceship>(std::bind(&Spaceship::playerMover, _1, -1.f, 0.f));
+	mActionBinding[MoveRight].action	= derivedAction<Spaceship>(std::bind(&Spaceship::playerMover, _1, 1.f, 0.f));
+	mActionBinding[Fire].action			= derivedAction<Spaceship>(std::bind(&Spaceship::fire, _1));
 }
 
 bool Player::isRealtimeAction(Action action)

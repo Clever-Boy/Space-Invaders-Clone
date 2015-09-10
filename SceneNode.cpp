@@ -57,9 +57,6 @@ void SceneNode::updateChildren(sf::Time dt, CommandQueue& commands)
 
 void SceneNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	// Apply transform of current node
-	states.transform *= getTransform();
-
 	drawCurrent(target, states);
 	drawChildren(target, states);
 }
@@ -85,7 +82,7 @@ sf::Transform SceneNode::getWorldTransform() const
 	sf::Transform transform = sf::Transform::Identity;
 
 	for (const auto* node = this; node != nullptr; node = node->mParent)
-		transform *= node->getTransform();
+		transform.combine(node->getTransform());
 
 	return transform;
 }

@@ -6,7 +6,8 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 
 #include <algorithm>
-
+#include "Profiler.hpp"
+#include <iostream>
 
 namespace
 {
@@ -39,6 +40,8 @@ namespace
 	constexpr auto Padding = 40.f;
 }
 
+World*	World::sInstance = nullptr;
+
 World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds)
 	: mTarget(outputTarget)
 	, mWorldView(outputTarget.getDefaultView())
@@ -63,6 +66,8 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mLivesText()
 	, mSounds(sounds)
 {
+	sInstance = this;
+
 	mStaticScoreText.setString("Score: ");
 	mStaticScoreText.setFont(mFonts.get(Fonts::Main));
 	mStaticScoreText.setPosition(5.f, 5.f);
@@ -146,11 +151,11 @@ void World::updateText()
 void World::draw()
 {
 	mTarget.setView(mWorldView);
+
 	mTarget.draw(mSceneGraph);
 
 	for (const auto& i : mLives)
 		mTarget.draw(*i);
-
 
 	sf::Vertex line[] =
 	{
@@ -165,8 +170,9 @@ void World::draw()
 	mTarget.draw(mScoreText);
 	mTarget.draw(mLivesText);
 
-#ifdef DEBUG
-	mQuadTree.draw(mTarget);
+#ifdef _DEBUG
+	//mQuadTreePrimary.draw(mTarget);
+	//mQuadTreeSecondary.draw(mTarget);
 #endif
 
 }
@@ -456,8 +462,6 @@ void World::handleCollisions()
 		}
 	}
 
-	mCollidableNodes.clear();
-
 	for (const auto& node1 : mEnemyBulletNodes)
 	{
 		if (node1->isDestroyed())
@@ -497,8 +501,6 @@ void World::handleCollisions()
 			}
 		}
 	}
-
-	mCollidableNodes.clear();
 
 	for (const auto& node1 : mEnemyNodes)
 	{
