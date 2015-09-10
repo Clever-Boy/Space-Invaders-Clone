@@ -49,7 +49,7 @@ void QuadTree::split()
 	mChildren[3] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x + subWidth, y + subHeight, subWidth, subHeight)));
 }
 
-int QuadTree::getIndex(const sf::FloatRect& Rect)
+int QuadTree::getIndex(const sf::FloatRect &Rect)
 {
 	int index = -1;
 
