@@ -6,8 +6,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 
 #include <algorithm>
-#include "Profiler.hpp"
-#include <iostream>
+
 
 namespace
 {
@@ -40,7 +39,6 @@ namespace
 	constexpr auto Padding = 40.f;
 }
 
-World*	World::sInstance = nullptr;
 
 World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds)
 	: mTarget(outputTarget)
@@ -66,8 +64,6 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mLivesText()
 	, mSounds(sounds)
 {
-	sInstance = this;
-
 	mStaticScoreText.setString("Score: ");
 	mStaticScoreText.setFont(mFonts.get(Fonts::Main));
 	mStaticScoreText.setPosition(5.f, 5.f);
