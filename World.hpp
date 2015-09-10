@@ -95,7 +95,6 @@ private:
 	std::vector<SceneNode*>					mPlayerBulletNodes;
 	std::vector<SceneNode*>					mEnemyBulletNodes;
 
-	std::vector<Spaceship*>					mActiveEnemies;
 	std::list<std::unique_ptr<Life>>		mLives;
 
 	float									mDeadLine;

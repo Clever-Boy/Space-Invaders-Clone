@@ -56,7 +56,6 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mEnemyNodes()
 	, mPlayerBulletNodes()
 	, mEnemyBulletNodes()
-	, mActiveEnemies()
 	, mLives()
 	, mDeadLine(getBattlefieldBounds().height + getBattlefieldBounds().top)
 	, mScore()
@@ -538,23 +537,13 @@ bool World::hasAlivePlayer() const
 
 bool World::hasPlayerWon() const
 {
-	return mActiveEnemies.empty();
+	return mEnemyNodes.empty();
 }
 
 void World::controlEnemyFire()
 {
-	// Setup command that stores all enemies in mActiveEnemies
-	Command enemyCollector;
-	enemyCollector.category = Category::EnemySpaceship;
-	enemyCollector.action = derivedAction<Spaceship>(
-		[this](auto& enemy)
-	{
-		if (!enemy.isDestroyed())
-			mActiveEnemies.push_back(&enemy);
-	});
-
 	// Sort all enemies according to their y value, such that lower enemies are ready to fire
-	std::sort(mActiveEnemies.begin(), mActiveEnemies.end(),
+	std::sort(mEnemyNodes.begin(), mEnemyNodes.end(),
 		[this](const auto& lhs, const auto& rhs)
 	{
 		return lhs->getPosition().y > rhs->getPosition().y;
@@ -564,28 +553,24 @@ void World::controlEnemyFire()
 	std::size_t j = 0;
 
 	// control fire and speed notify when alain reach the end screen 
-	std::for_each(mActiveEnemies.begin(), mActiveEnemies.end(),
+	std::for_each(mEnemyNodes.begin(), mEnemyNodes.end(),
 		[this, &j](const auto& i)
 	{
-
-		if (i->getWorldPosition().y >= mDeadLine - 20.f)
+		Spaceship& enemy = static_cast<Spaceship&>(*i);
+		if (enemy.getWorldPosition().y >= mDeadLine - 20.f)
 		{
 			mPlayerShip->destroy();
 		}
 
 
-		if (mActiveEnemies.size() <= 3)
-			i->setMaxSpeed(i->getMaxSpeed() + 1.f);
+		if (mEnemyNodes.size() <= 3)
+			enemy.setMaxSpeed(enemy.getMaxSpeed() + 1.f);
 
 		if (j < 11)
-			i->fire();
+			enemy.fire();
 
 		++j;
 	});
-
-	// Push commands, reset active enemies
-	mCommandQueue.push(enemyCollector);
-	mActiveEnemies.clear();
 }
 
 void World::updateSounds()
