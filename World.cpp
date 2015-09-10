@@ -359,6 +359,7 @@ void World::destroyEntitiesOutsideView()
 
 	mCommandQueue.push(command);
 }
+
 void World::fillCollisionData(SceneNode& node)
 {
 	if (node.getCategory() == Category::PlayerProjectile)
@@ -383,7 +384,6 @@ void World::fillCollisionData(SceneNode& node)
 	{
 		mQuadTreeSecondary.insert(node);
 	}
-
 }
 
 void World::handleCollisions()
