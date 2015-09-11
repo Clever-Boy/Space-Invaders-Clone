@@ -52,6 +52,11 @@ void Application::run()
 			processInput();
 			update(deltaTime);
 			render();
+
+			// Check inside this loop, because stack might be empty before update() call
+			if (mStateStack.isEmpty())
+				mWindow.close();
+
 			deltaTime = sf::Time::Zero;
 		}
 	}
