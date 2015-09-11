@@ -2,14 +2,14 @@
 
 #include <SFML\Graphics\RectangleShape.hpp>
 #include <SFML\Graphics\RenderTarget.hpp>
-
-#include <algorithm> 
+ 
 
 namespace
 {
-	constexpr auto	MaxLevels	= 5u; //defines the deepest level subnode
-	constexpr auto	MaxObjects	= 2u; //defines how many objects a node can hold before it splits
+	constexpr auto	MaxLevels	= 5u;
+	constexpr auto	MaxObjects	= 2u;
 }
+
 
 QuadTree::QuadTree(std::size_t Level, const sf::FloatRect& Bounds)
 	: mObjects()
