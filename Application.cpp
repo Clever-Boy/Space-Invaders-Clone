@@ -38,25 +38,22 @@ Application::Application()
 void Application::run()
 {
 	sf::Clock clock;
-	sf::Time timeSinceLastUpdate = sf::Time::Zero;
+	sf::Time deltaTime = sf::Time::Zero;
 
 	while (mWindow.isOpen())
 	{
-		sf::Time dt = clock.restart();
-		timeSinceLastUpdate += dt;
-		while (timeSinceLastUpdate > TimePerFrame)
+		sf::Time elapsed = clock.getElapsedTime();
+		clock.restart();
+
+		deltaTime += elapsed;
+
+		if (deltaTime > sf::Time::Zero)
 		{
-			timeSinceLastUpdate -= TimePerFrame;
-
 			processInput();
-			update(TimePerFrame);
-
-			// Check inside this loop, because stack might be empty before update() call
-			if (mStateStack.isEmpty())
-				mWindow.close();
+			update(deltaTime);
+			render();
+			deltaTime = sf::Time::Zero;
 		}
-
-		render();
 	}
 }
 
