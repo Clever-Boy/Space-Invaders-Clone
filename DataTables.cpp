@@ -1,7 +1,6 @@
 #include "DataTables.hpp"
 #include "Spaceship.hpp"
 #include "Projectile.hpp"
-#include "Shield.hpp"
 
 
 std::vector<SpaceshipData> initializeSpaceshipData()
@@ -108,33 +107,6 @@ std::vector<ProjectileData> initializeProjectileData()
 	data[Projectile::EnemyBullet].size = sf::Vector2f(0.2f, 0.5f);
 	data[Projectile::EnemyBullet].texture = Textures::Bullet;
 	data[Projectile::EnemyBullet].textureRect = sf::IntRect(0, 0, 1, 1);
-
-	return data;
-}
-
-std::vector<ShieldData> initializeShieldData()
-{
-	std::vector<ShieldData> data(Shield::TypeCount);
-
-	data[Shield::TopLeft].size = sf::Vector2f(2.f, 2.f);
-	data[Shield::TopLeft].texture = Textures::Shields;
-	data[Shield::TopLeft].textureRect = sf::IntRect(0, 0, 20, 15); 
-
-	data[Shield::BottomLeft].size = sf::Vector2f(2.f, 2.f);
-	data[Shield::BottomLeft].texture = Textures::Shields;
-	data[Shield::BottomLeft].textureRect = sf::IntRect(0, 15, 20, 15);
-
-	data[Shield::TopRight].size = sf::Vector2f(2.f, 2.f);
-	data[Shield::TopRight].texture = Textures::Shields;
-	data[Shield::TopRight].textureRect = sf::IntRect(0, 30, 20, 15);
-
-	data[Shield::BottomRight].size = sf::Vector2f(2.f, 2.f);
-	data[Shield::BottomRight].texture = Textures::Shields;
-	data[Shield::BottomRight].textureRect = sf::IntRect(0, 45, 20, 15);
-
-	data[Shield::Middle].size = sf::Vector2f(2.f, 2.f);
-	data[Shield::Middle].texture = Textures::Shields;
-	data[Shield::Middle].textureRect = sf::IntRect(0, 65, 20, 15);
 
 	return data;
 }

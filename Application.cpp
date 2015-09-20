@@ -1,5 +1,4 @@
 #include "Application.hpp"
-#include "Utility.hpp"
 #include "TitleState.hpp"
 #include "GameState.hpp"
 #include "MenuState.hpp"
@@ -7,8 +6,6 @@
 #include "SettingsState.hpp"
 #include "GameOverState.hpp"
 
-
-const sf::Time Application::TimePerFrame = sf::seconds(1.f / 60.f);
 
 Application::Application()
 	: mWindow(sf::VideoMode(800, 600), "Space Invaders", sf::Style::Close)
@@ -53,7 +50,6 @@ void Application::run()
 			update(deltaTime);
 			render();
 
-			// Check inside this loop, because stack might be empty before update() call
 			if (mStateStack.isEmpty())
 				mWindow.close();
 

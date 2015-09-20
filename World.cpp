@@ -3,35 +3,82 @@
 #include "SoundNode.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
 
 
 namespace
 {
-	bool matchesCategories(SceneNode::Pair& colliders, Category::Type type1, Category::Type type2)
-	{
-		unsigned int category1 = colliders.first->getCategory();
-		unsigned int category2 = colliders.second->getCategory();
-
-		// Make sure first pair entry has category type1 and second has type2
-		if (type1 & category1 && type2 & category2)
-		{
-			return true;
-		}
-		else if (type1 & category2 && type2 & category1)
-		{
-			std::swap(colliders.first, colliders.second);
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
 	bool collision(const SceneNode& lhs, const SceneNode& rhs)
 	{
 		return lhs.getBoundingRect().intersects(rhs.getBoundingRect());
+	}
+
+	bool PixelcollidesPair(Shield& shield, Projectile& bullet)
+	{
+		auto bulletBounds = static_cast<sf::Rect<std::size_t>>(bullet.getBoundingRect());
+		auto shieldBounds = static_cast<sf::Rect<std::size_t>>(shield.getBoundingRect());
+
+		auto width = bulletBounds.left + bulletBounds.width * bullet.getScale().x;
+		auto height = bulletBounds.top + bulletBounds.height * bullet.getScale().y;
+
+		sf::Vector2u position(bulletBounds.left, bulletBounds.top);
+
+		if (bulletBounds.intersects(shieldBounds))
+		{
+			for (auto x = position.x; x < width; ++x)
+			{
+				//for (auto y = position.y; y < height; ++y)
+				//{
+				//	auto relX = x - shieldBounds.left;
+				//	auto relY = y - shieldBounds.top;
+
+				//	if (relY > 0 && relY < shieldBounds.height && shield.getPixel(relX, relY))
+				//	{
+				//		return true;
+				//	}
+				//}
+				auto y = position.y;
+
+				auto relX = x - shieldBounds.left;
+				auto relY = y - shieldBounds.top;
+
+				if (relY > 0 && relY < shieldBounds.height && shield.getPixel(relX, relY))
+				{
+					return true;
+				}
+
+			}
+		}
+
+		return false;
+	}
+
+	bool PixelcollidesPair(Shield& shield, Spaceship& enemy)
+	{
+		auto enemyBounds = static_cast<sf::Rect<std::size_t>>(enemy.getBoundingRect());
+		auto shieldBounds = static_cast<sf::Rect<std::size_t>>(shield.getBoundingRect());
+
+		auto width = enemyBounds.left + enemyBounds.width;
+		auto height = enemyBounds.top + enemyBounds.height;
+		sf::Vector2u position(enemyBounds.left, enemyBounds.top);
+
+		if (enemyBounds.intersects(shieldBounds))
+		{
+			for (auto x = position.x; x < width; ++x)
+			{
+				for (auto y = position.y; y < height; ++y)
+				{
+					auto relX = x - shieldBounds.left;
+					auto relY = y - shieldBounds.top;
+
+					if (relY > 0 && relY < shieldBounds.height && shield.getPixel(relX, relY))
+					{
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
 	constexpr auto Padding = 40.f;
@@ -126,9 +173,10 @@ void World::update(sf::Time dt)
 
 	mSceneGraph.removeWrecks();
 
-	// Regular update step, adapt position (correct if outside view)
+	// Regular update step
 	mSceneGraph.update(dt, mCommandQueue);
 
+	// Adapt position (correct if outside view)
 	adaptPlayerPosition();
 
 	updateText();
@@ -180,11 +228,12 @@ void World::loadTextures()
 	mTextures.load(Textures::Boss, "Media/Textures/Boss.png");
 	mTextures.load(Textures::Player, "Media/Textures/PlayerSet.png");
 	mTextures.load(Textures::PlayerExplosion, "Media/Textures/PlayerExpolsion.png");
-	mTextures.load(Textures::Shields, "Media/Textures/Shields.png");
 	mTextures.load(Textures::Background, "Media/Textures/Backgoundblack.jpg");
 	mTextures.load(Textures::Enemies, "Media/Textures/Enemies.png");
 	mTextures.load(Textures::EnemiesExplosion, "Media/Textures/EnemiesExplosion.png");
 	mTextures.load(Textures::Bullet, "Media/Textures/Bullet.png");
+
+	mImages.load(Images::Shield, "Media/Textures/Shield.png");
 }
 
 void World::buildScene()
@@ -231,33 +280,15 @@ void World::buildScene()
 
 void World::addShields()
 {
-	sf::Vector2f position = sf::Vector2f(85.f, 150.f);
-	adaptShieldPlaces(position);
-
-	position = sf::Vector2f(-85.f, 150.f);
-	adaptShieldPlaces(position);
-
-	position = sf::Vector2f(250.f, 150.f);
-	adaptShieldPlaces(position);
-
-	position = sf::Vector2f(-250.f, 150.f);
-	adaptShieldPlaces(position);
+	addShield(  85.f, 150.f);
+	addShield( -85.f, 150.f);
+	addShield( 250.f, 150.f);
+	addShield(-250.f, 150.f);
 }
 
-void World::adaptShieldPlaces(sf::Vector2f position)
+void World::addShield(float relX, float relY)
 {
-	sf::Vector2f shieldSize(15.f, 15.f);
-
-	addShield(Shield::Middle,		position.x + shieldSize.x * 0, position.y + shieldSize.y * 0);
-	addShield(Shield::TopLeft,		position.x - shieldSize.x * 1, position.y + shieldSize.y * 0);
-	addShield(Shield::TopRight,		position.x + shieldSize.x * 1, position.y + shieldSize.y * 0);
-	addShield(Shield::BottomLeft,	position.x - shieldSize.x * 1, position.y + shieldSize.y * 1);
-	addShield(Shield::BottomRight,	position.x + shieldSize.x * 1, position.y + shieldSize.y * 1);
-}
-
-void World::addShield(Shield::Type type, float relX, float relY)
-{
-	auto shield(std::make_unique<Shield>(type, mTextures));
+	auto shield(std::make_unique<Shield>(mImages, mTarget.getSize()));
 	shield->setPosition(mSpawnPosition.x + relX, mSpawnPosition.y + relY);
 	mSceneLayers[Space]->attachChild(std::move(shield));
 }
@@ -415,23 +446,20 @@ void World::handleCollisions()
 			if (node2->isDestroyed())
 				continue;
 
-			if (!collision(*node1, *node2))
-				continue;
-
-			SceneNode::Pair pair(std::minmax(node1, node2));
-
-			if (matchesCategories(pair, Category::Shield, Category::PlayerProjectile))
+			if (node2->getCategory() == Category::Shield)
 			{
-				auto& shield = static_cast<Shield&>(*pair.first);
-				auto& projectile = static_cast<Projectile&>(*pair.second);
-
-				shield.damage(projectile.getDamage());
-				projectile.destroy();
+				auto& shield = static_cast<Shield&>(*node2);
+				auto& projectile = static_cast<Projectile&>(*node1);
+				if (PixelcollidesPair(shield, projectile))
+				{
+					shield.onHit(projectile.getBoundingRect(), projectile.getPosition(), 1);
+					projectile.destroy();
+				}
 			}
-			else if (matchesCategories(pair, Category::EnemySpaceship, Category::PlayerProjectile))
+			else if (collision(*node1, *node2))
 			{
-				auto& enemy = static_cast<Spaceship&>(*pair.first);
-				auto& projectile = static_cast<Projectile&>(*pair.second);
+				auto& enemy = static_cast<Spaceship&>(*node2);
+				auto& projectile = static_cast<Projectile&>(*node1);
 
 				switch (enemy.getType())
 				{
@@ -468,23 +496,21 @@ void World::handleCollisions()
 			if (node2->isDestroyed())
 				continue;
 
-			if (!collision(*node1, *node2))
-				continue;
-
-			SceneNode::Pair pair(std::minmax(node1, node2));
-
-			if (matchesCategories(pair, Category::Shield, Category::EnemyProjectile))
+			if (node2->getCategory() == Category::Shield)
 			{
-				auto& shield = static_cast<Shield&>(*pair.first);
-				auto& projectile = static_cast<Projectile&>(*pair.second);
-
-				shield.damage(projectile.getDamage());
-				projectile.destroy();
+				auto& shield = static_cast<Shield&>(*node2);
+				auto& projectile = static_cast<Projectile&>(*node1);
+				if (PixelcollidesPair(shield, projectile))
+				{
+					shield.onHit(projectile.getBoundingRect(), projectile.getPosition(), -1);
+					projectile.destroy();
+				}
 			}
-			else if (matchesCategories(pair, Category::PlayerSpaceship, Category::EnemyProjectile))
+			else if (collision(*node1, *node2))
 			{
-				auto& player = static_cast<Spaceship&>(*pair.first);
-				auto& projectile = static_cast<Projectile&>(*pair.second);
+
+				auto& player = static_cast<Spaceship&>(*node2);
+				auto& projectile = static_cast<Projectile&>(*node1);
 
 				player.onHit();
 				player.damage(projectile.getDamage());
@@ -508,28 +534,24 @@ void World::handleCollisions()
 			if (node2->isDestroyed())
 				continue;
 
-			if (!collision(*node1, *node2))
-				continue;
-
-			SceneNode::Pair pair(std::minmax(node1, node2));
-
-			if (matchesCategories(pair, Category::PlayerSpaceship, Category::EnemySpaceship))
+			if (node2->getCategory() == Category::Shield)
 			{
-				auto& player = static_cast<Spaceship&>(*pair.first);
-				auto& enemy = static_cast<Spaceship&>(*pair.second);
+				auto& shield = static_cast<Shield&>(*node2);
+				auto& enemy = static_cast<Spaceship&>(*node1);
+				if (PixelcollidesPair(shield, enemy))
+				{
+					shield.onHit(enemy.getBoundingRect(), enemy.getPosition(), 1);
+				}
+			}
+			else if (collision(*node1, *node2))
+			{
+				auto& player = static_cast<Spaceship&>(*node2);
+				auto& enemy = static_cast<Spaceship&>(*node1);
 
 				player.damage(enemy.getHitpoints());
 				enemy.destroy();
 				if (!mLives.empty())
 					mLives.pop_back();
-			}
-			else if (matchesCategories(pair, Category::Shield, Category::EnemySpaceship))
-			{
-				auto& shield = static_cast<Shield&>(*pair.first);
-				auto& enemy = static_cast<Spaceship&>(*pair.second);
-
-				shield.damage(enemy.getHitpoints());
-				//enemy.destroy();
 			}
 		}
 	}

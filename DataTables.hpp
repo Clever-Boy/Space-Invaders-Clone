@@ -49,14 +49,5 @@ struct ProjectileData
 	sf::IntRect						textureRect;
 };
 
-struct ShieldData
-{
-	Textures::ID					texture;
-	sf::IntRect						textureRect;
-	sf::Vector2f					size;
-};
-
-
 std::vector<SpaceshipData>	initializeSpaceshipData();
 std::vector<ProjectileData>	initializeProjectileData();
-std::vector<ShieldData>		initializeShieldData();

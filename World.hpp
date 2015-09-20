@@ -51,8 +51,7 @@ private:
 	void								addLife(float relX, float relY);
 
 	void								addShields();
-	void								adaptShieldPlaces(sf::Vector2f position);
-	void								addShield(Shield::Type type, float relX, float relY);
+	void								addShield(float relX, float relY);
 
 	void								updateText();
 
@@ -76,6 +75,7 @@ private:
 
 	sf::View								mWorldView;
 	TextureHolder							mTextures;
+	ImageHolder								mImages;
 
 	SceneNode								mSceneGraph;
 	std::array<SceneNode*, LayerCount>		mSceneLayers;
