@@ -50,12 +50,12 @@ unsigned int Shield::getCategory() const
 	return Category::Shield;
 }
 
-void Shield::onHit(sf::FloatRect rect, sf::Vector2f position, int sign)
+void Shield::onHit(sf::FloatRect rect, sf::Vector2f position, Category::Type category)
 {
 	mRectOnHit = rect;
 	mPositionOnHit = position;
 	mOnHit = true;
-	mSign = sign;
+	mSign = category == Category::PlayerProjectile ? 1 : -1;
 }
 
 void Shield::updateCurrent(sf::Time dt, CommandQueue& commands)
