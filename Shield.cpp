@@ -4,7 +4,6 @@
 #include "ResourceHolder.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 
 namespace
@@ -55,7 +54,7 @@ void Shield::onHit(sf::FloatRect rect, sf::Vector2f position, Category::Type cat
 	mRectOnHit = rect;
 	mPositionOnHit = position;
 	mOnHit = true;
-	mSign = category == Category::PlayerProjectile ? 1 : -1;
+	mSign = (category == Category::PlayerProjectile) ? 1 : -1;
 }
 
 void Shield::updateCurrent(sf::Time dt, CommandQueue& commands)
@@ -63,6 +62,7 @@ void Shield::updateCurrent(sf::Time dt, CommandQueue& commands)
 	if (!mOnHit)
 		return;
 
+	mRenderTexture.clear();
 	mRenderTexture.draw(*this, sf::BlendNone);
 	mRenderTexture.display();
 
@@ -71,6 +71,7 @@ void Shield::updateCurrent(sf::Time dt, CommandQueue& commands)
 	circle.setPosition(mPositionOnHit.x, mPositionOnHit.y + circle.getRadius() / 2.f * mSign);
 	circle.setFillColor(sf::Color::Transparent);
 	centerOrigin(circle);
+
 	mRenderTexture.draw(circle, sf::BlendNone);
 	mRenderTexture.display();
 
