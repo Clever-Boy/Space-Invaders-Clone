@@ -24,6 +24,7 @@ Shield::Shield(const ImageHolder& images, sf::Vector2u windowsize)
 	, mRenderTexture()
 	, mSprite()
 	, mTexture()
+	, mTransform(sf::Transform::Identity)
 {
 	mRenderTexture.create(windowsize.x, windowsize.y);
 	mRenderTexture.clear();
