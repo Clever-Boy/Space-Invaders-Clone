@@ -402,25 +402,25 @@ void World::checkForCollision()
 	command.category = Category::All;
 	command.action = [this](auto& node)
 	{
-		if (node.getCategory() == Category::PlayerProjectile)
+		if (node.getCategory() & Category::PlayerProjectile)
 		{
 			mPlayerBulletNodes.push_back(&node);
 		}
-		else if (node.getCategory() == Category::EnemyProjectile)
+		else if (node.getCategory() & Category::EnemyProjectile)
 		{
 			mEnemyBulletNodes.push_back(&node);
 		}
-		else if (node.getCategory() == Category::EnemySpaceship)
+		else if (node.getCategory() & Category::EnemySpaceship)
 		{
 			mEnemyNodes.push_back(&node);
 			mQuadTreePrimary.insert(node);
 		}
-		else if (node.getCategory() == Category::Shield)
+		else if (node.getCategory() & Category::Shield)
 		{
 			mQuadTreeSecondary.insert(node);
 			mQuadTreePrimary.insert(node);
 		}
-		else if (node.getCategory() == Category::PlayerSpaceship)
+		else if (node.getCategory() & Category::PlayerSpaceship)
 		{
 			mQuadTreeSecondary.insert(node);
 		}
