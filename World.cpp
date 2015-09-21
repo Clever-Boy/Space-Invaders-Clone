@@ -452,7 +452,7 @@ void World::handleCollisions()
 				auto& projectile = static_cast<Projectile&>(*node1);
 				if (PixelcollidesPair(shield, projectile))
 				{
-					shield.onHit(projectile.getBoundingRect(), projectile.getPosition(), Category::Type(projectile.getCategory()));
+					shield.onHit(projectile.getBoundingRect(), projectile.getPosition(), projectile.getCategory());
 					projectile.destroy();
 				}
 			}
@@ -502,7 +502,7 @@ void World::handleCollisions()
 				auto& projectile = static_cast<Projectile&>(*node1);
 				if (PixelcollidesPair(shield, projectile))
 				{
-					shield.onHit(projectile.getBoundingRect(), projectile.getPosition(), Category::Type(projectile.getCategory()));
+					shield.onHit(projectile.getBoundingRect(), projectile.getPosition(), projectile.getCategory());
 					projectile.destroy();
 				}
 			}
@@ -540,7 +540,7 @@ void World::handleCollisions()
 				auto& enemy = static_cast<Spaceship&>(*node1);
 				if (PixelcollidesPair(shield, enemy))
 				{
-					shield.onHit(enemy.getBoundingRect(), enemy.getPosition(), Category::Type(enemy.getCategory()));
+					shield.onHit(enemy.getBoundingRect(), enemy.getPosition(), enemy.getCategory());
 				}
 			}
 			else if (collision(*node1, *node2))

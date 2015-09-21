@@ -23,7 +23,7 @@ Shield::Shield(const ImageHolder& images, sf::Vector2u windowsize)
 	, mRenderTexture()
 	, mSprite()
 	, mTexture()
-	, mTransform(sf::Transform::Identity)
+	, mTransform()
 {
 	mRenderTexture.create(windowsize.x, windowsize.y);
 	mRenderTexture.clear();
@@ -49,7 +49,7 @@ unsigned int Shield::getCategory() const
 	return Category::Shield;
 }
 
-void Shield::onHit(sf::FloatRect rect, sf::Vector2f position, Category::Type category)
+void Shield::onHit(sf::FloatRect rect, sf::Vector2f position, unsigned int category)
 {
 	mRectOnHit = rect;
 	mPositionOnHit = position;
@@ -67,7 +67,7 @@ void Shield::updateCurrent(sf::Time dt, CommandQueue& commands)
 	mRenderTexture.display();
 
 	float radious = (mRectOnHit.height > ExplosionRadious) ? mRectOnHit.height : ExplosionRadious;
-	sf::CircleShape circle(radious, 32);
+	sf::CircleShape circle(radious, 10);
 	circle.setPosition(mPositionOnHit.x, mPositionOnHit.y + circle.getRadius() / 2.f * mSign);
 	circle.setFillColor(sf::Color::Transparent);
 	centerOrigin(circle);

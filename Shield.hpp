@@ -19,7 +19,7 @@ public:
 	unsigned int			getCategory() const override;
 	sf::FloatRect			getBoundingRect() const override;
 
-	void					onHit(sf::FloatRect rect, sf::Vector2f position, Category::Type category);
+	void					onHit(sf::FloatRect rect, sf::Vector2f position, unsigned int category);
 	bool					getPixel(std::size_t x, std::size_t y) const;
 
 
