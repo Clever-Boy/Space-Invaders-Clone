@@ -446,7 +446,7 @@ void World::handleCollisions()
 			if (node2->isDestroyed())
 				continue;
 
-			if (node2->getCategory() == Category::Shield)
+			if (node2->getCategory() & Category::Shield)
 			{
 				auto& shield = static_cast<Shield&>(*node2);
 				auto& projectile = static_cast<Projectile&>(*node1);
@@ -496,7 +496,7 @@ void World::handleCollisions()
 			if (node2->isDestroyed())
 				continue;
 
-			if (node2->getCategory() == Category::Shield)
+			if (node2->getCategory() & Category::Shield)
 			{
 				auto& shield = static_cast<Shield&>(*node2);
 				auto& projectile = static_cast<Projectile&>(*node1);
@@ -534,7 +534,7 @@ void World::handleCollisions()
 			if (node2->isDestroyed())
 				continue;
 
-			if (node2->getCategory() == Category::Shield)
+			if (node2->getCategory() & Category::Shield)
 			{
 				auto& shield = static_cast<Shield&>(*node2);
 				auto& enemy = static_cast<Spaceship&>(*node1);
