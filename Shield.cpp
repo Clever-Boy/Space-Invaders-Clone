@@ -8,7 +8,7 @@
 
 namespace
 {
-	constexpr auto ExplosionRadious = 10.f;
+	constexpr auto ExplosionRadius = 10.f;
 }
 
 
@@ -66,8 +66,8 @@ void Shield::updateCurrent(sf::Time dt, CommandQueue& commands)
 	mRenderTexture.draw(*this, sf::BlendNone);
 	mRenderTexture.display();
 
-	float radious = (mRectOnHit.height > ExplosionRadious) ? mRectOnHit.height : ExplosionRadious;
-	sf::CircleShape circle(radious, 10);
+	float radius = (mRectOnHit.height > ExplosionRadius) ? mRectOnHit.height : ExplosionRadius;
+	sf::CircleShape circle(radius, 10);
 	circle.setPosition(mPositionOnHit.x, mPositionOnHit.y + circle.getRadius() / 2.f * mSign);
 	circle.setFillColor(sf::Color::Transparent);
 	centerOrigin(circle);
