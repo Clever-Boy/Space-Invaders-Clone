@@ -22,30 +22,35 @@ namespace
 
 		sf::Vector2u position(bulletBounds.left, bulletBounds.top);
 
-		if (bulletBounds.intersects(shieldBounds))
+		if (!bulletBounds.intersects(shieldBounds))
+			return false;
+	
+		// FIXME: this ain't good
+		if (bullet.getCategory() & Category::PlayerProjectile)
 		{
 			for (auto x = position.x; x < width; ++x)
 			{
-				//for (auto y = position.y; y < height; ++y)
-				//{
-				//	auto relX = x - shieldBounds.left;
-				//	auto relY = y - shieldBounds.top;
+				for (auto y = position.y; y < height; ++y)
+				{
+					auto relX = x - shieldBounds.left;
+					auto relY = y - shieldBounds.top;
 
-				//	if (relY > 0 && relY <= shieldBounds.height && shield.getPixel(relX, relY))
-				//	{
-				//		return true;
-				//	}
-				//}
+					if (relY > 0 && relY < shieldBounds.height && shield.getPixel(relX, relY))
+						return true;
+				}
+			}
+		}
+		else
+		{
+			for (auto x = position.x; x < width; ++x)
+			{
 				auto y = position.y;
 
 				auto relX = x - shieldBounds.left;
 				auto relY = y - shieldBounds.top;
 
 				if (relY > 0 && relY < shieldBounds.height && shield.getPixel(relX, relY))
-				{
 					return true;
-				}
-
 			}
 		}
 
@@ -61,22 +66,21 @@ namespace
 		auto height = enemyBounds.top + enemyBounds.height;
 		sf::Vector2u position(enemyBounds.left, enemyBounds.top);
 
-		if (enemyBounds.intersects(shieldBounds))
-		{
-			for (auto x = position.x; x < width; ++x)
-			{
-				for (auto y = position.y; y < height; ++y)
-				{
-					auto relX = x - shieldBounds.left;
-					auto relY = y - shieldBounds.top;
+		if (!enemyBounds.intersects(shieldBounds))
+			return false;
 
-					if (relY > 0 && relY < shieldBounds.height && shield.getPixel(relX, relY))
-					{
-						return true;
-					}
-				}
+		for (auto x = position.x; x < width; ++x)
+		{
+			for (auto y = position.y; y < height; ++y)
+			{
+				auto relX = x - shieldBounds.left;
+				auto relY = y - shieldBounds.top;
+
+				if (relY > 0 && relY < shieldBounds.height && shield.getPixel(relX, relY))
+					return true;
 			}
 		}
+
 
 		return false;
 	}
