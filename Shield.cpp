@@ -76,9 +76,8 @@ void Shield::updateCurrent(sf::Time dt, CommandQueue& commands)
 	mRenderTexture.draw(circle, sf::BlendNone);
 	mRenderTexture.display();
 
-	sf::Image image(mRenderTexture.getTexture().copyToImage());
 	sf::Vector2u position(static_cast<std::size_t>(getPosition().x - mTexture.getSize().x / 2u), static_cast<std::size_t>(getPosition().y - mTexture.getSize().y / 2u));
-	mImage.copy(image, 0u, 0u, sf::IntRect(position.x, position.y, mTexture.getSize().x, mTexture.getSize().y));
+	mImage.copy(mRenderTexture.getTexture().copyToImage(), 0u, 0u, sf::IntRect(position.x, position.y, mTexture.getSize().x, mTexture.getSize().y));
 	mImage.createMaskFromColor(sf::Color::Transparent);
 
 	updateSprite();
