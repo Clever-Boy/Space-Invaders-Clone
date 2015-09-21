@@ -54,7 +54,7 @@ void Shield::onHit(sf::FloatRect rect, sf::Vector2f position, unsigned int categ
 	mRectOnHit = rect;
 	mPositionOnHit = position;
 	mOnHit = true;
-	mSign = (category == Category::PlayerProjectile) ? 1 : -1;
+	mSign = (category & Category::PlayerProjectile) ? 1 : -1;
 }
 
 void Shield::updateCurrent(sf::Time dt, CommandQueue& commands)
@@ -63,6 +63,7 @@ void Shield::updateCurrent(sf::Time dt, CommandQueue& commands)
 		return;
 
 	mRenderTexture.clear();
+
 	mRenderTexture.draw(*this, sf::BlendNone);
 	mRenderTexture.display();
 
