@@ -12,7 +12,7 @@ namespace
 		return lhs.getBoundingRect().intersects(rhs.getBoundingRect());
 	}
 
-	bool PixelcollidesPair(Shield& shield, Projectile& bullet)
+	bool PixelcollidesPair(const Shield& shield, const Projectile& bullet)
 	{
 		auto bulletBounds = static_cast<sf::Rect<std::size_t>>(bullet.getBoundingRect());
 		auto shieldBounds = static_cast<sf::Rect<std::size_t>>(shield.getBoundingRect());
@@ -41,13 +41,14 @@ namespace
 		return false;
 	}
 
-	bool PixelcollidesPair(Shield& shield, Spaceship& enemy)
+	bool PixelcollidesPair(const Shield& shield, const Spaceship& enemy)
 	{
 		auto enemyBounds = static_cast<sf::Rect<std::size_t>>(enemy.getBoundingRect());
 		auto shieldBounds = static_cast<sf::Rect<std::size_t>>(shield.getBoundingRect());
 
 		auto width = enemyBounds.left + enemyBounds.width;
 		auto height = enemyBounds.top + enemyBounds.height;
+
 		sf::Vector2u position(enemyBounds.left, enemyBounds.top);
 
 		if (!enemyBounds.intersects(shieldBounds))
@@ -60,7 +61,7 @@ namespace
 				auto relX = x - shieldBounds.left;
 				auto relY = y - shieldBounds.top;
 
-				if (relY > 0 && relY < shieldBounds.height && shield.getPixel(relX, relY))
+				if (shield.getPixel(relX, relY))
 					return true;
 			}
 		}
