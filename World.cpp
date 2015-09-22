@@ -17,39 +17,23 @@ namespace
 		auto bulletBounds = static_cast<sf::Rect<std::size_t>>(bullet.getBoundingRect());
 		auto shieldBounds = static_cast<sf::Rect<std::size_t>>(shield.getBoundingRect());
 
-		auto width = bulletBounds.left + bulletBounds.width * bullet.getScale().x;
-		auto height = bulletBounds.top + bulletBounds.height * bullet.getScale().y;
+		auto width = bulletBounds.left + bulletBounds.width;
+		auto height = bulletBounds.top + bulletBounds.height;
 
 		sf::Vector2u position(bulletBounds.left, bulletBounds.top);
 
 		if (!bulletBounds.intersects(shieldBounds))
 			return false;
-	
-		// FIXME: this ain't good
-		if (bullet.getCategory() & Category::PlayerProjectile)
-		{
-			for (auto x = position.x; x < width; ++x)
-			{
-				for (auto y = position.y; y < height; ++y)
-				{
-					auto relX = x - shieldBounds.left;
-					auto relY = y - shieldBounds.top;
 
-					if (relY > 0 && relY < shieldBounds.height && shield.getPixel(relX, relY))
-						return true;
-				}
-			}
-		}
-		else
+		for (auto x = position.x; x < width; ++x)
 		{
-			for (auto x = position.x; x < width; ++x)
+			for (auto y = position.y; y < height; ++y)
 			{
-				auto y = position.y;
-
 				auto relX = x - shieldBounds.left;
-				auto relY = y - shieldBounds.top;
 
-				if (relY > 0 && relY < shieldBounds.height && shield.getPixel(relX, relY))
+				auto relY = (bullet.getCategory() & Category::PlayerProjectile) ? y - shieldBounds.top : y - shieldBounds.top - bulletBounds.height;
+
+				if (shield.getPixel(relX, relY))
 					return true;
 			}
 		}
@@ -80,7 +64,6 @@ namespace
 					return true;
 			}
 		}
-
 
 		return false;
 	}
