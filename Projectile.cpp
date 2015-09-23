@@ -19,8 +19,11 @@ Projectile::Projectile(Type type, const TextureHolder& textures)
 	, mType(type)
 	, mSprite(textures.get(Table[type].texture), Table[type].textureRect)
 {
-	centerOrigin(mSprite);
+	//centerOrigin(mSprite);
+	//if (type == PlayerBullet)
+	//	mSprite.rotate(180.f);
 	setScaleSize(mSprite, Table[type].size.x, Table[type].size.y);
+	centerOrigin(mSprite);
 }
 
 void Projectile::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const

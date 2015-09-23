@@ -33,7 +33,7 @@ namespace
 				auto relX = x - object1Bounds.left;
 
 				auto relY = (object2.getCategory() & Category::EnemyProjectile) ? y - object1Bounds.top - object2Bounds.height : y - object1Bounds.top;
-
+				
 				if (object1.getPixel(relX, relY))
 					return true;
 			}

@@ -40,10 +40,10 @@ void QuadTree::clear()
 
 void QuadTree::split()
 {
-	float subWidth = mBounds.width / 2.f;
-	float subHeight = mBounds.height / 2.f;
-	float x = mBounds.left;
-	float y = mBounds.top;
+	auto subWidth = mBounds.width / 2.f;
+	auto subHeight = mBounds.height / 2.f;
+	auto x = mBounds.left;
+	auto y = mBounds.top;
 
 	mChildren[0] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x + subWidth, y, subWidth, subHeight)));
 	mChildren[1] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x, y, subWidth, subHeight)));
@@ -53,10 +53,10 @@ void QuadTree::split()
 
 int QuadTree::getIndex(const sf::FloatRect& Rect)
 {
-	int index = -1;
+	auto index = -1;
 
-	float verticalMidpoint = mBounds.left + mBounds.width / 2.f;
-	float horizontalMidpoint = mBounds.top + mBounds.height / 2.f;
+	auto verticalMidpoint = mBounds.left + mBounds.width / 2.f;
+	auto horizontalMidpoint = mBounds.top + mBounds.height / 2.f;
 
 	// Object can completely fit within the top quadrants
 	bool topQuadrant = (Rect.top < horizontalMidpoint && Rect.top + Rect.height < horizontalMidpoint);
@@ -97,7 +97,7 @@ void QuadTree::insert(SceneNode& object)
 {
 	if (mChildren[0] != nullptr)
 	{
-		int index = getIndex(object.getBoundingRect());
+		auto index = getIndex(object.getBoundingRect());
 
 		if (index != -1)
 		{
@@ -135,7 +135,7 @@ void QuadTree::insert(SceneNode& object)
 
 void QuadTree::getCloseObjects(const sf::FloatRect& Bounds, std::vector<SceneNode*>& returnObjects)
 {
-	int index = getIndex(Bounds);
+	auto index = getIndex(Bounds);
 
 	if (index != -1 && mChildren[0] != nullptr)
 	{

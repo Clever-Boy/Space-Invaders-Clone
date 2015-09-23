@@ -50,9 +50,9 @@ sf::Vector2f unitVector(sf::Vector2f vector)
 void setScaleSize(sf::Sprite& sprite, float x, float y)
 {
 	//sf::Vector2f size(x, y);
-	unsigned int worldScale = 16;
-	float scaleX = (1.0f / sprite.getTextureRect().width) * x * worldScale;
-	float scaleY = (1.0f / sprite.getTextureRect().height) * y * worldScale;
+	auto worldScale = 16u;
+	auto scaleX = (1.0f / sprite.getTextureRect().width) * x * worldScale;
+	auto scaleY = (1.0f / sprite.getTextureRect().height) * y * worldScale;
 	sprite.setScale(scaleX, scaleY);
 }
 

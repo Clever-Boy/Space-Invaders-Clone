@@ -106,7 +106,7 @@ namespace GUI
 			return;
 
 		// Search next component that is selectable, wrap around if necessary
-		int next = mSelectedChild;
+		auto next = mSelectedChild;
 		do
 			next = (next + 1) % mChildren.size();
 		while (!mChildren[next]->isSelectable());
@@ -121,7 +121,7 @@ namespace GUI
 			return;
 
 		// Search previous component that is selectable, wrap around if necessary
-		int prev = mSelectedChild;
+		auto prev = mSelectedChild;
 		do
 			prev = (prev + mChildren.size() - 1) % mChildren.size();
 		while (!mChildren[prev]->isSelectable());
@@ -132,7 +132,8 @@ namespace GUI
 
 	void Container::validateChild(sf::Vector2f position)
 	{
-		for (std::size_t i = 0; i < mChildren.size(); ++i)
+		auto size = mChildren.size();
+		for (auto i = 0u; i < size; ++i)
 		{
 			if (mChildren[i]->isSelectable() && mChildren[i]->contains(position))
 				select(i);

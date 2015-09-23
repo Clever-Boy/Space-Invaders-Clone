@@ -225,9 +225,9 @@ void Spaceship::updateMovementPattern(sf::Time dt)
 		}
 
 		// Compute velocity from direction
-		float radians = toRadian(directions[mDirectionIndex].angle + 90.f);
-		float vx = getMaxSpeed() * std::cos(radians);
-		float vy = getMaxSpeed() * std::sin(radians);
+		auto radians = toRadian(directions[mDirectionIndex].angle + 90.f);
+		auto vx = getMaxSpeed() * std::cos(radians);
+		auto vy = getMaxSpeed() * std::sin(radians);
 
 		setVelocity(vx, vy);
 
@@ -272,7 +272,7 @@ void Spaceship::createProjectile(SceneNode& node, Projectile::Type type, float x
 	sf::Vector2f offset(xOffset * mSprite.getGlobalBounds().width, yOffset * mSprite.getGlobalBounds().height);
 	sf::Vector2f velocity(0, projectile->getMaxSpeed());
 
-	float sign = isAllied() ? -1.f : +1.f;
+	auto sign = isAllied() ? -1.f : +1.f;
 	projectile->setPosition(getWorldPosition() + offset * sign);
 	projectile->setVelocity(velocity * sign);
 	node.attachChild(std::move(projectile));

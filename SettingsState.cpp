@@ -11,6 +11,7 @@ SettingsState::SettingsState(StateStack& stack, Context context)
 {
 	mBackgroundSprite.setTexture(context.textures->get(Textures::TitleScreen));
 	mBackgroundSprite.setScale(1.25f, 1.f);
+
 	// Build key binding buttons and labels
 	addButtonLabel(Player::MoveLeft, 300.f, "Move Left", context);
 	addButtonLabel(Player::MoveRight, 350.f, "Move Right", context);
@@ -45,7 +46,7 @@ bool SettingsState::handleEvent(const sf::Event& event)
 	bool isKeyBinding = false;
 
 	// Iterate through all key binding buttons to see if they are being pressed, waiting for the user to enter a key
-	for (std::size_t action = 0; action < Player::ActionCount; ++action)
+	for (auto action = 0u; action < Player::ActionCount; ++action)
 	{
 		if (mBindingButtons[action]->isActive())
 		{
@@ -77,7 +78,7 @@ void SettingsState::updateLabels()
 {
 	Player& player = *getContext().player;
 
-	for (std::size_t i = 0; i < Player::ActionCount; ++i)
+	for (auto i = 0u; i < Player::ActionCount; ++i)
 	{
 		sf::Keyboard::Key key = player.getAssignedKey(static_cast<Player::Action>(i));
 		mBindingLabels[i]->setText(toString(key));
