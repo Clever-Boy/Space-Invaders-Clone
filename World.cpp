@@ -18,8 +18,8 @@ namespace
 		auto object1Bounds = static_cast<sf::Rect<std::size_t>>(object1.getBoundingRect());
 		auto object2Bounds = static_cast<sf::Rect<std::size_t>>(object2.getBoundingRect());
 
-		auto width = object2Bounds.left + object2Bounds.width;
-		auto height = object2Bounds.top + object2Bounds.height;
+		auto width = object2Bounds.left + object2Bounds.width * object2.getScale().x;
+		auto height = object2Bounds.top + object2Bounds.height * object2.getScale().y;
 
 		sf::Vector2u position(object2Bounds.left, object2Bounds.top);
 

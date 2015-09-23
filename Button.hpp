@@ -5,13 +5,9 @@
 #include "ResourceIdentifiers.hpp"
 #include "State.hpp"
 
-
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 
-#include <vector>
-#include <string>
-#include <memory>
 #include <functional>
 
 

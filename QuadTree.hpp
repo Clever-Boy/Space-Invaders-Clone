@@ -28,7 +28,7 @@ public:
 
 private:
 	void								split();
-	int									getIndex(const sf::FloatRect &Rect);
+	int									getIndex(const sf::FloatRect& Rect);
 
 
 private:
