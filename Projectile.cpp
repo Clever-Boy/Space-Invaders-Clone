@@ -4,9 +4,6 @@
 #include "ResourceHolder.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Graphics/RenderStates.hpp>
-
-#include <cassert>
 
 
 namespace
@@ -19,9 +16,6 @@ Projectile::Projectile(Type type, const TextureHolder& textures)
 	, mType(type)
 	, mSprite(textures.get(Table[type].texture), Table[type].textureRect)
 {
-	//centerOrigin(mSprite);
-	//if (type == PlayerBullet)
-	//	mSprite.rotate(180.f);
 	setScaleSize(mSprite, Table[type].size.x, Table[type].size.y);
 	centerOrigin(mSprite);
 }
