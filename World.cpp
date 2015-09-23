@@ -15,8 +15,6 @@ namespace
 	template<typename GameObject1, typename GameObject2>
 	auto PixelcollidesPair(const GameObject1& object1, const GameObject2& object2) ->bool
 	{
-		assert(object1.getCategory() & Category::Shield && "shield must be the first parameter");
-
 		auto object2Bounds = static_cast<sf::Rect<std::size_t>>(object2.getBoundingRect());
 		auto object1Bounds = static_cast<sf::Rect<std::size_t>>(object1.getBoundingRect());
 
