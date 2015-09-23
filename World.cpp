@@ -15,8 +15,8 @@ namespace
 	template<typename GameObject1, typename GameObject2>
 	auto PixelcollidesPair(const GameObject1& object1, const GameObject2& object2) ->bool
 	{
-		auto object2Bounds = static_cast<sf::Rect<std::size_t>>(object2.getBoundingRect());
 		auto object1Bounds = static_cast<sf::Rect<std::size_t>>(object1.getBoundingRect());
+		auto object2Bounds = static_cast<sf::Rect<std::size_t>>(object2.getBoundingRect());
 
 		auto width = object2Bounds.left + object2Bounds.width;
 		auto height = object2Bounds.top + object2Bounds.height;
@@ -200,7 +200,7 @@ void World::loadTextures()
 void World::buildScene()
 {
 	// Initialize the different layers
-	for (std::size_t i = 0; i < LayerCount; ++i)
+	for (auto i = 0u; i < LayerCount; ++i)
 	{
 		Category::Type category = (i == Space) ? Category::SceneSpaceLayer : Category::None;
 
@@ -264,7 +264,6 @@ void World::addLife(float relX, float relY)
 {
 	auto life(std::make_unique<Life>(Spaceship::Player, mTextures));
 	life->setPosition(mSpawnPosition + sf::Vector2f(relX, relY));
-
 	mLives.push_back(std::move(life));
 }
 
@@ -275,11 +274,11 @@ void World::addEnemies()
 
 	// Add enemies
 	sf::Vector2f position = sf::Vector2f(40.f, 190.f);
-	std::size_t colHight = 35;
+	auto colHight = 35u;
 
-	for (std::size_t i = 0; i < 6; ++i)
+	for (auto i = 0u; i < 6u; ++i)
 	{
-		for (std::size_t j = 0; j < 6; ++j)
+		for (auto j = 0u; j < 6u; ++j)
 		{
 			if (j >= 0 && j < 2)
 			{
@@ -392,6 +391,13 @@ void World::checkForCollision()
 
 void World::handleCollisions()
 {
+	enemyProjectileCollision();
+	playerProjectileCollision();
+	enemyCollision();
+}
+
+void World::playerProjectileCollision()
+{
 	std::vector<SceneNode*> mCollidableNodes;
 
 	for (const auto& node1 : mPlayerBulletNodes)
@@ -443,6 +449,11 @@ void World::handleCollisions()
 			}
 		}
 	}
+}
+
+void World::enemyProjectileCollision()
+{
+	std::vector<SceneNode*> mCollidableNodes;
 
 	for (const auto& node1 : mEnemyBulletNodes)
 	{
@@ -481,6 +492,11 @@ void World::handleCollisions()
 			}
 		}
 	}
+}
+
+void World::enemyCollision()
+{
+	std::vector<SceneNode*> mCollidableNodes;
 
 	for (const auto& node1 : mEnemyNodes)
 	{

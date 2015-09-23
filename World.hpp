@@ -59,6 +59,10 @@ private:
 
 	void								updateSounds();
 
+	void								enemyProjectileCollision();
+	void								playerProjectileCollision();
+	void								enemyCollision();
+
 
 private:
 	enum Layer
