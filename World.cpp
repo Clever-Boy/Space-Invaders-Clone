@@ -417,6 +417,7 @@ void World::playerProjectileCollision()
 			{
 				auto& shield = static_cast<Shield&>(*node2);
 				auto& projectile = static_cast<Projectile&>(*node1);
+
 				if (PixelcollidesPair(shield, projectile))
 				{
 					shield.onHit(projectile.getBoundingRect(), projectile.getPosition(), projectile.getCategory());
@@ -472,6 +473,7 @@ void World::enemyProjectileCollision()
 			{
 				auto& shield = static_cast<Shield&>(*node2);
 				auto& projectile = static_cast<Projectile&>(*node1);
+
 				if (PixelcollidesPair(shield, projectile))
 				{
 					shield.onHit(projectile.getBoundingRect(), projectile.getPosition(), projectile.getCategory());
@@ -515,6 +517,7 @@ void World::enemyCollision()
 			{
 				auto& shield = static_cast<Shield&>(*node2);
 				auto& enemy = static_cast<Spaceship&>(*node1);
+
 				if (PixelcollidesPair(shield, enemy))
 				{
 					shield.onHit(enemy.getBoundingRect(), enemy.getPosition(), enemy.getCategory());
