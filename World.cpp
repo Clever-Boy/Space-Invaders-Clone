@@ -12,56 +12,31 @@ namespace
 		return lhs.getBoundingRect().intersects(rhs.getBoundingRect());
 	}
 
-	bool PixelcollidesPair(const Shield& shield, const Projectile& bullet)
+	template<typename GameObject1, typename GameObject2>
+	auto PixelcollidesPair(const GameObject1& object1, const GameObject2& object2) ->bool
 	{
-		auto bulletBounds = static_cast<sf::Rect<std::size_t>>(bullet.getBoundingRect());
-		auto shieldBounds = static_cast<sf::Rect<std::size_t>>(shield.getBoundingRect());
+		assert(object1.getCategory() & Category::Shield && "shield must be the first parameter");
 
-		auto width = bulletBounds.left + bulletBounds.width;
-		auto height = bulletBounds.top + bulletBounds.height;
+		auto object2Bounds = static_cast<sf::Rect<std::size_t>>(object2.getBoundingRect());
+		auto object1Bounds = static_cast<sf::Rect<std::size_t>>(object1.getBoundingRect());
 
-		sf::Vector2u position(bulletBounds.left, bulletBounds.top);
+		auto width = object2Bounds.left + object2Bounds.width;
+		auto height = object2Bounds.top + object2Bounds.height;
 
-		if (!bulletBounds.intersects(shieldBounds))
+		sf::Vector2u position(object2Bounds.left, object2Bounds.top);
+
+		if (!object2Bounds.intersects(object1Bounds))
 			return false;
 
 		for (auto x = position.x; x < width; ++x)
 		{
 			for (auto y = position.y; y < height; ++y)
 			{
-				auto relX = x - shieldBounds.left;
+				auto relX = x - object1Bounds.left;
 
-				auto relY = (bullet.getCategory() & Category::PlayerProjectile) ? y - shieldBounds.top : y - shieldBounds.top - bulletBounds.height;
+				auto relY = (object2.getCategory() & Category::EnemyProjectile) ? y - object1Bounds.top - object2Bounds.height : y - object1Bounds.top;
 
-				if (shield.getPixel(relX, relY))
-					return true;
-			}
-		}
-
-		return false;
-	}
-
-	bool PixelcollidesPair(const Shield& shield, const Spaceship& enemy)
-	{
-		auto enemyBounds = static_cast<sf::Rect<std::size_t>>(enemy.getBoundingRect());
-		auto shieldBounds = static_cast<sf::Rect<std::size_t>>(shield.getBoundingRect());
-
-		auto width = enemyBounds.left + enemyBounds.width;
-		auto height = enemyBounds.top + enemyBounds.height;
-
-		sf::Vector2u position(enemyBounds.left, enemyBounds.top);
-
-		if (!enemyBounds.intersects(shieldBounds))
-			return false;
-
-		for (auto x = position.x; x < width; ++x)
-		{
-			for (auto y = position.y; y < height; ++y)
-			{
-				auto relX = x - shieldBounds.left;
-				auto relY = y - shieldBounds.top;
-
-				if (shield.getPixel(relX, relY))
+				if (object1.getPixel(relX, relY))
 					return true;
 			}
 		}
