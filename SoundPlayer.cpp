@@ -35,7 +35,7 @@ void SoundPlayer::play(SoundEffect::ID effect)
 void SoundPlayer::play(SoundEffect::ID effect, sf::Vector2f position)
 {
 	mSounds.push_back(sf::Sound());
-	sf::Sound& sound = mSounds.back();
+	auto& sound = mSounds.back();
 
 	sound.setBuffer(mSoundBuffers.get(effect));
 	sound.setPosition(position.x, -position.y, 0.f);
@@ -61,6 +61,6 @@ void SoundPlayer::setListenerPosition(sf::Vector2f position)
 
 sf::Vector2f SoundPlayer::getListenerPosition() const
 {
-	sf::Vector3f position = sf::Listener::getPosition();
+	auto position = sf::Listener::getPosition();
 	return sf::Vector2f(position.x, -position.y);
 }
