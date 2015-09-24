@@ -5,7 +5,6 @@
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/View.hpp>
 
 
 GameOverState::GameOverState(StateStack& stack, Context context)
