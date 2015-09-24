@@ -1,6 +1,5 @@
 #include "SceneNode.hpp"
 #include "Command.hpp"
-#include "Utility.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
