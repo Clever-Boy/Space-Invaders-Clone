@@ -6,7 +6,6 @@
 #include "SoundNode.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
 
@@ -105,7 +104,9 @@ void Spaceship::updateCurrent(sf::Time dt, CommandQueue& commands)
 	// Update enemy movement pattern; apply velocity
 	updateMovementPattern(dt);
 
+	// player get hit
 	checkForHit(dt);
+
 	Entity::updateCurrent(dt, commands);
 }
 

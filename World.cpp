@@ -12,29 +12,29 @@ namespace
 		return lhs.getBoundingRect().intersects(rhs.getBoundingRect());
 	}
 
-	template<typename GameObject1, typename GameObject2>
-	auto PixelcollidesPair(const GameObject1& object1, const GameObject2& object2) ->bool
+	template<typename GameObject>
+	auto PixelcollidesPair(const Shield& shield, const GameObject& object) ->bool
 	{
-		auto object1Bounds = static_cast<sf::Rect<std::size_t>>(object1.getBoundingRect());
-		auto object2Bounds = static_cast<sf::Rect<std::size_t>>(object2.getBoundingRect());
+		auto shieldBounds = static_cast<sf::Rect<std::size_t>>(shield.getBoundingRect());
+		auto objectBounds = static_cast<sf::Rect<std::size_t>>(object.getBoundingRect());
 
-		auto width = object2Bounds.left + object2Bounds.width * object2.getScale().x;
-		auto height = object2Bounds.top + object2Bounds.height * object2.getScale().y;
+		auto width = objectBounds.left + objectBounds.width * object.getScale().x;
+		auto height = objectBounds.top + objectBounds.height * object.getScale().y;
 
-		sf::Vector2u position(object2Bounds.left, object2Bounds.top);
+		sf::Vector2u position(objectBounds.left, objectBounds.top);
 
-		if (!object2Bounds.intersects(object1Bounds))
+		if (!objectBounds.intersects(shieldBounds))
 			return false;
 
 		for (auto x = position.x; x < width; ++x)
 		{
 			for (auto y = position.y; y < height; ++y)
 			{
-				auto relX = x - object1Bounds.left;
+				auto relX = x - shieldBounds.left;
 
-				auto relY = (object2.getCategory() & Category::EnemyProjectile) ? y - object1Bounds.top - object2Bounds.height : y - object1Bounds.top;
+				auto relY = (object.getCategory() & Category::EnemyProjectile) ? y - shieldBounds.top - objectBounds.height : y - shieldBounds.top;
 				
-				if (object1.getPixel(relX, relY))
+				if (shield.getPixel(relX, relY))
 					return true;
 			}
 		}
