@@ -10,9 +10,9 @@
 
 MenuState::MenuState(StateStack& stack, Context context)
 	: State(stack, context)
-	, mGUIContainer(*context.sounds)
+	, mGUIContainer(context.sounds)
 {
-	sf::Texture& texture = context.textures->get(Textures::TitleScreen);
+	auto& texture = context.textures.get(Textures::TitleScreen);
 	mBackgroundSprite.setTexture(texture);
 	mBackgroundSprite.setScale(1.25f, 1.f);
 
@@ -46,12 +46,12 @@ MenuState::MenuState(StateStack& stack, Context context)
 	mGUIContainer.pack(exitButton);
 
 	// Play menu theme
-	context.music->play(Music::MenuTheme);
+	context.music.play(Music::MenuTheme);
 }
 
 void MenuState::draw()
 {
-	sf::RenderWindow& window = *getContext().window;
+	auto& window = getContext().window;
 
 	window.setView(window.getDefaultView());
 
@@ -66,7 +66,7 @@ bool MenuState::update(sf::Time)
 
 bool MenuState::handleEvent(const sf::Event& event)
 {
-	const auto& window = *getContext().window;
+	const auto& window = getContext().window;
 	auto position = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
 	mGUIContainer.handleEvent(event, position);

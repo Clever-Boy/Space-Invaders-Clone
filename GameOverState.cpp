@@ -13,11 +13,12 @@ GameOverState::GameOverState(StateStack& stack, Context context)
 	, mGameOverText()
 	, mElapsedTime(sf::Time::Zero)
 {
-	sf::Font& font = context.fonts->get(Fonts::Main);
-	sf::Vector2f windowSize(context.window->getSize());
+	auto& font = context.fonts.get(Fonts::Main);
+	auto windowSize(context.window.getSize());
 
 	mGameOverText.setFont(font);
-	if (context.player->getMissionStatus() == Player::MissionFailure)
+
+	if (context.player.getMissionStatus() == Player::MissionFailure)
 		mGameOverText.setString("Mission failed!");
 	else
 		mGameOverText.setString("Mission successful!");
@@ -29,7 +30,7 @@ GameOverState::GameOverState(StateStack& stack, Context context)
 
 void GameOverState::draw()
 {
-	sf::RenderWindow& window = *getContext().window;
+	auto& window = getContext().window;
 	window.setView(window.getDefaultView());
 
 	// Create dark, semitransparent background
@@ -45,6 +46,7 @@ bool GameOverState::update(sf::Time dt)
 {
 	// Show state for 3 seconds, after return to menu
 	mElapsedTime += dt;
+
 	if (mElapsedTime > sf::seconds(3))
 	{
 		requestStateClear();

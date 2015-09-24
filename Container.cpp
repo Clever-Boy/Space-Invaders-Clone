@@ -18,7 +18,7 @@ namespace GUI
 
 	void Container::pack(Component::Ptr component)
 	{
-		Component& temp = *component.get();
+		auto& temp = *component.get();
 		mChildren.push_back(std::move(component));
 
 		if (!hasSelection() && temp.isSelectable())
@@ -77,7 +77,7 @@ namespace GUI
 
 	void Container::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
-		states.transform *= getTransform();
+		states.transform.combine(getTransform());
 
 		for (const auto& child : mChildren)
 			target.draw(*child, states);
@@ -107,6 +107,7 @@ namespace GUI
 
 		// Search next component that is selectable, wrap around if necessary
 		auto next = mSelectedChild;
+
 		do
 			next = (next + 1) % mChildren.size();
 		while (!mChildren[next]->isSelectable());
@@ -122,6 +123,7 @@ namespace GUI
 
 		// Search previous component that is selectable, wrap around if necessary
 		auto prev = mSelectedChild;
+
 		do
 			prev = (prev + mChildren.size() - 1) % mChildren.size();
 		while (!mChildren[prev]->isSelectable());
@@ -133,6 +135,7 @@ namespace GUI
 	void Container::validateChild(sf::Vector2f position)
 	{
 		auto size = mChildren.size();
+
 		for (auto i = 0u; i < size; ++i)
 		{
 			if (mChildren[i]->isSelectable() && mChildren[i]->contains(position))

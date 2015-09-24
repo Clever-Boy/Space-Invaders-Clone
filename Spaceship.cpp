@@ -206,7 +206,6 @@ void Spaceship::fire()
 		return;
 	}
 
-	// Only ships with fire interval != 0 are able to fire
 	if (randomInt(50) == 0)
 		mIsFiring = true;
 

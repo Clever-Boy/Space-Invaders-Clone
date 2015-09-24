@@ -7,9 +7,9 @@
 
 SettingsState::SettingsState(StateStack& stack, Context context)
 	: State(stack, context)
-	, mGUIContainer(*context.sounds)
+	, mGUIContainer(context.sounds)
 {
-	mBackgroundSprite.setTexture(context.textures->get(Textures::TitleScreen));
+	mBackgroundSprite.setTexture(context.textures.get(Textures::TitleScreen));
 	mBackgroundSprite.setScale(1.25f, 1.f);
 
 	// Build key binding buttons and labels
@@ -29,7 +29,7 @@ SettingsState::SettingsState(StateStack& stack, Context context)
 
 void SettingsState::draw()
 {
-	sf::RenderWindow& window = *getContext().window;
+	sf::RenderWindow& window = getContext().window;
 
 	window.clear();
 	window.draw(mBackgroundSprite);
@@ -53,7 +53,8 @@ bool SettingsState::handleEvent(const sf::Event& event)
 			isKeyBinding = true;
 			if (event.type == sf::Event::KeyReleased)
 			{
-				getContext().player->assignKey(static_cast<Player::Action>(action), event.key.code);
+				auto& player = getContext().player;
+				player.assignKey(static_cast<Player::Action>(action), event.key.code);
 				mBindingButtons[action]->deactivate();
 			}
 			break;
@@ -65,7 +66,7 @@ bool SettingsState::handleEvent(const sf::Event& event)
 		updateLabels();
 	else
 	{
-		const auto& window = *getContext().window;
+		const auto& window = getContext().window;
 		auto position = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
 		mGUIContainer.handleEvent(event, position);
@@ -76,7 +77,7 @@ bool SettingsState::handleEvent(const sf::Event& event)
 
 void SettingsState::updateLabels()
 {
-	Player& player = *getContext().player;
+	auto& player = getContext().player;
 
 	for (auto i = 0u; i < Player::ActionCount; ++i)
 	{
@@ -92,7 +93,7 @@ void SettingsState::addButtonLabel(Player::Action action, float y, const std::st
 	mBindingButtons[action]->setText(text);
 	mBindingButtons[action]->setToggle(true);
 
-	mBindingLabels[action] = std::make_shared<GUI::Label>("", *context.fonts);
+	mBindingLabels[action] = std::make_shared<GUI::Label>("", context.fonts);
 	mBindingLabels[action]->setPosition(300.f, y + 15.f);
 
 	mGUIContainer.pack(mBindingButtons[action]);

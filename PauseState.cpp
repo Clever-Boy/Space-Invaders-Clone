@@ -12,10 +12,10 @@ PauseState::PauseState(StateStack& stack, Context context)
 	: State(stack, context)
 	, mBackgroundSprite()
 	, mPausedText()
-	, mGUIContainer(*context.sounds)
+	, mGUIContainer(context.sounds)
 {
-	sf::Font& font = context.fonts->get(Fonts::Main);
-	sf::Vector2f windowSize(context.window->getSize());
+	auto& font = context.fonts.get(Fonts::Main);
+	auto windowSize(context.window.getSize());
 
 	mPausedText.setFont(font);
 	mPausedText.setString("Game Paused");
@@ -46,7 +46,7 @@ PauseState::PauseState(StateStack& stack, Context context)
 
 void PauseState::draw()
 {
-	sf::RenderWindow& window = *getContext().window;
+	auto& window = getContext().window;
 	window.setView(window.getDefaultView());
 
 	sf::RectangleShape backgroundShape;
@@ -65,7 +65,7 @@ bool PauseState::update(sf::Time)
 
 bool PauseState::handleEvent(const sf::Event& event)
 {
-	const auto& window = *getContext().window;
+	const auto& window = getContext().window;
 	auto position = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
 	mGUIContainer.handleEvent(event, position);

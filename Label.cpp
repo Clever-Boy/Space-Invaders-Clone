@@ -23,7 +23,7 @@ namespace GUI
 
 	void Label::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
-		states.transform *= getTransform();
+		states.transform.combine(getTransform());
 		target.draw(mText, states);
 	}
 

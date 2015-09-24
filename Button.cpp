@@ -4,24 +4,22 @@
 #include "ResourceHolder.hpp"
 
 #include <SFML/Window/Event.hpp>
-#include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML\Graphics\RenderWindow.hpp>
 
 namespace GUI
 {
 
 	Button::Button(State::Context context)
 		: mCallback()
-		, mSprite(context.textures->get(Textures::Buttons))
-		, mText("", context.fonts->get(Fonts::Main), 16)
+		, mSprite(context.textures.get(Textures::Buttons))
+		, mText("", context.fonts.get(Fonts::Main), 16)
 		, mIsToggle(false)
-		, mSounds(*context.sounds)
-		, mWindow(*context.window)
+		, mSounds(context.sounds)
+		, mWindow(context.window)
 	{
 		changeTexture(Normal);
 
-		sf::FloatRect bounds = mSprite.getLocalBounds();
+		auto bounds = mSprite.getLocalBounds();
 		mText.setPosition(bounds.width / 2.f, bounds.height / 2.f);
 	}
 
@@ -98,7 +96,7 @@ namespace GUI
 
 	void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
-		states.transform *= getTransform();
+		states.transform.combine(getTransform());
 		target.draw(mSprite, states);
 		target.draw(mText, states);
 	}
