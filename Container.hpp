@@ -5,7 +5,6 @@
 #include "SoundPlayer.hpp"
 
 #include <vector>
-#include <memory>
 
 
 namespace GUI
