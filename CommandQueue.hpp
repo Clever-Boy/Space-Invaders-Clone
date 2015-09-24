@@ -3,10 +3,12 @@
 
 #include "Command.hpp"
 
+#include <SFML/System/NonCopyable.hpp>
+
 #include <queue>
 
 
-class CommandQueue
+class CommandQueue final : private sf::NonCopyable
 {
 public:
 	void						push(const Command& command);
