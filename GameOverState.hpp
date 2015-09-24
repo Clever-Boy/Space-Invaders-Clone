@@ -4,7 +4,6 @@
 #include "State.hpp"
 #include "Container.hpp"
 
-#include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 
 

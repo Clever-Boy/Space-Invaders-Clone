@@ -5,9 +5,6 @@
 #include "World.hpp"
 #include "Player.hpp"
 
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Text.hpp>
-
 
 class GameState final : public State
 {

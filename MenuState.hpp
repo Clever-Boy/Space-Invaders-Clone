@@ -5,7 +5,6 @@
 #include "Container.hpp"
 
 #include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Text.hpp>
 
 
 class MenuState final : public State
