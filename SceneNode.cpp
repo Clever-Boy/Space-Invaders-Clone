@@ -2,7 +2,6 @@
 #include "Command.hpp"
 #include "Utility.hpp"
 
-#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
 
