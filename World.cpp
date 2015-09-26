@@ -1,6 +1,7 @@
 #include "World.hpp"
 #include "Utility.hpp"
 #include "SoundNode.hpp"
+#include "DataTables.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
@@ -125,6 +126,9 @@ void World::update(sf::Time dt)
 	// Forward commands to scene graph
 	while (!mCommandQueue.isEmpty())
 		mSceneGraph.onCommand(mCommandQueue.pop());
+
+	// Adapt Movements 
+	adaptEnemyMovements();
 
 	// control enemy fires
 	controlEnemyFire();
@@ -270,56 +274,31 @@ void World::addLife(float relX, float relY)
 void World::addEnemies()
 {
 	// Add Boss
-	addEnemy(Spaceship::Boss, mWorldBounds.width / 2 - 40.f, 210.f);
+	addEnemy(Spaceship::Boss, Padding, Padding * 1.5);
 
 	// Add enemies
-	sf::Vector2f position = sf::Vector2f(40.f, 190.f);
-	auto colHight = 35u;
+	constexpr auto numberOfEnemies = 66u;
+	constexpr auto enemiesPerRow = 11u;
+	constexpr auto horizontalSpacing = 40.f;
+	constexpr auto verticalSpacing = 35.f;
+	const sf::Vector2f positionOfTopLeft(Padding, Padding * 2.5);
 
-	for (auto i = 0u; i < 6u; ++i)
+	for (auto i = 0u; i < numberOfEnemies; ++i)
 	{
-		for (auto j = 0u; j < 6u; ++j)
-		{
-			if (j >= 0 && j < 2)
-			{
-				if (i != 0)
-				{
-					addEnemy(Spaceship::Enemy1, +position.x * i, position.y - colHight * j);
-					addEnemy(Spaceship::Enemy1, -position.x * i, position.y - colHight * j);
-				}
-				else
-					addEnemy(Spaceship::Enemy1, position.x * i, position.y - colHight * j);
-			}
-
-			if (j >= 2 && j < 4)
-			{
-				if (i != 0)
-				{
-					addEnemy(Spaceship::Enemy2, +position.x * i, position.y - colHight * j);
-					addEnemy(Spaceship::Enemy2, -position.x * i, position.y - colHight * j);
-				}
-				else
-					addEnemy(Spaceship::Enemy2, position.x * i, position.y - colHight * j);
-			}
-
-			if (j >= 4 && j < 6)
-			{
-				if (i != 0)
-				{
-					addEnemy(Spaceship::Enemy3, +position.x * i, position.y - colHight * j);
-					addEnemy(Spaceship::Enemy3, -position.x * i, position.y - colHight * j);
-				}
-				else
-					addEnemy(Spaceship::Enemy3, position.x * i, position.y - colHight * j);
-			}
-		}
+		sf::Vector2f p(horizontalSpacing * (i % enemiesPerRow), verticalSpacing * (i / enemiesPerRow));
+		if(i < 22)
+			addEnemy(Spaceship::Enemy1, positionOfTopLeft.x + p.x, positionOfTopLeft.y + p.y);
+		else if (i >= 22 &&i < 44)
+			addEnemy(Spaceship::Enemy2, positionOfTopLeft.x + p.x, positionOfTopLeft.y + p.y);
+		if (i >= 44)
+			addEnemy(Spaceship::Enemy3, positionOfTopLeft.x + p.x, positionOfTopLeft.y + p.y);
 	}
 }
 
 void World::addEnemy(Spaceship::Type type, float relX, float relY)
 {
 	auto enemy(std::make_unique<Spaceship>(type, mTextures));
-	enemy->setPosition(mSpawnPosition.x + relX, mSpawnPosition.y - relY);
+	enemy->setPosition(relX, relY);
 	mSceneLayers[Space]->attachChild(std::move(enemy));
 }
 
@@ -545,6 +524,25 @@ bool World::hasAlivePlayer() const
 bool World::hasPlayerWon() const
 {
 	return mEnemyNodes.empty();
+}
+
+void World::adaptEnemyMovements()
+{
+	bool directionFlipping = false;
+
+	for (const auto& i : mEnemyNodes)
+	{
+		Spaceship& enemy = static_cast<Spaceship&>(*i);
+
+		if (!getBattlefieldBounds().contains(enemy.getPosition()))
+			directionFlipping = true;
+	}
+
+	for (const auto& i : mEnemyNodes)
+	{
+		Spaceship& enemy = static_cast<Spaceship&>(*i);
+		enemy.requestChangeDirection(directionFlipping);
+	}
 }
 
 void World::controlEnemyFire()

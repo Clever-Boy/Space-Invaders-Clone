@@ -62,6 +62,7 @@ private:
 	void								enemyProjectileCollision();
 	void								playerProjectileCollision();
 	void								enemyCollision();
+	void								adaptEnemyMovements();
 
 
 private:

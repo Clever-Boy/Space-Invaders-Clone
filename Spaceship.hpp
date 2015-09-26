@@ -21,60 +21,64 @@ public:
 
 
 public:
-	explicit				Spaceship(Type type, const TextureHolder& textures);
+	explicit					Spaceship(Type type, const TextureHolder& textures);
 
-	unsigned int			getCategory() const override;
-	sf::FloatRect			getBoundingRect() const override;
-	bool 					isMarkedForRemoval() const override;
-	bool					isAllied() const;
-	float					getMaxSpeed() const;
+	unsigned int				getCategory() const override;
+	sf::FloatRect				getBoundingRect() const override;
+	bool 						isMarkedForRemoval() const override;
+	bool						isAllied() const;
+	float						getMaxSpeed() const;
 
-	void					playerMover(float vx, float vy);
-	void 					fire();
-	void					remove() override;
-	void					setMaxSpeed(float point);
-	Type					getType() const;
-	void					onHit();
+	void						playerMover(float vx, float vy);
+	void 						fire();
+	void						remove() override;
+	void						setMaxSpeed(float point);
+	Type						getType() const;
+	void						onHit();
 
-	void					playLocalSound(CommandQueue& commands, SoundEffect::ID effect);
+	void						playLocalSound(CommandQueue& commands, SoundEffect::ID effect);
 
-
-private:
-	void					drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const override;
-
-	void 					updateCurrent(sf::Time dt, CommandQueue& commands) override;
-	void					updateMovementPattern(sf::Time dt);
-	void					checkProjectileLaunch(sf::Time dt, CommandQueue& commands);
-
-	void					createBullets(SceneNode& node, const TextureHolder& textures) const;
-	void					createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const;
-	void					applyAnimation(sf::Time dt);
-	bool					isAnimated() const;
-
-	void					checkForHit(sf::Time dt);
-	void					apllyHitEffect(sf::Time dt);
+	void						requestChangeDirection(bool ChangeDirction);
 
 
 private:
-	Type					mType;
-	sf::Sprite				mSprite;
+	void						drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-	Command 				mFireCommand;
-	sf::Time				mFireCountdown;
-	bool 					mIsFiring;
-	bool 					mIsMarkedForRemoval;
-	int						mFireRateLevel;
+	void 						updateCurrent(sf::Time dt, CommandQueue& commands) override;
+	void						updateMovementPattern(sf::Time dt);
+	void						checkProjectileLaunch(sf::Time dt, CommandQueue& commands);
 
-	float					mTravelledDistance;
-	std::size_t				mDirectionIndex;
+	void						createBullets(SceneNode& node, const TextureHolder& textures) const;
+	void						createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const;
+	void						applyAnimation(sf::Time dt);
+	bool						isAnimated() const;
 
-	int						mAnimateRate;
-	sf::Time				mAnimateCountdown;
-	sf::Time				mTimer;
-	bool 					mShowExplosion;
-	float					mMaxSpeed;
+	void						checkForHit(sf::Time dt);
+	void						apllyHitEffect(sf::Time dt);
 
-	sf::Sprite				mExplosion;
-	bool					mIsHit;
-	bool					mPlayedExplosionSound;
+
+private:
+	Type						mType;
+	sf::Sprite					mSprite;
+
+	Command 					mFireCommand;
+	sf::Time					mFireCountdown;
+	bool 						mIsFiring;
+	bool 						mIsMarkedForRemoval;
+	int							mFireRateLevel;
+
+	float						mTravelledDistance;
+	std::size_t					mDirectionIndex;
+
+	int							mAnimateRate;
+	sf::Time					mAnimateCountdown;
+	sf::Time					mTimer;
+	bool 						mShowExplosion;
+	float						mMaxSpeed;
+
+	sf::Sprite					mExplosion;
+	bool						mIsHit;
+	bool						mPlayedExplosionSound;
+
+	bool						mChaneDirction;
 };

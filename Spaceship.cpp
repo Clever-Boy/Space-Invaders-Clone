@@ -34,6 +34,7 @@ Spaceship::Spaceship(Type type, const TextureHolder& textures)
 	, mMaxSpeed(Table[mType].speed)
 	, mIsHit(false)
 	, mPlayedExplosionSound(false)
+	, mChaneDirction(false)
 {
 	if (isAllied())
 	{
@@ -108,6 +109,7 @@ void Spaceship::updateCurrent(sf::Time dt, CommandQueue& commands)
 	checkForHit(dt);
 
 	Entity::updateCurrent(dt, commands);
+
 }
 
 void Spaceship::checkForHit(sf::Time dt)
@@ -211,14 +213,20 @@ void Spaceship::fire()
 
 }
 
+void Spaceship::requestChangeDirection(bool ChangeDirction)
+{
+	mChaneDirction = ChangeDirction;
+}
+
 void Spaceship::updateMovementPattern(sf::Time dt)
 {
 	// Enemy Spaceships: Movement pattern
 	const std::vector<Direction>& directions = Table[mType].directions;
+
 	if (!directions.empty())
 	{
 		// Moved long enough in current direction: Change direction
-		if (mTravelledDistance > directions[mDirectionIndex].distance)
+		if(mChaneDirction && mTravelledDistance > directions[mDirectionIndex].distance)
 		{
 			mDirectionIndex = (mDirectionIndex + 1) % directions.size();
 			mTravelledDistance = 0.f;
