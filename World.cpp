@@ -179,10 +179,12 @@ void World::draw()
 	for (const auto& i : mLives)
 		mTarget.draw(*i);
 
+	auto bounds = getBattlefieldBounds();
+
 	sf::Vertex line[] =
 	{
-		sf::Vertex(sf::Vector2f(getBattlefieldBounds().left , getBattlefieldBounds().top + getBattlefieldBounds().height)),
-		sf::Vertex(sf::Vector2f(getBattlefieldBounds().left + getBattlefieldBounds().width, getBattlefieldBounds().top + getBattlefieldBounds().height))
+		sf::Vertex(sf::Vector2f(bounds.left , bounds.top + bounds.height)),
+		sf::Vertex(sf::Vector2f(bounds.left + bounds.width, bounds.top + bounds.height))
 	};
 
 	line[0].color = line[1].color = sf::Color::Green;
@@ -214,7 +216,6 @@ void World::draw()
 	mQuadTreePrimary.draw(mTarget);
 	mQuadTreeSecondary.draw(mTarget);
 #endif
-
 }
 
 CommandQueue& World::getCommandQueue()
@@ -320,9 +321,10 @@ void World::addEnemies()
 	for (auto i = 0u; i < numberOfEnemies; ++i)
 	{
 		sf::Vector2f position(horizontalSpacing * (i % enemiesPerRow), verticalSpacing * (i / enemiesPerRow));
+
 		if(i < 22)
 			addEnemy(Spaceship::Enemy1, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
-		else if (i >= 22 &&i < 44)
+		else if (i >= 22 && i < 44)
 			addEnemy(Spaceship::Enemy2, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
 		if (i >= 44)
 			addEnemy(Spaceship::Enemy3, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
