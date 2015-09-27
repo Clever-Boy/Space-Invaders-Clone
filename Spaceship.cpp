@@ -230,7 +230,6 @@ void Spaceship::updateMovementPattern(sf::Time dt)
 			mDirectionIndex = (mDirectionIndex + 1) % directions.size();
 			mTravelledDistance = 0.f;
 			mChaneDirction = false;
-
 		}
 
 		// Moved long enough in vertical direction: Change direction to move aside

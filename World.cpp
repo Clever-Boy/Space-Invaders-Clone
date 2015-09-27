@@ -534,14 +534,21 @@ void World::adaptEnemyMovements()
 	{
 		Spaceship& enemy = static_cast<Spaceship&>(*i);
 
+		if (enemy.getType() == Spaceship::Boss)
+			continue;
+
 		if (!getBattlefieldBounds().contains(enemy.getPosition()))
 			changeDirection = true;
 	}
 
-	// let invaders moving down
+	// let invaders moving down and update condiction change direction
 	for (const auto& i : mEnemyNodes)
 	{
 		Spaceship& enemy = static_cast<Spaceship&>(*i);
+
+		if (enemy.getType() == Spaceship::Boss)
+			continue;
+
 		enemy.requestChangeDirection(changeDirection);
 	}
 }

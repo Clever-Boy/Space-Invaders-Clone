@@ -43,15 +43,15 @@ public:
 
 private:
 	void						drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const override;
-
 	void 						updateCurrent(sf::Time dt, CommandQueue& commands) override;
-	void						updateMovementPattern(sf::Time dt);
-	void						checkProjectileLaunch(sf::Time dt, CommandQueue& commands);
 
-	void						createBullets(SceneNode& node, const TextureHolder& textures) const;
-	void						createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const;
+	void						updateMovementPattern(sf::Time dt);
 	void						applyAnimation(sf::Time dt);
 	bool						isAnimated() const;
+
+	void						checkProjectileLaunch(sf::Time dt, CommandQueue& commands);
+	void						createBullets(SceneNode& node, const TextureHolder& textures) const;
+	void						createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const;
 
 	void						checkForHit(sf::Time dt);
 	void						apllyHitEffect(sf::Time dt);
