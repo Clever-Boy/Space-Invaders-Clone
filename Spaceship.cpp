@@ -224,12 +224,20 @@ void Spaceship::updateMovementPattern(sf::Time dt)
 
 	if (!directions.empty())
 	{
-		// Moved long enough in current direction: Change direction
-		if(mChaneDirction && mTravelledDistance > directions[mDirectionIndex].distance)
+		// Moved long enough in horizontal direction: Change direction to move down
+		if(mChaneDirction && directions[mDirectionIndex].distance == 0.f)
 		{
 			mDirectionIndex = (mDirectionIndex + 1) % directions.size();
 			mTravelledDistance = 0.f;
 			mChaneDirction = false;
+
+		}
+
+		// Moved long enough in vertical direction: Change direction to move aside
+		if (directions[mDirectionIndex].distance != 0.f && mTravelledDistance > directions[mDirectionIndex].distance)
+		{
+			mDirectionIndex = (mDirectionIndex + 1) % directions.size();
+			mTravelledDistance = 0.f;
 		}
 
 		// Compute velocity from direction
