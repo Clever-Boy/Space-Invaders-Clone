@@ -541,7 +541,7 @@ void World::adaptEnemyMovements()
 			changeDirection = true;
 	}
 
-	// let invaders moving down and update condiction change direction
+	// let invaders moving down and update condition of change direction
 	for (const auto& i : mEnemyNodes)
 	{
 		Spaceship& enemy = static_cast<Spaceship&>(*i);
