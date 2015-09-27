@@ -535,9 +535,7 @@ void World::adaptEnemyMovements()
 		Spaceship& enemy = static_cast<Spaceship&>(*i);
 
 		if (!getBattlefieldBounds().contains(enemy.getPosition()))
-		{
 			changeDirection = true;
-		}
 	}
 
 	// let invaders moving down
