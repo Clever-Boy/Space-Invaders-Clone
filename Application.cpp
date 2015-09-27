@@ -6,7 +6,7 @@
 #include "SettingsState.hpp"
 #include "GameOverState.hpp"
 
-#define FIXED_TIME_STEP_ENABLE
+//#define FIXED_TIME_STEP_ENABLE
 
 const sf::Time Application::TimePerFrame = sf::seconds(1.f / 60.f);
 
@@ -20,7 +20,12 @@ Application::Application()
 	, mStateStack(State::Context(mWindow, mTextures, mFonts, mPlayer, mMusic, mSounds))
 {
 	mWindow.setKeyRepeatEnabled(false);
+
+#ifdef FIXED_TIME_STEP_ENABLE
+	mWindow.setVerticalSyncEnabled(false);
+#else
 	mWindow.setVerticalSyncEnabled(true);
+#endif
 
 	mFonts.load(Fonts::Main, "Media/Sansation.ttf");
 

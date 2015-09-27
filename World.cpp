@@ -6,6 +6,8 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
+//#define DEBUG
+
 namespace
 {
 	bool collision(const SceneNode& lhs, const SceneNode& rhs)
