@@ -6,6 +6,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 
+
 namespace
 {
 	constexpr auto ExplosionRadius = 10.f;
@@ -30,7 +31,6 @@ Shield::Shield(const ImageHolder& images, sf::Vector2u windowsize)
 	mRenderTexture.display();
 
 	updateSprite();
-
 }
 
 void Shield::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
@@ -40,6 +40,7 @@ void Shield::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) cons
 		mTransform.combine(getTransform());
 		mDrity = false;
 	}
+
 	states.transform = mTransform;
 	target.draw(mSprite, states);
 }

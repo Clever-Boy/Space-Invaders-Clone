@@ -190,7 +190,7 @@ void World::draw()
 	mTarget.draw(mScoreText);
 	mTarget.draw(mLivesText);
 
-#ifdef _DEBUG
+#ifdef DEBUG
 	sf::RectangleShape shapeBattle;
 	auto boundBattle = getBattlefieldBounds();
 	shapeBattle.setSize(sf::Vector2f(boundBattle.width, boundBattle.height));
