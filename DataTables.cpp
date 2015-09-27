@@ -28,8 +28,8 @@ std::vector<SpaceshipData> initializeSpaceshipData()
 	data[Spaceship::Boss].fireInterval = sf::Time::Zero;
 	data[Spaceship::Boss].texture = Textures::Boss;
 	data[Spaceship::Boss].textureRect = sf::IntRect(0, 0, 45, 22);
-	data[Spaceship::Boss].directions.push_back(Direction(-90.f, 720.f));
-	data[Spaceship::Boss].directions.push_back(Direction(90.f, 720.f));
+	data[Spaceship::Boss].directions.push_back(Direction(-90.f, 720.f - 55.f));
+	data[Spaceship::Boss].directions.push_back(Direction(90.f, 720.f -55.f));
 	data[Spaceship::Boss].hasAnimation = false;
 	data[Spaceship::Boss].animationInterval = sf::Time::Zero;
 	data[Spaceship::Boss].textureRectExplosion = sf::IntRect(0, 0, 41, 34);

@@ -26,6 +26,8 @@ private:
 
 
 private:
+	static const sf::Time	TimePerFrame;
+
 	sf::RenderWindow		mWindow;
 	TextureHolder			mTextures;
 	FontHolder				mFonts;

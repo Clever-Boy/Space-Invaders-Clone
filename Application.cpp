@@ -6,6 +6,9 @@
 #include "SettingsState.hpp"
 #include "GameOverState.hpp"
 
+#define FIXED_TIME_STEP_ENABLE
+
+const sf::Time Application::TimePerFrame = sf::seconds(1.f / 60.f);
 
 Application::Application()
 	: mWindow(sf::VideoMode(800, 600), "Space Invaders", sf::Style::Close)
@@ -34,6 +37,30 @@ Application::Application()
 
 void Application::run()
 {
+#ifdef FIXED_TIME_STEP_ENABLE
+	sf::Clock clock;
+	sf::Time timeSinceLastUpdate = sf::Time::Zero;
+
+	while (mWindow.isOpen())
+	{
+		sf::Time dt = clock.restart();
+		timeSinceLastUpdate += dt;
+
+		while (timeSinceLastUpdate > TimePerFrame)
+		{
+			timeSinceLastUpdate -= TimePerFrame;
+
+			processInput();
+			update(TimePerFrame);
+
+			// Check inside this loop, because stack might be empty before update() call
+			if (mStateStack.isEmpty())
+				mWindow.close();
+		}
+
+		render();
+	}
+#else
 	sf::Clock clock;
 	sf::Time deltaTime = sf::Time::Zero;
 
@@ -56,6 +83,7 @@ void Application::run()
 			deltaTime = sf::Time::Zero;
 		}
 	}
+#endif
 }
 
 void Application::processInput()

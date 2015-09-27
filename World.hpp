@@ -56,6 +56,7 @@ private:
 	void								updateText();
 
 	sf::FloatRect						getBattlefieldBounds() const;
+	sf::FloatRect						getMovementsfieldBounds() const;
 
 	void								updateSounds();
 

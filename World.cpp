@@ -4,7 +4,7 @@
 #include "DataTables.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
-
+#include <SFML/Graphics/RectangleShape.hpp>
 
 namespace
 {
@@ -44,6 +44,7 @@ namespace
 	}
 
 	constexpr auto Padding = 40.f;
+	constexpr auto MovementsPadding = 55.f;
 }
 
 
@@ -108,6 +109,19 @@ sf::FloatRect World::getBattlefieldBounds() const
 
 	bounds.left += Padding;
 	bounds.width -= Padding * 2;
+
+	return bounds;
+}
+
+sf::FloatRect World::getMovementsfieldBounds() const
+{
+	sf::FloatRect bounds = getViewBounds();
+
+	bounds.top += MovementsPadding;
+	bounds.height -= MovementsPadding * 2 ;
+
+	bounds.left += MovementsPadding;
+	bounds.width -= MovementsPadding * 2;
 
 	return bounds;
 }
@@ -177,8 +191,26 @@ void World::draw()
 	mTarget.draw(mLivesText);
 
 #ifdef _DEBUG
-	//mQuadTreePrimary.draw(mTarget);
-	//mQuadTreeSecondary.draw(mTarget);
+	sf::RectangleShape shapeBattle;
+	auto boundBattle = getBattlefieldBounds();
+	shapeBattle.setSize(sf::Vector2f(boundBattle.width, boundBattle.height));
+	shapeBattle.setFillColor(sf::Color::Transparent);
+	shapeBattle.setOutlineColor(sf::Color::Red);
+	shapeBattle.setOutlineThickness(2.f);
+	shapeBattle.setPosition(boundBattle.left, boundBattle.top);
+	mTarget.draw(shapeBattle);
+
+	sf::RectangleShape shapeMovements;
+	auto boundMovements = getMovementsfieldBounds();
+	shapeMovements.setSize(sf::Vector2f(boundMovements.width, boundMovements.height));
+	shapeMovements.setFillColor(sf::Color::Transparent);
+	shapeMovements.setOutlineColor(sf::Color::Yellow);
+	shapeMovements.setOutlineThickness(2.f);
+	shapeMovements.setPosition(boundMovements.left, boundMovements.top);
+	mTarget.draw(shapeMovements);
+
+	mQuadTreePrimary.draw(mTarget);
+	mQuadTreeSecondary.draw(mTarget);
 #endif
 
 }
@@ -274,14 +306,14 @@ void World::addLife(float relX, float relY)
 void World::addEnemies()
 {
 	// Add Boss
-	addEnemy(Spaceship::Boss, Padding, Padding * 1.5);
+	addEnemy(Spaceship::Boss, MovementsPadding, MovementsPadding * 1.5);
 
 	// Add enemies
 	constexpr auto numberOfEnemies = 66u;
 	constexpr auto enemiesPerRow = 11u;
 	constexpr auto horizontalSpacing = 40.f;
 	constexpr auto verticalSpacing = 35.f;
-	const sf::Vector2f positionOfTopLeft(Padding, Padding * 2.5);
+	const sf::Vector2f positionOfTopLeft(MovementsPadding, MovementsPadding * 2.5);
 
 	for (auto i = 0u; i < numberOfEnemies; ++i)
 	{
@@ -309,8 +341,8 @@ void World::adaptPlayerPosition()
 
 	sf::Vector2f position = mPlayerShip->getPosition();
 
-	position.x = std::max(position.x, viewBounds.left + Padding);
-	position.x = std::min(position.x, viewBounds.left + viewBounds.width - Padding - 5.f);
+	position.x = std::max(position.x, viewBounds.left + MovementsPadding);
+	position.x = std::min(position.x, viewBounds.left + viewBounds.width - MovementsPadding);
 
 	mPlayerShip->setPosition(position);
 }
@@ -537,7 +569,7 @@ void World::adaptEnemyMovements()
 		if (enemy.getType() == Spaceship::Boss)
 			continue;
 
-		if (!getBattlefieldBounds().contains(enemy.getPosition()))
+		if (!getMovementsfieldBounds().contains(enemy.getPosition()))
 			changeDirection = true;
 	}
 
