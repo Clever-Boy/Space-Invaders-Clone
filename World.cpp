@@ -76,19 +76,19 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	mStaticScoreText.setString("Score: ");
 	mStaticScoreText.setFont(mFonts.get(Fonts::Main));
 	mStaticScoreText.setPosition(5.f, 5.f);
-	mStaticScoreText.setCharacterSize(30);
+	mStaticScoreText.setCharacterSize(30u);
 
 	mScoreText.setString(std::to_string(mScore));
 	mScoreText.setFont(mFonts.get(Fonts::Main));
 	mScoreText.setPosition(100.f, 25.f);
-	mScoreText.setCharacterSize(25);
+	mScoreText.setCharacterSize(25u);
 	mScoreText.setColor(sf::Color::Green);
 	centerOrigin(mScoreText);
 
 	mLivesText.setString("Lives: ");
 	mLivesText.setFont(mFonts.get(Fonts::Main));
 	mLivesText.setPosition(mWorldView.getSize().x - 200.f, 5.f);
-	mLivesText.setCharacterSize(30);
+	mLivesText.setCharacterSize(30u);
 
 	loadTextures();
 	buildScene();
@@ -264,7 +264,7 @@ void World::buildScene()
 
 	mSceneLayers[Space]->attachChild(std::move(leader));
 
-	// Add enemy aircraft
+	// Add enemy Spaceships
 	addEnemies();
 
 	// add lifes dummys
@@ -309,14 +309,14 @@ void World::addLife(float relX, float relY)
 void World::addEnemies()
 {
 	// Add Boss
-	addEnemy(Spaceship::Boss, MovementsPadding, MovementsPadding * 1.5);
+	addEnemy(Spaceship::Boss, MovementsPadding, Padding * 1.5);
 
 	// Add enemies
 	constexpr auto numberOfEnemies = 66u;
 	constexpr auto enemiesPerRow = 11u;
 	constexpr auto horizontalSpacing = 40.f;
 	constexpr auto verticalSpacing = 35.f;
-	const sf::Vector2f positionOfTopLeft(MovementsPadding, MovementsPadding * 2.5);
+	const sf::Vector2f positionOfTopLeft(MovementsPadding, Padding * 2.5);
 
 	for (auto i = 0u; i < numberOfEnemies; ++i)
 	{
