@@ -109,7 +109,6 @@ void Spaceship::updateCurrent(sf::Time dt, CommandQueue& commands)
 	checkForHit(dt);
 
 	Entity::updateCurrent(dt, commands);
-
 }
 
 void Spaceship::checkForHit(sf::Time dt)
@@ -230,6 +229,7 @@ void Spaceship::updateMovementPattern(sf::Time dt)
 		{
 			mDirectionIndex = (mDirectionIndex + 1) % directions.size();
 			mTravelledDistance = 0.f;
+			mChaneDirction = false;
 		}
 
 		// Compute velocity from direction

@@ -285,13 +285,13 @@ void World::addEnemies()
 
 	for (auto i = 0u; i < numberOfEnemies; ++i)
 	{
-		sf::Vector2f p(horizontalSpacing * (i % enemiesPerRow), verticalSpacing * (i / enemiesPerRow));
+		sf::Vector2f position(horizontalSpacing * (i % enemiesPerRow), verticalSpacing * (i / enemiesPerRow));
 		if(i < 22)
-			addEnemy(Spaceship::Enemy1, positionOfTopLeft.x + p.x, positionOfTopLeft.y + p.y);
+			addEnemy(Spaceship::Enemy1, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
 		else if (i >= 22 &&i < 44)
-			addEnemy(Spaceship::Enemy2, positionOfTopLeft.x + p.x, positionOfTopLeft.y + p.y);
+			addEnemy(Spaceship::Enemy2, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
 		if (i >= 44)
-			addEnemy(Spaceship::Enemy3, positionOfTopLeft.x + p.x, positionOfTopLeft.y + p.y);
+			addEnemy(Spaceship::Enemy3, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
 	}
 }
 
@@ -528,20 +528,23 @@ bool World::hasPlayerWon() const
 
 void World::adaptEnemyMovements()
 {
-	bool directionFlipping = false;
+	bool changeDirection = false;
 
 	for (const auto& i : mEnemyNodes)
 	{
 		Spaceship& enemy = static_cast<Spaceship&>(*i);
 
 		if (!getBattlefieldBounds().contains(enemy.getPosition()))
-			directionFlipping = true;
+		{
+			changeDirection = true;
+		}
 	}
 
+	// let invaders moving down
 	for (const auto& i : mEnemyNodes)
 	{
 		Spaceship& enemy = static_cast<Spaceship&>(*i);
-		enemy.requestChangeDirection(directionFlipping);
+		enemy.requestChangeDirection(changeDirection);
 	}
 }
 
