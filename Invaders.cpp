@@ -24,7 +24,7 @@ Invaders::Invaders(Type type, const TextureHolder& textures)
 	, mFireCountdown(sf::Time::Zero)
 	, mIsFiring(false)
 	, mIsMarkedForRemoval(false)
-	, mTravelledDistance()
+	, mTravelledTime(sf::Time::Zero)
 	, mDirectionIndex()
 	, mChaneDirction(false)
 	, mMaxSpeed(Table[mType].speed)
@@ -122,7 +122,7 @@ void Invaders::requestChangeDirection(bool ChangeDirction)
 void Invaders::updateMovementPattern(sf::Time dt)
 {
 	if (isDestroyed())
-		return;
+		mTravelledTime = sf::Time::Zero;
 
 	// Enemy Spaceships: Movement pattern
 	const std::vector<Direction>& directions = Table[mType].directions;
@@ -131,16 +131,16 @@ void Invaders::updateMovementPattern(sf::Time dt)
 	if((mDirectionIndex % 2 == 0 ) && mChaneDirction)
 	{
 		mDirectionIndex = (mDirectionIndex + 1) % directions.size();
-		mTravelledDistance = 0.f;
 		mChaneDirction = false;
+		mTravelledTime = sf::Time::Zero;
 	}
 
 	// Moved long enough in vertical direction: Change direction to move aside
-	if ((mDirectionIndex % 2 != 0) && mTravelledDistance > directions[mDirectionIndex].distance)
+	if ((mDirectionIndex % 2 != 0) && mTravelledTime > sf::seconds(0.5)) // 0.375
 	{
 		mDirectionIndex = (mDirectionIndex + 1) % directions.size();
-		mTravelledDistance = 0.f;
 		mChaneDirction = false;
+		mTravelledTime = sf::Time::Zero;
 	}
 
 	// Compute velocity from direction
@@ -150,7 +150,7 @@ void Invaders::updateMovementPattern(sf::Time dt)
 
 	setVelocity(vx, vy);
 
-	mTravelledDistance += getMaxSpeed() * dt.asSeconds();
+	mTravelledTime += dt;
 
 	applyAnimation(dt);
 }

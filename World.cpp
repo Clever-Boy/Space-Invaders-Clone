@@ -204,7 +204,7 @@ void World::addEnemies()
 			addEnemy(Invaders::Enemy1, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
 		else if (i >= 22 && i < 44)
 			addEnemy(Invaders::Enemy2, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
-		if (i >= 44)
+		else if (i >= 44)
 			addEnemy(Invaders::Enemy3, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
 	}
 }
