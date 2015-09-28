@@ -57,9 +57,9 @@ private:
 	int				mAnimateRate;
 	sf::Time		mAnimateCountdown;
 	sf::Time		mTimer;
-	bool 			mShowExplosion;
+	bool			mIsHit;
 
 	sf::Sprite		mExplosion;
-	bool			mIsHit;
-	bool			mPlayedExplosionSound;
+	bool 			mShowExplosion;
+
 };

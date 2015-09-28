@@ -63,9 +63,9 @@ private:
 
 	int				mAnimateRate;
 	sf::Time		mAnimateCountdown;
-	bool 			mShowExplosion;
 
 	float			mMaxSpeed;
 
 	sf::Sprite		mExplosion;
+	bool 			mShowExplosion;
 };

@@ -43,7 +43,6 @@ private:
 	float			mTravelledDistance;
 	std::size_t		mDirectionIndex;
 
-	bool 			mShowExplosion;
-
 	sf::Sprite		mExplosion;
+	bool 			mShowExplosion;
 };

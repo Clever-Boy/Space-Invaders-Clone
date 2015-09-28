@@ -3,7 +3,6 @@
 #include "Utility.hpp"
 #include "CommandQueue.hpp"
 #include "ResourceHolder.hpp"
-#include "SoundNode.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
