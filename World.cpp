@@ -60,6 +60,7 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mWorldBounds(0.f, 0.f, mWorldView.getSize().x, mWorldView.getSize().y)
 	, mSpawnPosition(mWorldView.getSize().x / 2.f, mWorldView.getSize().y / 2.f)
 	, mPlayerShip(nullptr)
+	, mIsBossDead(false)
 	, mQuadTreePrimary(1, mWorldBounds)
 	, mQuadTreeSecondary(1, mWorldBounds)
 	, mEnemyNodes()
@@ -457,6 +458,7 @@ void World::playerProjectileCollision()
 				mScore += 100;
 
 				enemy.damage(projectile.getDamage());
+				mIsBossDead = enemy.isDestroyed();
 				projectile.destroy();
 			}
 			else if (node2->getCategory() & Category::EnemySpaceship)
@@ -589,7 +591,7 @@ bool World::hasAlivePlayer() const
 
 bool World::hasPlayerWon() const
 {
-	return(mScore == 1420);
+	return(mEnemyNodes.empty() && mIsBossDead);
 }
 
 void World::adaptEnemyMovements()
@@ -598,12 +600,10 @@ void World::adaptEnemyMovements()
 
 	for (const auto& i : mEnemyNodes)
 	{
-		Invaders& enemy = static_cast<Invaders&>(*i);
-
-		if (enemy.isDestroyed())
+		if (i->isDestroyed())
 			continue;
 
-		if (!getMovementsfieldBounds().contains(enemy.getWorldPosition()))
+		if (!getMovementsfieldBounds().contains(i->getWorldPosition()))
 			changeDirection = true;
 	}
 

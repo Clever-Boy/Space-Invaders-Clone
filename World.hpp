@@ -94,6 +94,7 @@ private:
 	sf::Vector2f							mSpawnPosition;
 
 	Player*									mPlayerShip;
+	bool									mIsBossDead;
 
 	QuadTree								mQuadTreePrimary;
 	QuadTree								mQuadTreeSecondary;

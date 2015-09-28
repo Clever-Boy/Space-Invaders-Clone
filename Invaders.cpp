@@ -121,11 +121,17 @@ void Invaders::requestChangeDirection(bool ChangeDirction)
 
 void Invaders::updateMovementPattern(sf::Time dt)
 {
+	if (isDestroyed())
+	{
+		mDirectionIndex--;
+		return;
+	}
+
 	// Enemy Spaceships: Movement pattern
 	const std::vector<Direction>& directions = Table[mType].directions;
 
 	// Moved long enough in horizontal direction: Change direction to move down
-	if(mChaneDirction && mDirectionIndex != 1 && mDirectionIndex != 3)
+	if((mDirectionIndex % 2 == 0 ) && mChaneDirction)
 	{
 		mDirectionIndex = (mDirectionIndex + 1) % directions.size();
 		mTravelledDistance = 0.f;
@@ -133,7 +139,7 @@ void Invaders::updateMovementPattern(sf::Time dt)
 	}
 
 	// Moved long enough in vertical direction: Change direction to move aside
-	if (directions[mDirectionIndex].distance != 0.f && mTravelledDistance > directions[mDirectionIndex].distance)
+	if ((mDirectionIndex % 2 != 0) && mTravelledDistance > directions[mDirectionIndex].distance)
 	{
 		mDirectionIndex = (mDirectionIndex + 1) % directions.size();
 		mTravelledDistance = 0.f;
