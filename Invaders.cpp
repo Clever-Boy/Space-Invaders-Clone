@@ -122,10 +122,7 @@ void Invaders::requestChangeDirection(bool ChangeDirction)
 void Invaders::updateMovementPattern(sf::Time dt)
 {
 	if (isDestroyed())
-	{
 		mDirectionIndex--;
-		return;
-	}
 
 	// Enemy Spaceships: Movement pattern
 	const std::vector<Direction>& directions = Table[mType].directions;
