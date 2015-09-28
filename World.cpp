@@ -634,6 +634,9 @@ void World::controlEnemyFire()
 	{
 		Invaders& enemy = static_cast<Invaders&>(*mEnemyNodes[i]);
 
+		if (enemy.isDestroyed())
+			continue;
+
 		if (enemy.getWorldPosition().y >= mDeadLine - 20.f)
 			mPlayerShip->destroy();
 
