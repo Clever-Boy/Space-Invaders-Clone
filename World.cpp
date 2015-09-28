@@ -60,7 +60,6 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mWorldBounds(0.f, 0.f, mWorldView.getSize().x, mWorldView.getSize().y)
 	, mSpawnPosition(mWorldView.getSize().x / 2.f, mWorldView.getSize().y / 2.f)
 	, mPlayerShip(nullptr)
-	, mBoss(nullptr)
 	, mQuadTreePrimary(1, mWorldBounds)
 	, mQuadTreeSecondary(1, mWorldBounds)
 	, mEnemyNodes()
@@ -141,8 +140,7 @@ void World::buildScene()
 
 	// Add Boss
 	auto boss(std::make_unique<Boss>(Boss::BossShip, mTextures));
-	mBoss = boss.get();
-	mBoss->setPosition(MovementsPadding, Padding * 1.5);
+	boss->setPosition(MovementsPadding, Padding * 1.5);
 	mSceneLayers[Space]->attachChild(std::move(boss));
 
 	// Add enemy Spaceships
