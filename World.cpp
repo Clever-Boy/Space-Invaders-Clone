@@ -45,27 +45,6 @@ namespace
 		return false;
 	}
 
-	bool matchesCategories(SceneNode::Pair& colliders, Category::Type type1, Category::Type type2)
-	{
-		unsigned int category1 = colliders.first->getCategory();
-		unsigned int category2 = colliders.second->getCategory();
-
-		// Make sure first pair entry has category type1 and second has type2
-		if (type1 & category1 && type2 & category2)
-		{
-			return true;
-		}
-		else if (type1 & category2 && type2 & category1)
-		{
-			std::swap(colliders.first, colliders.second);
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
 	constexpr auto Padding = 40.f;
 	constexpr auto MovementsPadding = 55.f;
 }
@@ -470,58 +449,51 @@ void World::playerProjectileCollision()
 					projectile.destroy();
 				}
 			}
-			else 
+			else if (node2->getCategory() & Category::BossSpaceship)
 			{
 				if (!collision(*node1, *node2))
 					continue;
 
-				SceneNode::Pair pair(std::minmax(node1, node2));
+				auto& enemy = static_cast<Boss&>(*node2);
+				auto& projectile = static_cast<Projectile&>(*node1);
 
-				if (checked.find(pair) != checked.end())
+				mScore += 100;
+
+				enemy.damage(projectile.getDamage());
+
+				projectile.destroy();
+
+				playLocalSound(enemy.getWorldPosition(), SoundEffect::EnemiesExplosion);
+			}
+			else if (node2->getCategory() & Category::EnemySpaceship)
+			{
+				if (!collision(*node1, *node2))
 					continue;
 
-				checked.insert(pair);
+				auto& enemy = static_cast<Invaders&>(*node2);
+				auto& projectile = static_cast<Projectile&>(*node1);
 
-				if (matchesCategories(pair, Category::BossSpaceship, Category::PlayerProjectile))
+				switch (enemy.getType())
 				{
-					auto& enemy = static_cast<Boss&>(*pair.first);
-					auto& projectile = static_cast<Projectile&>(*pair.second);
-
-					mScore += 100;
-
-					enemy.damage(projectile.getDamage());
-
-					projectile.destroy();
-
-					playLocalSound(enemy.getWorldPosition(), SoundEffect::EnemiesExplosion);
+				case Invaders::Enemy1:
+					mScore += 30;
+					break;
+				case Invaders::Enemy2:
+					mScore += 20;
+					break;
+				case Invaders::Enemy3:
+					mScore += 10;
+					break;
+				default:break;
 				}
-				else if (matchesCategories(pair, Category::EnemySpaceship, Category::PlayerProjectile))
-				{
-					auto& enemy = static_cast<Invaders&>(*pair.first);
-					auto& projectile = static_cast<Projectile&>(*pair.second);
 
-					switch (enemy.getType())
-					{
-					case Invaders::Enemy1:
-						mScore += 30;
-						break;
-					case Invaders::Enemy2:
-						mScore += 20;
-						break;
-					case Invaders::Enemy3:
-						mScore += 10;
-						break;
-					default:break;
-					}
+				enemy.damage(projectile.getDamage());
 
-					enemy.damage(projectile.getDamage());
+				projectile.destroy();
 
-					projectile.destroy();
-
-					playLocalSound(enemy.getWorldPosition(), SoundEffect::EnemiesExplosion);
-				}
+				playLocalSound(enemy.getWorldPosition(), SoundEffect::EnemiesExplosion);
 			}
-		}
+		}	
 	}
 }
 
