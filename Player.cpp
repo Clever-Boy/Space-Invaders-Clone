@@ -19,16 +19,17 @@ Player::Player(Type type, const TextureHolder& textures)
 	: Entity(Table[type].hitpoints)
 	, mType(type)
 	, mSprite(textures.get(Table[type].texture), Table[type].textureRect)
-	, mExplosion()
-	, mShowExplosion(true)
 	, mFireCommand()
 	, mFireRateLevel(Table[type].fireRate)
 	, mFireCountdown(sf::Time::Zero)
 	, mIsFiring(false)
+	, mIsMarkedForRemoval(false)
 	, mAnimateCountdown(sf::Time::Zero)
 	, mTimer(sf::Time::Zero)
 	, mAnimateRate(Table[type].animateRate)
 	, mIsHit(false)
+	, mExplosion()
+	, mPlayedExplosionSound(false)
 {
 
 	mExplosion.setTexture(textures.get(Textures::PlayerExplosion));
@@ -46,6 +47,22 @@ Player::Player(Type type, const TextureHolder& textures)
 
 void Player::updateCurrent(sf::Time dt, CommandQueue& commands)
 {
+	// Entity has been destroyed: mark for removal
+	if (isDestroyed())
+	{
+		mIsMarkedForRemoval = true;
+
+		// Play explosion sound only once
+		if (!mPlayedExplosionSound)
+		{
+			playLocalSound(commands, SoundEffect::PlayerExplosion);
+
+			mPlayedExplosionSound = true;
+		}
+
+		return;
+	}
+
 	// Check if bullets or missiles are fired
 	checkProjectileLaunch(dt, commands);
 
@@ -59,10 +76,15 @@ void Player::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) cons
 {
 	states.transform.combine(getTransform());
 
-	if (isDestroyed() && mShowExplosion)
+	if (isDestroyed())
 		target.draw(mExplosion, states);
 	else
 		target.draw(mSprite, states);
+}
+
+bool Player::isMarkedForRemoval() const
+{
+	return mIsMarkedForRemoval;
 }
 
 void Player::playerMover(float vx, float vy)
@@ -86,6 +108,7 @@ void Player::checkForHit(sf::Time dt)
 
 	// start timer
 	mTimer += dt;
+
 	if (mTimer > Table[mType].animationInterval)
 	{
 		mIsHit = false;
@@ -163,7 +186,7 @@ void Player::createBullets(SceneNode& node, const TextureHolder& textures) const
 {
 	Projectile::Type type = Projectile::PlayerBullet;
 
-	createProjectile(node, type, 0.0f, 0.5f, textures);
+	createProjectile(node, type, 0.f, 0.5f, textures);
 
 }
 
@@ -172,18 +195,13 @@ void Player::createProjectile(SceneNode& node, Projectile::Type type, float xOff
 	auto  projectile(std::make_unique<Projectile>(type, textures));
 
 	sf::Vector2f offset(xOffset * mSprite.getGlobalBounds().width, yOffset * mSprite.getGlobalBounds().height);
-	sf::Vector2f velocity(0, projectile->getMaxSpeed());
+	sf::Vector2f velocity(0.f, projectile->getMaxSpeed());
 
 	auto sign = -1.f;
 	projectile->setPosition(getWorldPosition() + offset * sign);
 	projectile->setVelocity(velocity * sign);
-	node.attachChild(std::move(projectile));
-}
 
-void Player::remove()
-{
-	Entity::remove();
-	mShowExplosion = false;
+	node.attachChild(std::move(projectile));
 }
 
 void Player::playLocalSound(CommandQueue& commands, SoundEffect::ID effect)
@@ -193,5 +211,6 @@ void Player::playLocalSound(CommandQueue& commands, SoundEffect::ID effect)
 	Command command;
 	command.category = Category::SoundEffect;
 	command.action = derivedAction<SoundNode>(std::bind(&SoundNode::playSound, std::placeholders::_1, effect, worldPosition));
+
 	commands.push(command);
 }

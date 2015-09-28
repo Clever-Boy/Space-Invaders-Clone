@@ -101,7 +101,7 @@ unsigned int SceneNode::getCategory() const
 void SceneNode::removeWrecks()
 {
 	// Remove all children which request so
-	auto wreckfieldBegin = std::remove_if(mChildren.begin(), mChildren.end(), std::mem_fn(&SceneNode::isDestroyed));
+	auto wreckfieldBegin = std::remove_if(mChildren.begin(), mChildren.end(), std::mem_fn(&SceneNode::isMarkedForRemoval));
 	mChildren.erase(wreckfieldBegin, mChildren.end());
 
 	// Call function recursively for all remaining children
@@ -117,4 +117,10 @@ bool SceneNode::isDestroyed() const
 {
 	// By default, scene node needn't be removed
 	return false;
+}
+
+bool SceneNode::isMarkedForRemoval() const
+{
+	// By default, remove node if entity is destroyed
+	return isDestroyed();
 }

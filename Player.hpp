@@ -22,15 +22,14 @@ public:
 	unsigned int	getCategory() const override;
 	sf::FloatRect	getBoundingRect() const override;
 
+	bool 			isMarkedForRemoval() const override;
+
 	float			getMaxSpeed() const;
 
 	void			playerMover(float vx, float vy);
 	void 			fire();
-	void			remove() override;
 
 	void			onHit();
-
-	void			playLocalSound(CommandQueue& commands, SoundEffect::ID effect);
 
 
 private:
@@ -44,6 +43,8 @@ private:
 	void			checkForHit(sf::Time dt);
 	void			apllyHitEffect(sf::Time dt);
 
+	void			playLocalSound(CommandQueue& commands, SoundEffect::ID effect);
+
 
 private:
 	Type			mType;
@@ -54,12 +55,13 @@ private:
 	bool 			mIsFiring;
 	int				mFireRateLevel;
 
+	bool 			mIsMarkedForRemoval;
+
 	int				mAnimateRate;
 	sf::Time		mAnimateCountdown;
 	sf::Time		mTimer;
 	bool			mIsHit;
 
 	sf::Sprite		mExplosion;
-	bool 			mShowExplosion;
-
+	bool			mPlayedExplosionSound;
 };

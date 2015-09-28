@@ -68,8 +68,6 @@ private:
 
 	void								adaptEnemyMovements();
 
-	void								playLocalSound(sf::Vector2f worldPosition, SoundEffect::ID effect);
-
 
 private:
 	enum Layer

@@ -460,10 +460,7 @@ void World::playerProjectileCollision()
 				mScore += 100;
 
 				enemy.damage(projectile.getDamage());
-
 				projectile.destroy();
-
-				playLocalSound(enemy.getWorldPosition(), SoundEffect::EnemiesExplosion);
 			}
 			else if (node2->getCategory() & Category::EnemySpaceship)
 			{
@@ -488,10 +485,7 @@ void World::playerProjectileCollision()
 				}
 
 				enemy.damage(projectile.getDamage());
-
 				projectile.destroy();
-
-				playLocalSound(enemy.getWorldPosition(), SoundEffect::EnemiesExplosion);
 			}
 		}	
 	}
@@ -581,8 +575,6 @@ void World::enemyCollision()
 
 				if (!mLives.empty())
 					mLives.pop_back();
-
-				playLocalSound(enemy.getWorldPosition(), SoundEffect::EnemiesExplosion);
 			}
 		}
 	}
@@ -590,12 +582,12 @@ void World::enemyCollision()
 
 bool World::hasAlivePlayer() const
 {
-	return !mPlayerShip->isDestroyed();
+	return !mPlayerShip->isMarkedForRemoval();
 }
 
 bool World::hasPlayerWon() const
 {
-	return mEnemyNodes.empty() && mBoss->isDestroyed();
+	return mEnemyNodes.empty() && mBoss->isMarkedForRemoval();
 }
 
 void World::adaptEnemyMovements()
@@ -643,15 +635,6 @@ void World::controlEnemyFire()
 		if (i < 11)
 			enemy.fire();
 	}
-}
-
-void World::playLocalSound(sf::Vector2f worldPosition, SoundEffect::ID effect)
-{
-	Command command;
-	command.category = Category::SoundEffect;
-	command.action = derivedAction<SoundNode>(std::bind(&SoundNode::playSound, std::placeholders::_1, effect, worldPosition));
-
-	mCommandQueue.push(command);
 }
 
 void World::updateSounds()

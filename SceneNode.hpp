@@ -43,6 +43,7 @@ public:
 	void					removeWrecks();
 	virtual sf::FloatRect	getBoundingRect() const;
 	virtual bool			isDestroyed() const;
+	virtual bool			isMarkedForRemoval() const;
 
 
 private:

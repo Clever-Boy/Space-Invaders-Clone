@@ -25,13 +25,10 @@ public:
 	sf::FloatRect	getBoundingRect() const override;
 
 	float			getMaxSpeed() const;
+	void			setMaxSpeed(float point);
 
 	void 			fire();
-	void			remove() override;
-	void			setMaxSpeed(float point);
 	Type			getType() const;
-
-	void			playLocalSound(CommandQueue& commands, SoundEffect::ID effect);
 
 	void			requestChangeDirection(bool ChangeDirction);
 
@@ -47,6 +44,10 @@ private:
 	void			createBullets(SceneNode& node, const TextureHolder& textures) const;
 	void			createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const;
 
+	bool 			isMarkedForRemoval() const override;
+
+	void			playLocalSound(CommandQueue& commands, SoundEffect::ID effect);
+
 
 private:
 	Type			mType;
@@ -56,6 +57,8 @@ private:
 	sf::Time		mFireCountdown;
 	bool 			mIsFiring;
 	int				mFireRateLevel;
+
+	bool 			mIsMarkedForRemoval;
 
 	float			mTravelledDistance;
 	std::size_t		mDirectionIndex;
@@ -67,5 +70,5 @@ private:
 	float			mMaxSpeed;
 
 	sf::Sprite		mExplosion;
-	bool 			mShowExplosion;
+	bool			mPlayedExplosionSound;
 };

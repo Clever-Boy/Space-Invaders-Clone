@@ -24,9 +24,7 @@ public:
 	unsigned int	getCategory() const override;
 	sf::FloatRect	getBoundingRect() const override;
 
-	float			getMaxSpeed() const;
-
-	void			remove() override;
+	bool 			isMarkedForRemoval() const override;
 
 
 private:
@@ -34,6 +32,9 @@ private:
 	void 			updateCurrent(sf::Time dt, CommandQueue& commands) override;
 
 	void			updateMovementPattern(sf::Time dt);
+	float			getMaxSpeed() const;
+
+	void			playLocalSound(CommandQueue& commands, SoundEffect::ID effect);
 
 
 private:
@@ -43,6 +44,8 @@ private:
 	float			mTravelledDistance;
 	std::size_t		mDirectionIndex;
 
+	bool 			mIsMarkedForRemoval;
+
 	sf::Sprite		mExplosion;
-	bool 			mShowExplosion;
+	bool			mPlayedExplosionSound;
 };

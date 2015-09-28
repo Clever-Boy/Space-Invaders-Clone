@@ -3,6 +3,7 @@
 #include "Utility.hpp"
 #include "CommandQueue.hpp"
 #include "ResourceHolder.hpp"
+#include "SoundNode.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
@@ -17,10 +18,11 @@ Boss::Boss(Type type, const TextureHolder& textures)
 	: Entity(Table[type].hitpoints)
 	, mType(type)
 	, mSprite(textures.get(Table[type].texture))
-	, mExplosion()
-	, mShowExplosion(true)
 	, mTravelledDistance()
 	, mDirectionIndex()
+	, mIsMarkedForRemoval(false)
+	, mExplosion()
+	, mPlayedExplosionSound(false)
 {
 	mExplosion.setTexture(textures.get(Textures::EnemiesExplosion));
 	mExplosion.setColor(Table[type].color);
@@ -36,7 +38,7 @@ void Boss::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.transform.combine(getTransform());
 
-	if (isDestroyed() && mShowExplosion)
+	if (isDestroyed())
 		target.draw(mExplosion, states);
 	else
 		target.draw(mSprite, states);
@@ -44,6 +46,22 @@ void Boss::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 
 void Boss::updateCurrent(sf::Time dt, CommandQueue& commands)
 {
+	// Entity has been destroyed: mark for removal
+	if (isDestroyed())
+	{
+		mIsMarkedForRemoval = true;
+
+		// Play explosion sound only once
+		if (!mPlayedExplosionSound)
+		{
+			playLocalSound(commands, SoundEffect::EnemiesExplosion);
+
+			mPlayedExplosionSound = true;
+		}
+
+		return;
+	}
+
 	// Update enemy movement pattern; apply velocity
 	updateMovementPattern(dt);
 
@@ -58,6 +76,11 @@ unsigned int Boss::getCategory() const
 sf::FloatRect Boss::getBoundingRect() const
 {
 	return getWorldTransform().transformRect(mSprite.getGlobalBounds());
+}
+
+bool Boss::isMarkedForRemoval() const
+{
+	return mIsMarkedForRemoval;
 }
 
 float Boss::getMaxSpeed() const
@@ -87,8 +110,13 @@ void Boss::updateMovementPattern(sf::Time dt)
 	mTravelledDistance += getMaxSpeed() * dt.asSeconds();
 }
 
-void Boss::remove()
+void Boss::playLocalSound(CommandQueue& commands, SoundEffect::ID effect)
 {
-	Entity::remove();
-	mShowExplosion = false;
+	sf::Vector2f worldPosition = getWorldPosition();
+
+	Command command;
+	command.category = Category::SoundEffect;
+	command.action = derivedAction<SoundNode>(std::bind(&SoundNode::playSound, std::placeholders::_1, effect, worldPosition));
+
+	commands.push(command);
 }

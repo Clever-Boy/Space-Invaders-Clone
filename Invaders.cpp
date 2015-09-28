@@ -19,18 +19,19 @@ Invaders::Invaders(Type type, const TextureHolder& textures)
 	: Entity(Table[type].hitpoints)
 	, mType(type)
 	, mSprite(textures.get(Table[type].texture), Table[type].textureRect)
-	, mExplosion()
-	, mShowExplosion(true)
 	, mFireCommand()
 	, mFireRateLevel(Table[type].fireRate)
 	, mFireCountdown(sf::Time::Zero)
 	, mIsFiring(false)
+	, mIsMarkedForRemoval(false)
 	, mTravelledDistance()
 	, mDirectionIndex()
+	, mChaneDirction(false)
+	, mMaxSpeed(Table[mType].speed)
 	, mAnimateCountdown(sf::Time::Zero)
 	, mAnimateRate(Table[type].animateRate)
-	, mMaxSpeed(Table[mType].speed)
-	, mChaneDirction(false)
+	, mExplosion()
+	, mPlayedExplosionSound(false)
 {
 	mExplosion.setTexture(textures.get(Textures::EnemiesExplosion));
 	mExplosion.setColor(Table[type].color);
@@ -49,7 +50,7 @@ void Invaders::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) co
 {
 	states.transform.combine(getTransform());
 
-	if (isDestroyed() && mShowExplosion)
+	if (isDestroyed())
 		target.draw(mExplosion, states);
 	else
 		target.draw(mSprite, states);
@@ -57,6 +58,22 @@ void Invaders::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) co
 
 void Invaders::updateCurrent(sf::Time dt, CommandQueue& commands)
 {
+	// Entity has been destroyed: mark for removal
+	if (isDestroyed())
+	{
+		mIsMarkedForRemoval = true;
+
+		// Play explosion sound only once
+		if (!mPlayedExplosionSound)
+		{
+			playLocalSound(commands, SoundEffect::EnemiesExplosion);
+
+			mPlayedExplosionSound = true;
+		}
+
+		return;
+	}
+
 	// Check if bullets or missiles are fired
 	checkProjectileLaunch(dt, commands);
 
@@ -196,10 +213,9 @@ void Invaders::createProjectile(SceneNode& node, Projectile::Type type, float xO
 	node.attachChild(std::move(projectile));
 }
 
-void Invaders::remove()
+bool Invaders::isMarkedForRemoval() const
 {
-	Entity::remove();
-	mShowExplosion = false;
+	return mIsMarkedForRemoval;
 }
 
 void Invaders::playLocalSound(CommandQueue& commands, SoundEffect::ID effect)
@@ -209,5 +225,6 @@ void Invaders::playLocalSound(CommandQueue& commands, SoundEffect::ID effect)
 	Command command;
 	command.category = Category::SoundEffect;
 	command.action = derivedAction<SoundNode>(std::bind(&SoundNode::playSound, std::placeholders::_1, effect, worldPosition));
+
 	commands.push(command);
 }
