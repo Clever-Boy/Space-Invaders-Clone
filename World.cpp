@@ -591,7 +591,7 @@ bool World::hasAlivePlayer() const
 
 bool World::hasPlayerWon() const
 {
-	return mEnemyNodes.empty() && (mBoss->isMarkedForRemoval() || mBoss == nullptr);
+	return(mScore == 1420);
 }
 
 void World::adaptEnemyMovements()
@@ -602,7 +602,10 @@ void World::adaptEnemyMovements()
 	{
 		Invaders& enemy = static_cast<Invaders&>(*i);
 
-		if (!getMovementsfieldBounds().contains(enemy.getPosition()))
+		if (enemy.isDestroyed())
+			continue;
+
+		if (!getMovementsfieldBounds().contains(enemy.getWorldPosition()))
 			changeDirection = true;
 	}
 
@@ -610,6 +613,9 @@ void World::adaptEnemyMovements()
 	for (const auto& i : mEnemyNodes)
 	{
 		Invaders& enemy = static_cast<Invaders&>(*i);
+
+		if (enemy.isDestroyed())
+			continue;
 
 		enemy.requestChangeDirection(changeDirection);
 	}
