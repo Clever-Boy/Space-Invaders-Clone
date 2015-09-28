@@ -29,7 +29,6 @@ Player::Player(Type type, const TextureHolder& textures)
 	, mTimer(sf::Time::Zero)
 	, mAnimateRate(Table[type].animateRate)
 	, mIsHit(false)
-	, mPlayedExplosionSound(false)
 {
 
 	mExplosion.setTexture(textures.get(Textures::PlayerExplosion));
