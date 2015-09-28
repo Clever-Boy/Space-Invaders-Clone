@@ -423,7 +423,6 @@ void World::handleCollisions()
 void World::playerProjectileCollision()
 {
 	std::vector<SceneNode*> mCollidableNodes;
-	std::set<SceneNode::Pair> checked;
 
 	for (const auto& node1 : mPlayerBulletNodes)
 	{
@@ -519,8 +518,10 @@ void World::enemyProjectileCollision()
 					projectile.destroy();
 				}
 			}
-			else if (collision(*node1, *node2))
+			else if (node2->getCategory() & Category::PlayerSpaceship)
 			{
+				if (!collision(*node1, *node2))
+					continue;
 
 				auto& player = static_cast<Player&>(*node2);
 				auto& projectile = static_cast<Projectile&>(*node1);
@@ -564,8 +565,11 @@ void World::enemyCollision()
 					shield.onHit(enemy.getBoundingRect(), enemy.getPosition(), enemy.getCategory());
 				}
 			}
-			else if (collision(*node1, *node2))
+			else if(node2->getCategory() & Category::PlayerSpaceship)
 			{
+				if (!collision(*node1, *node2))
+					continue;
+
 				auto& player = static_cast<Player&>(*node2);
 				auto& enemy = static_cast<Invaders&>(*node1);
 
@@ -587,7 +591,7 @@ bool World::hasAlivePlayer() const
 
 bool World::hasPlayerWon() const
 {
-	return mEnemyNodes.empty() && mBoss->isMarkedForRemoval();
+	return mEnemyNodes.empty() && (mBoss->isMarkedForRemoval() || mBoss == nullptr);
 }
 
 void World::adaptEnemyMovements()
