@@ -6,43 +6,46 @@
 #include "Projectile.hpp"
 
 
-class Player final : public Entity
+class Invaders final : public Entity
 {
 public:
 	enum Type
 	{
-		PlayerShip,
+		Enemy1,
+		Enemy2,
+		Enemy3,
 		TypeCount
 	};
 
 
 public:
-	explicit		Player(Type type, const TextureHolder& textures);
+	explicit		Invaders(Type type, const TextureHolder& textures);
 
 	unsigned int	getCategory() const override;
 	sf::FloatRect	getBoundingRect() const override;
 
 	float			getMaxSpeed() const;
 
-	void			playerMover(float vx, float vy);
 	void 			fire();
 	void			remove() override;
-
-	void			onHit();
+	void			setMaxSpeed(float point);
+	Type			getType() const;
 
 	void			playLocalSound(CommandQueue& commands, SoundEffect::ID effect);
+
+	void			requestChangeDirection(bool ChangeDirction);
 
 
 private:
 	void			drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void 			updateCurrent(sf::Time dt, CommandQueue& commands) override;
 
+	void			updateMovementPattern(sf::Time dt);
+	void			applyAnimation(sf::Time dt);
+
 	void			checkProjectileLaunch(sf::Time dt, CommandQueue& commands);
 	void			createBullets(SceneNode& node, const TextureHolder& textures) const;
 	void			createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const;
-
-	void			checkForHit(sf::Time dt);
-	void			apllyHitEffect(sf::Time dt);
 
 
 private:
@@ -54,12 +57,15 @@ private:
 	bool 			mIsFiring;
 	int				mFireRateLevel;
 
+	float			mTravelledDistance;
+	std::size_t		mDirectionIndex;
+	bool			mChaneDirction;
+
 	int				mAnimateRate;
 	sf::Time		mAnimateCountdown;
-	sf::Time		mTimer;
 	bool 			mShowExplosion;
 
+	float			mMaxSpeed;
+
 	sf::Sprite		mExplosion;
-	bool			mIsHit;
-	bool			mPlayedExplosionSound;
 };

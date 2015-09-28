@@ -7,10 +7,10 @@
 
 namespace
 {
-	const std::vector<SpaceshipData> Table = initializeSpaceshipData();
+	const std::vector<PlayerData> Table = initializePlayerData();
 }
 
-Life::Life(Spaceship::Type type, const TextureHolder& textures)
+Life::Life(Player::Type type, const TextureHolder& textures)
 	: mSprite(textures.get(Table[type].texture), Table[type].textureRect)
 	, mDrity(true)
 {

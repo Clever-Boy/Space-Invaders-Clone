@@ -22,7 +22,18 @@ struct Direction
 	float distance;
 };
 
-struct SpaceshipData
+struct BossData
+{
+	int								hitpoints;
+	float							speed;
+	Textures::ID					texture;
+	sf::Color						color;
+	sf::Vector2f					size;
+	std::vector<Direction>			directions;
+	sf::IntRect						textureRectExplosion;
+};
+
+struct InvadersData
 {
 	int								hitpoints;
 	float							speed;
@@ -33,9 +44,23 @@ struct SpaceshipData
 	sf::Time						fireInterval;
 	std::size_t						fireRate;
 	std::vector<Direction>			directions;
-	bool							hasAnimation;
 	sf::Time						animationInterval;
-	int animateRate;
+	int								animateRate;
+	sf::IntRect						textureRectExplosion;
+};
+
+struct PlayerData
+{
+	int								hitpoints;
+	float							speed;
+	Textures::ID					texture;
+	sf::IntRect						textureRect;
+	sf::Color						color;
+	sf::Vector2f					size;
+	sf::Time						fireInterval;
+	std::size_t						fireRate;
+	sf::Time						animationInterval;
+	int								animateRate;
 	sf::IntRect						textureRectExplosion;
 };
 
@@ -49,5 +74,7 @@ struct ProjectileData
 	sf::IntRect						textureRect;
 };
 
-std::vector<SpaceshipData>	initializeSpaceshipData();
+std::vector<BossData>		initializeBossData();
+std::vector<InvadersData>	initializeInvadersData();
+std::vector<PlayerData>		initializePlayerData();
 std::vector<ProjectileData>	initializeProjectileData();

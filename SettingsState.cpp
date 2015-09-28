@@ -13,9 +13,9 @@ SettingsState::SettingsState(StateStack& stack, Context context)
 	mBackgroundSprite.setScale(1.25f, 1.f);
 
 	// Build key binding buttons and labels
-	addButtonLabel(Player::MoveLeft, 300.f, "Move Left", context);
-	addButtonLabel(Player::MoveRight, 350.f, "Move Right", context);
-	addButtonLabel(Player::Fire, 450.f, "Fire", context);
+	addButtonLabel(PlayerController::MoveLeft, 300.f, "Move Left", context);
+	addButtonLabel(PlayerController::MoveRight, 350.f, "Move Right", context);
+	addButtonLabel(PlayerController::Fire, 450.f, "Fire", context);
 
 	updateLabels();
 
@@ -46,15 +46,15 @@ bool SettingsState::handleEvent(const sf::Event& event)
 	bool isKeyBinding = false;
 
 	// Iterate through all key binding buttons to see if they are being pressed, waiting for the user to enter a key
-	for (auto action = 0u; action < Player::ActionCount; ++action)
+	for (auto action = 0u; action < PlayerController::ActionCount; ++action)
 	{
 		if (mBindingButtons[action]->isActive())
 		{
 			isKeyBinding = true;
 			if (event.type == sf::Event::KeyReleased)
 			{
-				auto& player = getContext().player;
-				player.assignKey(static_cast<Player::Action>(action), event.key.code);
+				auto& player = getContext().playerController;
+				player.assignKey(static_cast<PlayerController::Action>(action), event.key.code);
 				mBindingButtons[action]->deactivate();
 			}
 			break;
@@ -77,16 +77,16 @@ bool SettingsState::handleEvent(const sf::Event& event)
 
 void SettingsState::updateLabels()
 {
-	auto& player = getContext().player;
+	auto& player = getContext().playerController;
 
-	for (auto i = 0u; i < Player::ActionCount; ++i)
+	for (auto i = 0u; i < PlayerController::ActionCount; ++i)
 	{
-		sf::Keyboard::Key key = player.getAssignedKey(static_cast<Player::Action>(i));
+		sf::Keyboard::Key key = player.getAssignedKey(static_cast<PlayerController::Action>(i));
 		mBindingLabels[i]->setText(toString(key));
 	}
 }
 
-void SettingsState::addButtonLabel(Player::Action action, float y, const std::string& text, Context context)
+void SettingsState::addButtonLabel(PlayerController::Action action, float y, const std::string& text, Context context)
 {
 	mBindingButtons[action] = std::make_shared<GUI::Button>(context);
 	mBindingButtons[action]->setPosition(80.f, y);

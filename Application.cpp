@@ -14,10 +14,10 @@ Application::Application()
 	: mWindow(sf::VideoMode(800, 600), "Space Invaders", sf::Style::Close)
 	, mTextures()
 	, mFonts()
-	, mPlayer()
+	, mPlayerController()
 	, mMusic()
 	, mSounds()
-	, mStateStack(State::Context(mWindow, mTextures, mFonts, mPlayer, mMusic, mSounds))
+	, mStateStack(State::Context(mWindow, mTextures, mFonts, mPlayerController, mMusic, mSounds))
 {
 	mWindow.setKeyRepeatEnabled(false);
 

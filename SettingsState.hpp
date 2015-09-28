@@ -2,7 +2,7 @@
 
 
 #include "State.hpp"
-#include "Player.hpp"
+#include "PlayerController.hpp"
 #include "Container.hpp"
 #include "Button.hpp"
 #include "Label.hpp"
@@ -15,8 +15,8 @@
 class SettingsState final : public State
 {
 public:
-	using BindingButtons = std::array<GUI::Button::Ptr, Player::ActionCount>;
-	using BindingLabels = std::array<GUI::Label::Ptr, Player::ActionCount>;
+	using BindingButtons = std::array<GUI::Button::Ptr, PlayerController::ActionCount>;
+	using BindingLabels = std::array<GUI::Label::Ptr, PlayerController::ActionCount>;
 
 
 public:
@@ -29,7 +29,7 @@ public:
 
 private:
 	void							updateLabels();
-	void							addButtonLabel(Player::Action action, float y, const std::string& text, Context context);
+	void							addButtonLabel(PlayerController::Action action, float y, const std::string& text, Context context);
 
 
 private:

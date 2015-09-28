@@ -1,101 +1,198 @@
 #include "Player.hpp"
+#include "DataTables.hpp"
+#include "Utility.hpp"
 #include "CommandQueue.hpp"
-#include "Spaceship.hpp"
+#include "ResourceHolder.hpp"
+#include "SoundNode.hpp"
+
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/Texture.hpp>
 
 
-Player::Player()
-	: mCurrentMissionStatus(MissionRunning)
+namespace
 {
-	// Set initial key bindings
-	mKeyBinding.insert(std::make_pair(sf::Keyboard::Left, MoveLeft));
-	mKeyBinding.insert(std::make_pair(sf::Keyboard::Right, MoveRight));
-	mKeyBinding.insert(std::make_pair(sf::Keyboard::Space, Fire));
-
-	// Set initial action bindings
-	initializeActions();
-
-	// Assign all categories to player's aircraft
-	for (auto& pair : mActionBinding)
-		pair.second.category = Category::PlayerSpaceship;
+	const std::vector<PlayerData> Table = initializePlayerData();
 }
 
-void Player::handleEvent(const sf::Event& event, CommandQueue& commands)
+
+Player::Player(Type type, const TextureHolder& textures)
+	: Entity(Table[type].hitpoints)
+	, mType(type)
+	, mSprite(textures.get(Table[type].texture), Table[type].textureRect)
+	, mExplosion()
+	, mShowExplosion(true)
+	, mFireCommand()
+	, mFireRateLevel(Table[type].fireRate)
+	, mFireCountdown(sf::Time::Zero)
+	, mIsFiring(false)
+	, mAnimateCountdown(sf::Time::Zero)
+	, mTimer(sf::Time::Zero)
+	, mAnimateRate(Table[type].animateRate)
+	, mIsHit(false)
+	, mPlayedExplosionSound(false)
 {
-	if (event.type == sf::Event::KeyPressed)
+
+	mExplosion.setTexture(textures.get(Textures::PlayerExplosion));
+	mExplosion.setTextureRect(Table[type].textureRectExplosion);
+	mExplosion.setColor(Table[type].color);
+	centerOrigin(mExplosion);
+
+	setScaleSize(mSprite, Table[type].size.x, Table[type].size.y);
+
+	centerOrigin(mSprite);
+
+	mFireCommand.category = Category::SceneSpaceLayer;
+	mFireCommand.action = std::bind(&Player::createBullets, this, std::placeholders::_1, std::cref(textures));
+}
+
+void Player::updateCurrent(sf::Time dt, CommandQueue& commands)
+{
+	// Check if bullets or missiles are fired
+	checkProjectileLaunch(dt, commands);
+
+	// player get hit
+	checkForHit(dt);
+
+	Entity::updateCurrent(dt, commands);
+}
+
+void Player::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	states.transform.combine(getTransform());
+
+	if (isDestroyed() && mShowExplosion)
+		target.draw(mExplosion, states);
+	else
+		target.draw(mSprite, states);
+}
+
+void Player::playerMover(float vx, float vy)
+{
+	accelerate(sf::Vector2f(vx, vy) * getMaxSpeed());
+}
+
+void Player::onHit()
+{
+	mIsHit = true;
+}
+
+void Player::checkForHit(sf::Time dt)
+{
+	sf::IntRect textureRect = mSprite.getTextureRect();
+
+	if (mIsHit)
 	{
-		// Check if pressed key appears in key binding, trigger command if so
-		auto found = mKeyBinding.find(event.key.code);
-		if (found != mKeyBinding.end() && !isRealtimeAction(found->second))
-			commands.push(mActionBinding[found->second]);
+		apllyHitEffect(dt);
+	}
+
+	// start timer
+	mTimer += dt;
+	if (mTimer > Table[mType].animationInterval)
+	{
+		mIsHit = false;
+		textureRect = sf::IntRect(0, textureRect.top, textureRect.width, textureRect.height);
+		mSprite.setTextureRect(textureRect);
+		// reset timer
+		mTimer = sf::Time::Zero;
+		mAnimateCountdown = sf::Time::Zero;
 	}
 }
 
-void Player::handleRealtimeInput(CommandQueue& commands)
+void Player::apllyHitEffect(sf::Time dt)
 {
-	// Traverse all assigned keys and check if they are pressed
-	for (const auto& pair : mKeyBinding)
-	{
-		// If key is pressed, lookup action and trigger corresponding command
-		if (sf::Keyboard::isKeyPressed(pair.first) && isRealtimeAction(pair.second))
-			commands.push(mActionBinding[pair.second]);
-	}
-}
+	sf::Vector2i textureBounds(mSprite.getTexture()->getSize());
+	sf::IntRect textureRect = mSprite.getTextureRect();
 
-void Player::assignKey(Action action, sf::Keyboard::Key key)
-{
-	// Remove all keys that already map to action
-	for (auto itr = mKeyBinding.begin(); itr != mKeyBinding.end(); )
+	if (mAnimateCountdown <= sf::Time::Zero)
 	{
-		if (itr->second == action)
-			mKeyBinding.erase(itr++);
+		mAnimateCountdown += Table[mType].animationInterval / (Table[mType].animateRate + 1.f);
+
+		if (textureRect.left + textureRect.width < textureBounds.x)
+			textureRect.left += textureRect.width;
 		else
-			++itr;
+			textureRect = sf::IntRect(textureRect.width, textureRect.top, textureRect.width, textureRect.height);
 	}
-
-	// Insert new binding
-	mKeyBinding[key] = action;
-}
-
-sf::Keyboard::Key Player::getAssignedKey(Action action) const
-{
-	for (const auto& pair : mKeyBinding)
+	else
 	{
-		if (pair.second == action)
-			return pair.first;
+		mAnimateCountdown -= dt;
 	}
 
-	return sf::Keyboard::Unknown;
+	mSprite.setTextureRect(textureRect);
 }
 
-void Player::setMissionStatus(MissionStatus status)
+unsigned int Player::getCategory() const
 {
-	mCurrentMissionStatus = status;
+	return Category::PlayerSpaceship;
 }
 
-Player::MissionStatus Player::getMissionStatus() const
+sf::FloatRect Player::getBoundingRect() const
 {
-	return mCurrentMissionStatus;
+	return getWorldTransform().transformRect(mSprite.getGlobalBounds());
 }
 
-void Player::initializeActions()
+float Player::getMaxSpeed() const
 {
-	using namespace std::placeholders;
-
-	mActionBinding[MoveLeft].action		= derivedAction<Spaceship>(std::bind(&Spaceship::playerMover, _1, -1.f, 0.f));
-	mActionBinding[MoveRight].action	= derivedAction<Spaceship>(std::bind(&Spaceship::playerMover, _1, 1.f, 0.f));
-	mActionBinding[Fire].action			= derivedAction<Spaceship>(std::bind(&Spaceship::fire, _1));
+	return Table[mType].speed;
 }
 
-bool Player::isRealtimeAction(Action action)
+void Player::fire()
 {
-	switch (action)
+	mIsFiring = true;
+}
+
+void Player::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
+{
+	// Check for automatic gunfire, allow only in intervals
+	if (mIsFiring && mFireCountdown <= sf::Time::Zero)
 	{
-	case MoveLeft:
-	case MoveRight:
-	case Fire:
-		return true;
+		// Interval expired: We can fire a new bullet
+		commands.push(mFireCommand);
+		playLocalSound(commands, SoundEffect::PlayerGunfire);
 
-	default:
-		return false;
+		mFireCountdown += Table[mType].fireInterval / (mFireRateLevel + 1.f);
+		mIsFiring = false;
 	}
+	else if (mFireCountdown > sf::Time::Zero)
+	{
+		// Interval not expired: Decrease it further
+		mFireCountdown -= dt;
+		mIsFiring = false;
+	}
+}
+
+void Player::createBullets(SceneNode& node, const TextureHolder& textures) const
+{
+	Projectile::Type type = Projectile::PlayerBullet;
+
+	createProjectile(node, type, 0.0f, 0.5f, textures);
+
+}
+
+void Player::createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const
+{
+	auto  projectile(std::make_unique<Projectile>(type, textures));
+
+	sf::Vector2f offset(xOffset * mSprite.getGlobalBounds().width, yOffset * mSprite.getGlobalBounds().height);
+	sf::Vector2f velocity(0, projectile->getMaxSpeed());
+
+	auto sign = -1.f;
+	projectile->setPosition(getWorldPosition() + offset * sign);
+	projectile->setVelocity(velocity * sign);
+	node.attachChild(std::move(projectile));
+}
+
+void Player::remove()
+{
+	Entity::remove();
+	mShowExplosion = false;
+}
+
+void Player::playLocalSound(CommandQueue& commands, SoundEffect::ID effect)
+{
+	sf::Vector2f worldPosition = getWorldPosition();
+
+	Command command;
+	command.category = Category::SoundEffect;
+	command.action = derivedAction<SoundNode>(std::bind(&SoundNode::playSound, std::placeholders::_1, effect, worldPosition));
+	commands.push(command);
 }

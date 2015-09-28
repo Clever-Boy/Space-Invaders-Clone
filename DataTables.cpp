@@ -1,90 +1,100 @@
 #include "DataTables.hpp"
-#include "Spaceship.hpp"
+#include "Boss.hpp"
+#include "Invaders.hpp"
+#include "Player.hpp"
 #include "Projectile.hpp"
 
-
-std::vector<SpaceshipData> initializeSpaceshipData()
+std::vector<BossData> initializeBossData()
 {
-	std::vector<SpaceshipData> data(Spaceship::TypeCount);
+	std::vector<BossData> data(Boss::TypeCount);
 
-	data[Spaceship::Player].hitpoints = 3;
-	data[Spaceship::Player].color = sf::Color(0, 255, 0);
-	data[Spaceship::Player].fireRate = 3;
-	data[Spaceship::Player].size = sf::Vector2f(2.f, 2.f);
-	data[Spaceship::Player].speed = 200.f;
-	data[Spaceship::Player].fireInterval = sf::seconds(1);
-	data[Spaceship::Player].texture = Textures::Player;
-	data[Spaceship::Player].textureRect = sf::IntRect(0, 0, 30, 20);
-	data[Spaceship::Player].hasAnimation = false;
-	data[Spaceship::Player].animationInterval = sf::seconds(2);
-	data[Spaceship::Player].textureRectExplosion = sf::IntRect(30, 0, 30, 20);
-	data[Spaceship::Player].animateRate = 4;
+	data[Boss::BossShip].hitpoints = 1;
+	data[Boss::BossShip].color = sf::Color(255, 0, 0);
+	data[Boss::BossShip].size = sf::Vector2f(3.f, 1.f);
+	data[Boss::BossShip].speed = 80.f;
 
-	data[Spaceship::Boss].hitpoints = 1;
-	data[Spaceship::Boss].color = sf::Color(255, 0, 0);
-	data[Spaceship::Boss].fireRate = 0;
-	data[Spaceship::Boss].size = sf::Vector2f(3.f, 1.f);
-	data[Spaceship::Boss].speed = 80.f;
-	data[Spaceship::Boss].fireInterval = sf::Time::Zero;
-	data[Spaceship::Boss].texture = Textures::Boss;
-	data[Spaceship::Boss].textureRect = sf::IntRect(0, 0, 45, 22);
-	data[Spaceship::Boss].directions.push_back(Direction(-90.f, 720.f - 55.f));
-	data[Spaceship::Boss].directions.push_back(Direction(90.f, 720.f -55.f));
-	data[Spaceship::Boss].hasAnimation = false;
-	data[Spaceship::Boss].animationInterval = sf::Time::Zero;
-	data[Spaceship::Boss].textureRectExplosion = sf::IntRect(0, 0, 41, 34);
-	data[Spaceship::Boss].animateRate = 0;
+	data[Boss::BossShip].texture = Textures::Boss;
+	data[Boss::BossShip].textureRectExplosion = sf::IntRect(0, 0, 41, 34);
 
-	data[Spaceship::Enemy1].hitpoints = 1;
-	data[Spaceship::Enemy1].color = sf::Color(255, 255, 255);
-	data[Spaceship::Enemy1].fireRate = 1;
-	data[Spaceship::Enemy1].size = sf::Vector2f(1.5f, 1.5f);
-	data[Spaceship::Enemy1].speed = 50.f;
-	data[Spaceship::Enemy1].texture = Textures::Enemies;
-	data[Spaceship::Enemy1].textureRect = sf::IntRect(0, 0, 25, 20);
-	data[Spaceship::Enemy1].directions.push_back(Direction(-90.f, 0.f));
-	data[Spaceship::Enemy1].directions.push_back(Direction(0.f, 30.f));
-	data[Spaceship::Enemy1].directions.push_back(Direction(+90.f, 0.f));
-	data[Spaceship::Enemy1].directions.push_back(Direction(0.f, 30.f));
-	data[Spaceship::Enemy1].fireInterval = sf::seconds(6);
-	data[Spaceship::Enemy1].hasAnimation = true;
-	data[Spaceship::Enemy1].animationInterval = sf::seconds(2);
-	data[Spaceship::Enemy1].textureRectExplosion = sf::IntRect(0, 0, 41, 34);
-	data[Spaceship::Enemy1].animateRate = 1;
+	data[Boss::BossShip].directions.push_back(Direction(-90.f, 720.f - 55.f));
+	data[Boss::BossShip].directions.push_back(Direction(90.f, 720.f - 55.f));
 
-	data[Spaceship::Enemy2].hitpoints = 1;
-	data[Spaceship::Enemy2].color = sf::Color(255, 255, 255);
-	data[Spaceship::Enemy2].size = sf::Vector2f(1.5f, 1.5f);
-	data[Spaceship::Enemy2].fireRate = 1;
-	data[Spaceship::Enemy2].speed = 50.f;
-	data[Spaceship::Enemy2].texture = Textures::Enemies;
-	data[Spaceship::Enemy2].textureRect = sf::IntRect(0, 20, 25, 20);
-	data[Spaceship::Enemy2].directions.push_back(Direction(-90.f, 0.f));
-	data[Spaceship::Enemy2].directions.push_back(Direction(0.f, 30.f));
-	data[Spaceship::Enemy2].directions.push_back(Direction(+90.f, 0.f));
-	data[Spaceship::Enemy2].directions.push_back(Direction(0.f, 30.f));
-	data[Spaceship::Enemy2].fireInterval = sf::seconds(6);
-	data[Spaceship::Enemy2].hasAnimation = true;
-	data[Spaceship::Enemy2].animationInterval = sf::seconds(2);
-	data[Spaceship::Enemy2].textureRectExplosion = sf::IntRect(0, 0, 41, 34);
-	data[Spaceship::Enemy2].animateRate = 1;
+	return data;
+}
 
-	data[Spaceship::Enemy3].hitpoints = 1;
-	data[Spaceship::Enemy3].color = sf::Color(255, 255, 255);
-	data[Spaceship::Enemy3].size = sf::Vector2f(1.5f, 1.5f);
-	data[Spaceship::Enemy3].fireRate = 1;
-	data[Spaceship::Enemy3].speed = 50.f;
-	data[Spaceship::Enemy3].texture = Textures::Enemies;
-	data[Spaceship::Enemy3].textureRect = sf::IntRect(0, 40, 25, 20);
-	data[Spaceship::Enemy3].directions.push_back(Direction(-90.f, 0.f ));
-	data[Spaceship::Enemy3].directions.push_back(Direction(0.f, 30.f));
-	data[Spaceship::Enemy3].directions.push_back(Direction(+90.f, 0.f));
-	data[Spaceship::Enemy3].directions.push_back(Direction(0.f, 30.f));
-	data[Spaceship::Enemy3].fireInterval = sf::seconds(6);
-	data[Spaceship::Enemy3].hasAnimation = true;
-	data[Spaceship::Enemy3].animationInterval = sf::seconds(2);
-	data[Spaceship::Enemy3].textureRectExplosion = sf::IntRect(0, 0, 41, 34);
-	data[Spaceship::Enemy3].animateRate = 1;
+std::vector<InvadersData> initializeInvadersData()
+{
+	std::vector<InvadersData> data(Invaders::TypeCount);
+
+	data[Invaders::Enemy1].hitpoints = 1;
+	data[Invaders::Enemy1].color = sf::Color(255, 255, 255);
+	data[Invaders::Enemy1].fireRate = 1;
+	data[Invaders::Enemy1].size = sf::Vector2f(1.5f, 1.5f);
+	data[Invaders::Enemy1].speed = 50.f;
+	data[Invaders::Enemy1].texture = Textures::Enemies;
+	data[Invaders::Enemy1].textureRect = sf::IntRect(0, 0, 25, 20);
+	data[Invaders::Enemy1].directions.push_back(Direction(-90.f, 0.f));
+	data[Invaders::Enemy1].directions.push_back(Direction(0.f, 30.f));
+	data[Invaders::Enemy1].directions.push_back(Direction(+90.f, 0.f));
+	data[Invaders::Enemy1].directions.push_back(Direction(0.f, 30.f));
+	data[Invaders::Enemy1].fireInterval = sf::seconds(6);
+	data[Invaders::Enemy1].animationInterval = sf::seconds(2);
+	data[Invaders::Enemy1].textureRectExplosion = sf::IntRect(0, 0, 41, 34);
+	data[Invaders::Enemy1].animateRate = 1;
+
+	data[Invaders::Enemy2].hitpoints = 1;
+	data[Invaders::Enemy2].color = sf::Color(255, 255, 255);
+	data[Invaders::Enemy2].size = sf::Vector2f(1.5f, 1.5f);
+	data[Invaders::Enemy2].fireRate = 1;
+	data[Invaders::Enemy2].speed = 50.f;
+	data[Invaders::Enemy2].texture = Textures::Enemies;
+	data[Invaders::Enemy2].textureRect = sf::IntRect(0, 20, 25, 20);
+	data[Invaders::Enemy2].directions.push_back(Direction(-90.f, 0.f));
+	data[Invaders::Enemy2].directions.push_back(Direction(0.f, 30.f));
+	data[Invaders::Enemy2].directions.push_back(Direction(+90.f, 0.f));
+	data[Invaders::Enemy2].directions.push_back(Direction(0.f, 30.f));
+	data[Invaders::Enemy2].fireInterval = sf::seconds(6);
+	data[Invaders::Enemy2].animationInterval = sf::seconds(2);
+	data[Invaders::Enemy2].textureRectExplosion = sf::IntRect(0, 0, 41, 34);
+	data[Invaders::Enemy2].animateRate = 1;
+
+	data[Invaders::Enemy3].hitpoints = 1;
+	data[Invaders::Enemy3].color = sf::Color(255, 255, 255);
+	data[Invaders::Enemy3].size = sf::Vector2f(1.5f, 1.5f);
+	data[Invaders::Enemy3].fireRate = 1;
+	data[Invaders::Enemy3].speed = 50.f;
+	data[Invaders::Enemy3].texture = Textures::Enemies;
+	data[Invaders::Enemy3].textureRect = sf::IntRect(0, 40, 25, 20);
+	data[Invaders::Enemy3].directions.push_back(Direction(-90.f, 0.f ));
+	data[Invaders::Enemy3].directions.push_back(Direction(0.f, 30.f));
+	data[Invaders::Enemy3].directions.push_back(Direction(+90.f, 0.f));
+	data[Invaders::Enemy3].directions.push_back(Direction(0.f, 30.f));
+	data[Invaders::Enemy3].fireInterval = sf::seconds(6);
+	data[Invaders::Enemy3].animationInterval = sf::seconds(2);
+	data[Invaders::Enemy3].textureRectExplosion = sf::IntRect(0, 0, 41, 34);
+	data[Invaders::Enemy3].animateRate = 1;
+
+	return data;
+}
+
+std::vector<PlayerData> initializePlayerData()
+{
+	std::vector<PlayerData> data(Player::TypeCount);
+
+	data[Player::PlayerShip].hitpoints = 3;
+	data[Player::PlayerShip].color = sf::Color(0, 255, 0);
+	data[Player::PlayerShip].size = sf::Vector2f(2.f, 2.f);
+	data[Player::PlayerShip].speed = 200.f;
+
+	data[Player::PlayerShip].fireRate = 3;
+	data[Player::PlayerShip].fireInterval = sf::seconds(1);
+
+	data[Player::PlayerShip].texture = Textures::Player;
+	data[Player::PlayerShip].textureRect = sf::IntRect(0, 0, 30, 20);
+	data[Player::PlayerShip].textureRectExplosion = sf::IntRect(30, 0, 30, 20);
+
+	data[Player::PlayerShip].animationInterval = sf::seconds(2);
+	data[Player::PlayerShip].animateRate = 4;
 
 	return data;
 }

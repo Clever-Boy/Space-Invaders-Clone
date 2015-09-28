@@ -2,7 +2,9 @@
 
 
 #include "SpriteNode.hpp"
-#include "Spaceship.hpp"
+#include "Boss.hpp"
+#include "Invaders.hpp"
+#include "Player.hpp"
 #include "CommandQueue.hpp"
 #include "QuadTree.hpp"
 #include "Life.hpp"
@@ -37,7 +39,7 @@ private:
 	void								adaptPlayerPosition();
 
 	void								addEnemies();
-	void								addEnemy(Spaceship::Type type, float relX, float relY);
+	void								addEnemy(Invaders::Type type, float relX, float relY);
 
 	sf::FloatRect						getViewBounds() const;
 
@@ -63,7 +65,10 @@ private:
 	void								enemyProjectileCollision();
 	void								playerProjectileCollision();
 	void								enemyCollision();
+
 	void								adaptEnemyMovements();
+
+	void								playLocalSound(sf::Vector2f worldPosition, SoundEffect::ID effect);
 
 
 private:
@@ -90,7 +95,8 @@ private:
 	sf::FloatRect							mWorldBounds;
 	sf::Vector2f							mSpawnPosition;
 
-	Spaceship*								mPlayerShip;
+	Player*									mPlayerShip;
+	Boss*									mBoss;
 
 	QuadTree								mQuadTreePrimary;
 	QuadTree								mQuadTreeSecondary;

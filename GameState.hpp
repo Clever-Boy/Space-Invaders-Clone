@@ -3,7 +3,7 @@
 
 #include "State.hpp"
 #include "World.hpp"
-#include "Player.hpp"
+#include "PlayerController.hpp"
 
 
 class GameState final : public State
@@ -18,5 +18,5 @@ public:
 
 private:
 	World				mWorld;
-	Player&				mPlayer;
+	PlayerController&	mPlayerController;
 };

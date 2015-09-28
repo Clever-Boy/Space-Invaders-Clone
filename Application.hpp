@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "Player.hpp"
+#include "PlayerController.hpp"
 #include "StateStack.hpp"
 #include "MusicPlayer.hpp"
 #include "SoundPlayer.hpp"
@@ -31,7 +31,7 @@ private:
 	sf::RenderWindow		mWindow;
 	TextureHolder			mTextures;
 	FontHolder				mFonts;
-	Player					mPlayer;
+	PlayerController		mPlayerController;
 
 	MusicPlayer				mMusic;
 	SoundPlayer				mSounds;

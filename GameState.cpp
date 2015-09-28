@@ -6,9 +6,9 @@
 GameState::GameState(StateStack& stack, Context context)
 	: State(stack, context)
 	, mWorld(context.window, context.fonts, context.sounds)
-	, mPlayer(context.player)
+	, mPlayerController(context.playerController)
 {
-	mPlayer.setMissionStatus(Player::MissionRunning);
+	mPlayerController.setMissionStatus(PlayerController::MissionRunning);
 
 	// Play game theme
 	context.music.stop();
@@ -25,17 +25,17 @@ bool GameState::update(sf::Time dt)
 
 	if (!mWorld.hasAlivePlayer())
 	{
-		mPlayer.setMissionStatus(Player::MissionFailure);
+		mPlayerController.setMissionStatus(PlayerController::MissionFailure);
 		requestStackPush(States::GameOver);
 	}
 	else if (mWorld.hasPlayerWon())
 	{
-		mPlayer.setMissionStatus(Player::MissionSuccess);
+		mPlayerController.setMissionStatus(PlayerController::MissionSuccess);
 		requestStackPush(States::GameOver);
 	}
 
 	auto& commands = mWorld.getCommandQueue();
-	mPlayer.handleRealtimeInput(commands);
+	mPlayerController.handleRealtimeInput(commands);
 
 	return true;
 }
@@ -44,7 +44,7 @@ bool GameState::handleEvent(const sf::Event& event)
 {
 	// Game input handling
 	auto& commands = mWorld.getCommandQueue();
-	mPlayer.handleEvent(event, commands);
+	mPlayerController.handleEvent(event, commands);
 
 	// Escape pressed, trigger the pause screen
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)

@@ -1,6 +1,6 @@
 #include "GameOverState.hpp"
 #include "Utility.hpp"
-#include "Player.hpp"
+#include "PlayerController.hpp"
 #include "ResourceHolder.hpp"
 
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -17,7 +17,7 @@ GameOverState::GameOverState(StateStack& stack, Context context)
 
 	mGameOverText.setFont(font);
 
-	if (context.player.getMissionStatus() == Player::MissionFailure)
+	if (context.playerController.getMissionStatus() == PlayerController::MissionFailure)
 		mGameOverText.setString("Mission failed!");
 	else
 		mGameOverText.setString("Mission successful!");

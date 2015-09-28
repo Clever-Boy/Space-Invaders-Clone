@@ -45,6 +45,27 @@ namespace
 		return false;
 	}
 
+	bool matchesCategories(SceneNode::Pair& colliders, Category::Type type1, Category::Type type2)
+	{
+		unsigned int category1 = colliders.first->getCategory();
+		unsigned int category2 = colliders.second->getCategory();
+
+		// Make sure first pair entry has category type1 and second has type2
+		if (type1 & category1 && type2 & category2)
+		{
+			return true;
+		}
+		else if (type1 & category2 && type2 & category1)
+		{
+			std::swap(colliders.first, colliders.second);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 	constexpr auto Padding = 40.f;
 	constexpr auto MovementsPadding = 55.f;
 }
@@ -60,6 +81,7 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mWorldBounds(0.f, 0.f, mWorldView.getSize().x, mWorldView.getSize().y)
 	, mSpawnPosition(mWorldView.getSize().x / 2.f, mWorldView.getSize().y / 2.f)
 	, mPlayerShip(nullptr)
+	, mBoss(nullptr)
 	, mQuadTreePrimary(1, mWorldBounds)
 	, mQuadTreeSecondary(1, mWorldBounds)
 	, mEnemyNodes()
@@ -97,6 +119,125 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	mWorldView.setCenter(mSpawnPosition);
 }
 
+void World::loadTextures()
+{
+	mTextures.load(Textures::Boss, "Media/Textures/Boss.png");
+	mTextures.load(Textures::Player, "Media/Textures/PlayerSet.png");
+	mTextures.load(Textures::PlayerExplosion, "Media/Textures/PlayerExpolsion.png");
+	mTextures.load(Textures::Background, "Media/Textures/Backgoundblack.jpg");
+	mTextures.load(Textures::Enemies, "Media/Textures/Enemies.png");
+	mTextures.load(Textures::EnemiesExplosion, "Media/Textures/EnemiesExplosion.png");
+	mTextures.load(Textures::Bullet, "Media/Textures/Bullet.png");
+
+	mImages.load(Images::Shield, "Media/Textures/Shield.png");
+}
+
+void World::buildScene()
+{
+	// Initialize the different layers
+	for (auto i = 0u; i < LayerCount; ++i)
+	{
+		Category::Type category = (i == Space) ? Category::SceneSpaceLayer : Category::None;
+
+		auto layer(std::make_unique<SceneNode>(category));
+		mSceneLayers[i] = layer.get();
+
+		mSceneGraph.attachChild(std::move(layer));
+	}
+
+	//Prepare the tiled background
+	sf::Texture& texture = mTextures.get(Textures::Background);
+
+	// Add the background sprite to the scene
+	auto backgroundSprite(std::make_unique<SpriteNode>(texture));
+	backgroundSprite->setPosition(mWorldBounds.left, mWorldBounds.top);
+	mSceneLayers[Background]->attachChild(std::move(backgroundSprite));
+
+	// Add player's spaceship
+	auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
+	mPlayerShip = leader.get();
+	mPlayerShip->setPosition(mSpawnPosition + sf::Vector2f(0.f, 240.f));
+
+	mSceneLayers[Space]->attachChild(std::move(leader));
+
+	// Add Boss
+	auto boss(std::make_unique<Boss>(Boss::BossShip, mTextures));
+	mBoss = boss.get();
+	mBoss->setPosition(MovementsPadding, Padding * 1.5);
+	mSceneLayers[Space]->attachChild(std::move(boss));
+
+	// Add enemy Spaceships
+	addEnemies();
+
+	// add lifes dummys
+	addLifes();
+
+	// add Shields
+	addShields();
+
+	// Add sound effect node
+	auto soundNode(std::make_unique<SoundNode>(mSounds));
+	mSceneGraph.attachChild(std::move(soundNode));
+}
+
+void World::addShields()
+{
+	addShield(85.f, 150.f);
+	addShield(-85.f, 150.f);
+	addShield(250.f, 150.f);
+	addShield(-250.f, 150.f);
+}
+
+void World::addShield(float relX, float relY)
+{
+	auto shield(std::make_unique<Shield>(mImages, mTarget.getSize()));
+	shield->setPosition(mSpawnPosition.x + relX, mSpawnPosition.y + relY);
+	mSceneLayers[Space]->attachChild(std::move(shield));
+}
+
+void World::addLifes()
+{
+	addLife(300.f, -275.f);
+	addLife(350.f, -275.f);
+}
+
+void World::addLife(float relX, float relY)
+{
+	auto life(std::make_unique<Life>(Player::PlayerShip, mTextures));
+	life->setPosition(mSpawnPosition + sf::Vector2f(relX, relY));
+	mLives.push_back(std::move(life));
+}
+
+void World::addEnemies()
+{
+	// Add enemies
+	constexpr auto numberOfEnemies = 66u;
+	constexpr auto enemiesPerRow = 11u;
+	constexpr auto horizontalSpacing = 40.f;
+	constexpr auto verticalSpacing = 35.f;
+
+	const sf::Vector2f positionOfTopLeft(MovementsPadding, Padding * 2.5);
+
+	for (auto i = 0u; i < numberOfEnemies; ++i)
+	{
+		sf::Vector2f position(horizontalSpacing * (i % enemiesPerRow), verticalSpacing * (i / enemiesPerRow));
+
+		if (i < 22)
+			addEnemy(Invaders::Enemy1, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
+		else if (i >= 22 && i < 44)
+			addEnemy(Invaders::Enemy2, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
+		if (i >= 44)
+			addEnemy(Invaders::Enemy3, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
+	}
+}
+
+void World::addEnemy(Invaders::Type type, float relX, float relY)
+{
+	auto enemy(std::make_unique<Invaders>(type, mTextures));
+	enemy->setPosition(relX, relY);
+	mSceneLayers[Space]->attachChild(std::move(enemy));
+}
+
 sf::FloatRect World::getViewBounds() const
 {
 	return sf::FloatRect(mWorldView.getCenter() - mWorldView.getSize() / 2.f, mWorldView.getSize());
@@ -128,46 +269,9 @@ sf::FloatRect World::getMovementsfieldBounds() const
 	return bounds;
 }
 
-void World::update(sf::Time dt)
+CommandQueue& World::getCommandQueue()
 {
-	// reset player velocity
-	mPlayerShip->setVelocity(0.f, 0.f);
-
-	// Remove useless entities
-	destroyEntitiesOutsideView();
-
-	// Update quadtree
-	checkForCollision();
-
-	// Forward commands to scene graph
-	while (!mCommandQueue.isEmpty())
-		mSceneGraph.onCommand(mCommandQueue.pop());
-
-	// Adapt Movements 
-	adaptEnemyMovements();
-
-	// control enemy fires
-	controlEnemyFire();
-
-	// Collision detection and response (may destroy entities)
-	handleCollisions();
-
-	mSceneGraph.removeWrecks();
-
-	// Regular update step
-	mSceneGraph.update(dt, mCommandQueue);
-
-	// Adapt position (correct if outside view)
-	adaptPlayerPosition();
-
-	updateText();
-
-	updateSounds();
-}
-
-void World::updateText()
-{
-	mScoreText.setString(std::to_string(mScore));
+	return mCommandQueue;
 }
 
 void World::draw()
@@ -218,124 +322,46 @@ void World::draw()
 #endif
 }
 
-CommandQueue& World::getCommandQueue()
+void World::update(sf::Time dt)
 {
-	return mCommandQueue;
+	// reset player velocity
+	mPlayerShip->setVelocity(0.f, 0.f);
+
+	// Remove useless entities
+	destroyEntitiesOutsideView();
+
+	// Update quadtree
+	checkForCollision();
+
+	// Forward commands to scene graph
+	while (!mCommandQueue.isEmpty())
+		mSceneGraph.onCommand(mCommandQueue.pop());
+
+	// Adapt Movements 
+	adaptEnemyMovements();
+
+	// control enemy fires
+	controlEnemyFire();
+
+	// Collision detection and response (may destroy entities)
+	handleCollisions();
+
+	mSceneGraph.removeWrecks();
+
+	// Regular update step
+	mSceneGraph.update(dt, mCommandQueue);
+
+	// Adapt position (correct if outside view)
+	adaptPlayerPosition();
+
+	updateText();
+
+	updateSounds();
 }
 
-void World::loadTextures()
+void World::updateText()
 {
-	mTextures.load(Textures::Boss, "Media/Textures/Boss.png");
-	mTextures.load(Textures::Player, "Media/Textures/PlayerSet.png");
-	mTextures.load(Textures::PlayerExplosion, "Media/Textures/PlayerExpolsion.png");
-	mTextures.load(Textures::Background, "Media/Textures/Backgoundblack.jpg");
-	mTextures.load(Textures::Enemies, "Media/Textures/Enemies.png");
-	mTextures.load(Textures::EnemiesExplosion, "Media/Textures/EnemiesExplosion.png");
-	mTextures.load(Textures::Bullet, "Media/Textures/Bullet.png");
-
-	mImages.load(Images::Shield, "Media/Textures/Shield.png");
-}
-
-void World::buildScene()
-{
-	// Initialize the different layers
-	for (auto i = 0u; i < LayerCount; ++i)
-	{
-		Category::Type category = (i == Space) ? Category::SceneSpaceLayer : Category::None;
-
-		auto layer(std::make_unique<SceneNode>(category));
-		mSceneLayers[i] = layer.get();
-
-		mSceneGraph.attachChild(std::move(layer));
-	}
-
-	//Prepare the tiled background
-	sf::Texture& texture = mTextures.get(Textures::Background);
-
-	// Add the background sprite to the scene
-	auto backgroundSprite(std::make_unique<SpriteNode>(texture));
-	backgroundSprite->setPosition(mWorldBounds.left, mWorldBounds.top);
-	mSceneLayers[Background]->attachChild(std::move(backgroundSprite));
-
-	// Add player's spaceship
-	auto leader(std::make_unique<Spaceship>(Spaceship::Player, mTextures));
-	mPlayerShip = leader.get();
-	mPlayerShip->setPosition(mSpawnPosition + sf::Vector2f(0.f, 240.f));
-
-	mSceneLayers[Space]->attachChild(std::move(leader));
-
-	// Add enemy Spaceships
-	addEnemies();
-
-	// add lifes dummys
-	addLifes();
-
-	// add Shields
-	addShields();
-
-	// Add sound effect node
-	auto soundNode(std::make_unique<SoundNode>(mSounds));
-	mSceneGraph.attachChild(std::move(soundNode));
-}
-
-void World::addShields()
-{
-	addShield(  85.f, 150.f);
-	addShield( -85.f, 150.f);
-	addShield( 250.f, 150.f);
-	addShield(-250.f, 150.f);
-}
-
-void World::addShield(float relX, float relY)
-{
-	auto shield(std::make_unique<Shield>(mImages, mTarget.getSize()));
-	shield->setPosition(mSpawnPosition.x + relX, mSpawnPosition.y + relY);
-	mSceneLayers[Space]->attachChild(std::move(shield));
-}
-
-void World::addLifes()
-{
-	addLife(300.f, -275.f);
-	addLife(350.f, -275.f);
-}
-
-void World::addLife(float relX, float relY)
-{
-	auto life(std::make_unique<Life>(Spaceship::Player, mTextures));
-	life->setPosition(mSpawnPosition + sf::Vector2f(relX, relY));
-	mLives.push_back(std::move(life));
-}
-
-void World::addEnemies()
-{
-	// Add Boss
-	addEnemy(Spaceship::Boss, MovementsPadding, Padding * 1.5);
-
-	// Add enemies
-	constexpr auto numberOfEnemies = 66u;
-	constexpr auto enemiesPerRow = 11u;
-	constexpr auto horizontalSpacing = 40.f;
-	constexpr auto verticalSpacing = 35.f;
-	const sf::Vector2f positionOfTopLeft(MovementsPadding, Padding * 2.5);
-
-	for (auto i = 0u; i < numberOfEnemies; ++i)
-	{
-		sf::Vector2f position(horizontalSpacing * (i % enemiesPerRow), verticalSpacing * (i / enemiesPerRow));
-
-		if(i < 22)
-			addEnemy(Spaceship::Enemy1, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
-		else if (i >= 22 && i < 44)
-			addEnemy(Spaceship::Enemy2, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
-		if (i >= 44)
-			addEnemy(Spaceship::Enemy3, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
-	}
-}
-
-void World::addEnemy(Spaceship::Type type, float relX, float relY)
-{
-	auto enemy(std::make_unique<Spaceship>(type, mTextures));
-	enemy->setPosition(relX, relY);
-	mSceneLayers[Space]->attachChild(std::move(enemy));
+	mScoreText.setString(std::to_string(mScore));
 }
 
 void World::adaptPlayerPosition()
@@ -399,6 +425,10 @@ void World::checkForCollision()
 		{
 			mQuadTreeSecondary.insert(node);
 		}
+		else if (node.getCategory() & Category::BossSpaceship)
+		{
+			mQuadTreePrimary.insert(node);
+		}
 	};
 
 	mCommandQueue.push(command);
@@ -414,6 +444,7 @@ void World::handleCollisions()
 void World::playerProjectileCollision()
 {
 	std::vector<SceneNode*> mCollidableNodes;
+	std::set<SceneNode::Pair> checked;
 
 	for (const auto& node1 : mPlayerBulletNodes)
 	{
@@ -439,29 +470,56 @@ void World::playerProjectileCollision()
 					projectile.destroy();
 				}
 			}
-			else if (collision(*node1, *node2))
+			else 
 			{
-				auto& enemy = static_cast<Spaceship&>(*node2);
-				auto& projectile = static_cast<Projectile&>(*node1);
+				if (!collision(*node1, *node2))
+					continue;
 
-				switch (enemy.getType())
+				SceneNode::Pair pair(std::minmax(node1, node2));
+
+				if (checked.find(pair) != checked.end())
+					continue;
+
+				checked.insert(pair);
+
+				if (matchesCategories(pair, Category::BossSpaceship, Category::PlayerProjectile))
 				{
-				case Spaceship::Boss:
+					auto& enemy = static_cast<Boss&>(*pair.first);
+					auto& projectile = static_cast<Projectile&>(*pair.second);
+
 					mScore += 100;
-					break;
-				case Spaceship::Enemy1:
-					mScore += 30;
-					break;
-				case Spaceship::Enemy2:
-					mScore += 20;
-					break;
-				case Spaceship::Enemy3:
-					mScore += 10;
-					break;
-				default:break;
+
+					enemy.damage(projectile.getDamage());
+
+					projectile.destroy();
+
+					playLocalSound(enemy.getWorldPosition(), SoundEffect::EnemiesExplosion);
 				}
-				enemy.damage(projectile.getDamage());
-				projectile.destroy();
+				else if (matchesCategories(pair, Category::EnemySpaceship, Category::PlayerProjectile))
+				{
+					auto& enemy = static_cast<Invaders&>(*pair.first);
+					auto& projectile = static_cast<Projectile&>(*pair.second);
+
+					switch (enemy.getType())
+					{
+					case Invaders::Enemy1:
+						mScore += 30;
+						break;
+					case Invaders::Enemy2:
+						mScore += 20;
+						break;
+					case Invaders::Enemy3:
+						mScore += 10;
+						break;
+					default:break;
+					}
+
+					enemy.damage(projectile.getDamage());
+
+					projectile.destroy();
+
+					playLocalSound(enemy.getWorldPosition(), SoundEffect::EnemiesExplosion);
+				}
 			}
 		}
 	}
@@ -498,12 +556,14 @@ void World::enemyProjectileCollision()
 			else if (collision(*node1, *node2))
 			{
 
-				auto& player = static_cast<Spaceship&>(*node2);
+				auto& player = static_cast<Player&>(*node2);
 				auto& projectile = static_cast<Projectile&>(*node1);
 
 				player.onHit();
 				player.damage(projectile.getDamage());
+
 				projectile.destroy();
+
 				if (!mLives.empty())
 					mLives.pop_back();
 			}
@@ -531,7 +591,7 @@ void World::enemyCollision()
 			if (node2->getCategory() & Category::Shield)
 			{
 				auto& shield = static_cast<Shield&>(*node2);
-				auto& enemy = static_cast<Spaceship&>(*node1);
+				auto& enemy = static_cast<Invaders&>(*node1);
 
 				if (PixelcollidesPair(shield, enemy))
 				{
@@ -540,13 +600,17 @@ void World::enemyCollision()
 			}
 			else if (collision(*node1, *node2))
 			{
-				auto& player = static_cast<Spaceship&>(*node2);
-				auto& enemy = static_cast<Spaceship&>(*node1);
+				auto& player = static_cast<Player&>(*node2);
+				auto& enemy = static_cast<Invaders&>(*node1);
 
 				player.damage(enemy.getHitpoints());
+
 				enemy.destroy();
+
 				if (!mLives.empty())
 					mLives.pop_back();
+
+				playLocalSound(enemy.getWorldPosition(), SoundEffect::EnemiesExplosion);
 			}
 		}
 	}
@@ -554,12 +618,12 @@ void World::enemyCollision()
 
 bool World::hasAlivePlayer() const
 {
-	return !mPlayerShip->isMarkedForRemoval();
+	return !mPlayerShip->isDestroyed();
 }
 
 bool World::hasPlayerWon() const
 {
-	return mEnemyNodes.empty();
+	return mEnemyNodes.empty() && mBoss->isDestroyed();
 }
 
 void World::adaptEnemyMovements()
@@ -568,10 +632,7 @@ void World::adaptEnemyMovements()
 
 	for (const auto& i : mEnemyNodes)
 	{
-		Spaceship& enemy = static_cast<Spaceship&>(*i);
-
-		if (enemy.getType() == Spaceship::Boss)
-			continue;
+		Invaders& enemy = static_cast<Invaders&>(*i);
 
 		if (!getMovementsfieldBounds().contains(enemy.getPosition()))
 			changeDirection = true;
@@ -580,10 +641,7 @@ void World::adaptEnemyMovements()
 	// let invaders moving down and update condition of change direction
 	for (const auto& i : mEnemyNodes)
 	{
-		Spaceship& enemy = static_cast<Spaceship&>(*i);
-
-		if (enemy.getType() == Spaceship::Boss)
-			continue;
+		Invaders& enemy = static_cast<Invaders&>(*i);
 
 		enemy.requestChangeDirection(changeDirection);
 	}
@@ -602,7 +660,7 @@ void World::controlEnemyFire()
 
 	for (auto i = 0u; i < size; ++i)
 	{
-		Spaceship& enemy = static_cast<Spaceship&>(*mEnemyNodes[i]);
+		Invaders& enemy = static_cast<Invaders&>(*mEnemyNodes[i]);
 
 		if (enemy.getWorldPosition().y >= mDeadLine - 20.f)
 			mPlayerShip->destroy();
@@ -613,6 +671,15 @@ void World::controlEnemyFire()
 		if (i < 11)
 			enemy.fire();
 	}
+}
+
+void World::playLocalSound(sf::Vector2f worldPosition, SoundEffect::ID effect)
+{
+	Command command;
+	command.category = Category::SoundEffect;
+	command.action = derivedAction<SoundNode>(std::bind(&SoundNode::playSound, std::placeholders::_1, effect, worldPosition));
+
+	mCommandQueue.push(command);
 }
 
 void World::updateSounds()

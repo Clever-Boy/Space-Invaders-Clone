@@ -77,7 +77,7 @@ sf::Transform SceneNode::getWorldTransform() const
 	sf::Transform transform = sf::Transform::Identity;
 
 	for (const auto* node = this; node != nullptr; node = node->mParent)
-		transform.combine(node->getTransform());
+		transform = node->getTransform() * transform;
 
 	return transform;
 }
@@ -101,7 +101,7 @@ unsigned int SceneNode::getCategory() const
 void SceneNode::removeWrecks()
 {
 	// Remove all children which request so
-	auto wreckfieldBegin = std::remove_if(mChildren.begin(), mChildren.end(), std::mem_fn(&SceneNode::isMarkedForRemoval));
+	auto wreckfieldBegin = std::remove_if(mChildren.begin(), mChildren.end(), std::mem_fn(&SceneNode::isDestroyed));
 	mChildren.erase(wreckfieldBegin, mChildren.end());
 
 	// Call function recursively for all remaining children
@@ -111,12 +111,6 @@ void SceneNode::removeWrecks()
 sf::FloatRect SceneNode::getBoundingRect() const
 {
 	return sf::FloatRect();
-}
-
-bool SceneNode::isMarkedForRemoval() const
-{
-	// By default, remove node if entity is destroyed
-	return isDestroyed();
 }
 
 bool SceneNode::isDestroyed() const
