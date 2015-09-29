@@ -311,8 +311,8 @@ void World::draw()
 	shapeMovements.setPosition(boundMovements.left, boundMovements.top);
 	mTarget.draw(shapeMovements);
 
-	mQuadTreePrimary.draw(mTarget);
-	mQuadTreeSecondary.draw(mTarget);
+	mTarget.draw(mQuadTreePrimary);
+	mTarget.draw(mQuadTreeSecondary);
 #endif
 }
 

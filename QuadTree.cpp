@@ -145,8 +145,7 @@ void QuadTree::getCloseObjects(const sf::FloatRect& Bounds, std::vector<SceneNod
 	std::copy(mObjects.begin(), mObjects.end(), std::back_inserter(returnObjects));
 }
 
-#ifdef _DEBUG
-void QuadTree::draw(sf::RenderTarget& target)
+void QuadTree::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	sf::RectangleShape shape(sf::Vector2f(mBounds.width, mBounds.height));
 	shape.setPosition(mBounds.left, mBounds.top);
@@ -165,8 +164,7 @@ void QuadTree::draw(sf::RenderTarget& target)
 	{
 		for (const auto& child : mChildren)
 		{
-			child->draw(target);
+			child->draw(target, states);
 		}
 	}
 }
-#endif

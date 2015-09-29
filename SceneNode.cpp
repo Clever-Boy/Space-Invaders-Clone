@@ -56,8 +56,9 @@ void SceneNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	drawCurrent(target, states);
 	drawChildren(target, states);
 
-	// Draw bounding rectangle - disabled by default
-	//drawBoundingRect(target, states);
+#ifdef DEBUG
+	drawBoundingRect(target, states);
+#endif
 }
 
 void SceneNode::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const

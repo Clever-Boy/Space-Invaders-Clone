@@ -6,7 +6,7 @@
 #include <array>
 
 
-class QuadTree final : private sf::NonCopyable
+class QuadTree final : public sf::Drawable, private sf::NonCopyable
 {
 public:
 	using Ptr = std::unique_ptr<QuadTree>;
@@ -21,12 +21,8 @@ public:
 	void								getCloseObjects(const sf::FloatRect& Bounds, std::vector<SceneNode*>& returnObjects);
 
 
-#ifdef _DEBUG
-	void								draw(sf::RenderTarget& target);
-#endif
-
-
 private:
+	void								draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void								split();
 	int									getIndex(const sf::FloatRect& Rect);
 
