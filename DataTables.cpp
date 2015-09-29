@@ -16,8 +16,8 @@ std::vector<BossData> initializeBossData()
 	data[Boss::BossShip].texture = Textures::Boss;
 	data[Boss::BossShip].textureRectExplosion = sf::IntRect(0, 0, 41, 34);
 
-	data[Boss::BossShip].directions.push_back(Direction(-90.f, 720.f - 55.f));
-	data[Boss::BossShip].directions.push_back(Direction(90.f, 720.f - 55.f));
+	data[Boss::BossShip].directions.push_back(Direction(-90.f, 720.f - 45.f / 2));
+	data[Boss::BossShip].directions.push_back(Direction(90.f, 720.f - 45.f / 4 ));
 
 	return data;
 }

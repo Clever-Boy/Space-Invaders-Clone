@@ -130,7 +130,6 @@ void Invaders::requstChangeState()
 		mPreviousState = Right;
 		mTravelledDistance = 0;
 		mMovement = sf::Vector2f(0, 1);
-
 		return;
 	}
 

@@ -6,7 +6,7 @@
 #include "SettingsState.hpp"
 #include "GameOverState.hpp"
 
-//#define FIXED_TIME_STEP_ENABLE
+#define FIXED_TIME_STEP_ENABLE
 
 const sf::Time Application::TimePerFrame = sf::seconds(1.f / 60.f);
 
