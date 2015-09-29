@@ -27,7 +27,7 @@ Invaders::Invaders(Type type, const TextureHolder& textures)
 	, mTravelledDistance()
 	, mState(States::Right)
 	, mPreviousState(States::Right)
-	, mAngle(-90.f)
+	, mMovement(1, 0)
 	, mMaxSpeed(Table[mType].speed)
 	, mAnimateCountdown(sf::Time::Zero)
 	, mAnimateRate(Table[type].animateRate)
@@ -126,19 +126,20 @@ void Invaders::requstChangeState()
 {
 	if (mState == Right)
 	{
-		mAngle = 0.f;
 		mState = Down;
 		mPreviousState = Right;
 		mTravelledDistance = 0;
+		mMovement = sf::Vector2f(0, 1);
+
 		return;
 	}
 
 	if (mState == Left)
 	{
-		mAngle = 0.f;
 		mState = Down;
 		mPreviousState = Left;
 		mTravelledDistance = 0;
+		mMovement = sf::Vector2f(0, 1);
 		return;
 	}
 
@@ -147,12 +148,12 @@ void Invaders::requstChangeState()
 		if (mPreviousState == Left)
 		{
 			mState = Right;
-			mAngle = -90.f;
+			mMovement = sf::Vector2f(1, 0);
 		}
 		else
 		{
 			mState = Left;
-			mAngle = 90.f;
+			mMovement = sf::Vector2f(-1, 0);
 		}
 
 		mPreviousState = Down;
@@ -167,12 +168,7 @@ Invaders::States Invaders::getCurrentState() const
 
 void Invaders::updateMovementPattern(sf::Time dt)
 {
-	// Compute velocity from direction
-	auto radians = toRadian(mAngle + 90.f);
-	auto vx = getMaxSpeed() * std::cos(radians);
-	auto vy = getMaxSpeed() * std::sin(radians);
-
-	setVelocity(vx, vy);
+	setVelocity(mMovement * getMaxSpeed());
 
 	mTravelledDistance += getMaxSpeed() * dt.asSeconds();
 }

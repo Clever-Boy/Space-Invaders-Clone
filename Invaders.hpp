@@ -72,7 +72,7 @@ private:
 	float			mTravelledDistance;
 	States			mState;
 	States			mPreviousState;
-	float			mAngle;
+	sf::Vector2f	mMovement;
 
 	int				mAnimateRate;
 	sf::Time		mAnimateCountdown;
