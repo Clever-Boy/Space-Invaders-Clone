@@ -155,7 +155,7 @@ void Invaders::updateMovementPattern(sf::Time dt)
 void Invaders::applyAnimation(sf::Time dt)
 {
 	sf::Vector2i textureBounds(mSprite.getTexture()->getSize());
-	sf::IntRect textureRect = mSprite.getTextureRect();
+	auto textureRect(mSprite.getTextureRect());
 
 	if (mAnimateCountdown <= sf::Time::Zero)
 	{

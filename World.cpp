@@ -126,7 +126,7 @@ void World::buildScene()
 	}
 
 	//Prepare the tiled background
-	sf::Texture& texture = mTextures.get(Textures::Background);
+	auto& texture(mTextures.get(Textures::Background));
 
 	// Add the background sprite to the scene
 	auto backgroundSprite(std::make_unique<SpriteNode>(texture));
@@ -224,7 +224,7 @@ sf::FloatRect World::getViewBounds() const
 
 sf::FloatRect World::getBattlefieldBounds() const
 {
-	sf::FloatRect bounds = getViewBounds();
+	auto bounds(getViewBounds());
 
 	bounds.top += Padding;
 	bounds.height -= Padding * 2;
@@ -237,7 +237,7 @@ sf::FloatRect World::getBattlefieldBounds() const
 
 sf::FloatRect World::getMovementsfieldBounds() const
 {
-	sf::FloatRect bounds = getViewBounds();
+	auto bounds(getViewBounds());
 
 	bounds.top += MovementsPadding;
 	bounds.height -= MovementsPadding * 2 ;

@@ -99,7 +99,7 @@ void Player::onHit()
 
 void Player::checkForHit(sf::Time dt)
 {
-	sf::IntRect textureRect = mSprite.getTextureRect();
+	auto textureRect(mSprite.getTextureRect());
 
 	if (mIsHit)
 	{

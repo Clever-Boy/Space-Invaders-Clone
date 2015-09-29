@@ -74,7 +74,7 @@ void SceneNode::drawChildren(sf::RenderTarget& target, sf::RenderStates states) 
 
 void SceneNode::drawBoundingRect(sf::RenderTarget& target, sf::RenderStates) const
 {
-	sf::FloatRect rect = getBoundingRect();
+	auto rect(getBoundingRect());
 
 	sf::RectangleShape shape;
 	shape.setPosition(sf::Vector2f(rect.left, rect.top));
