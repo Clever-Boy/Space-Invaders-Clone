@@ -58,7 +58,7 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mFonts(fonts)
 	, mSceneGraph()
 	, mSceneLayers()
-	, mWorldBounds(0.f, 0.f, mWorldView.getSize().x, mWorldView.getSize().y)
+	, mWorldBounds(mWorldView.getCenter() - mWorldView.getSize() / 2.f, mWorldView.getSize())
 	, mSpawnPosition(mWorldView.getSize().x / 2.f, mWorldView.getSize().y / 2.f)
 	, mPlayerShip(nullptr)
 	, mIsBossDead(false)
@@ -285,7 +285,7 @@ void World::draw()
 	mTarget.draw(spawnPosition);
 
 	sf::RectangleShape shapeWorld;
-	auto boundWorld = mWorldBounds;
+	auto boundWorld(mWorldBounds);
 	shapeWorld.setSize(sf::Vector2f(boundWorld.width, boundWorld.height));
 	shapeWorld.setFillColor(sf::Color::Transparent);
 	shapeWorld.setOutlineColor(sf::Color::Green);
@@ -294,7 +294,7 @@ void World::draw()
 	mTarget.draw(shapeWorld);
 
 	sf::RectangleShape shapeBattle;
-	auto boundBattle = getBattlefieldBounds();
+	auto boundBattle(getBattlefieldBounds());
 	shapeBattle.setSize(sf::Vector2f(boundBattle.width, boundBattle.height));
 	shapeBattle.setFillColor(sf::Color::Transparent);
 	shapeBattle.setOutlineColor(sf::Color::Red);
@@ -303,7 +303,7 @@ void World::draw()
 	mTarget.draw(shapeBattle);
 
 	sf::RectangleShape shapeMovements;
-	auto boundMovements = getMovementsfieldBounds();
+	auto boundMovements(getMovementsfieldBounds());
 	shapeMovements.setSize(sf::Vector2f(boundMovements.width, boundMovements.height));
 	shapeMovements.setFillColor(sf::Color::Transparent);
 	shapeMovements.setOutlineColor(sf::Color::Yellow);
@@ -361,12 +361,12 @@ void World::updateText()
 void World::adaptPlayerPosition()
 {
 	// Keep player's position inside the screen bounds, at least borderDistance units from the border
-	sf::FloatRect viewBounds(mWorldView.getCenter() - mWorldView.getSize() / 2.f, mWorldView.getSize());
+	auto Bounds(getMovementsfieldBounds());
 
 	sf::Vector2f position = mPlayerShip->getPosition();
 
-	position.x = std::max(position.x, viewBounds.left + MovementsPadding);
-	position.x = std::min(position.x, viewBounds.left + viewBounds.width - MovementsPadding);
+	position.x = std::max(position.x, Bounds.left);
+	position.x = std::min(position.x, Bounds.left + Bounds.width);
 
 	mPlayerShip->setPosition(position);
 }
