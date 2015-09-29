@@ -5,6 +5,7 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
 
 //#define DEBUG
 
@@ -21,8 +22,8 @@ namespace
 		auto shieldBounds = static_cast<sf::Rect<std::size_t>>(shield.getBoundingRect());
 		auto objectBounds = static_cast<sf::Rect<std::size_t>>(object.getBoundingRect());
 
-		auto width = objectBounds.left + objectBounds.width * object.getScale().x;
-		auto height = objectBounds.top + objectBounds.height * object.getScale().y;
+		auto width = objectBounds.left + objectBounds.width;
+		auto height = objectBounds.top + objectBounds.height;
 
 		sf::Vector2u position(objectBounds.left, objectBounds.top);
 
@@ -277,6 +278,21 @@ void World::draw()
 	mTarget.draw(mLivesText);
 
 #ifdef DEBUG
+	sf::CircleShape spawnPosition(2.f);
+	spawnPosition.setPosition(mSpawnPosition);
+	spawnPosition.setFillColor(sf::Color::Red);
+	centerOrigin(spawnPosition);
+	mTarget.draw(spawnPosition);
+
+	sf::RectangleShape shapeWorld;
+	auto boundWorld = mWorldBounds;
+	shapeWorld.setSize(sf::Vector2f(boundWorld.width, boundWorld.height));
+	shapeWorld.setFillColor(sf::Color::Transparent);
+	shapeWorld.setOutlineColor(sf::Color::Green);
+	shapeWorld.setOutlineThickness(-2.f);
+	shapeWorld.setPosition(boundWorld.left, boundWorld.top);
+	mTarget.draw(shapeWorld);
+
 	sf::RectangleShape shapeBattle;
 	auto boundBattle = getBattlefieldBounds();
 	shapeBattle.setSize(sf::Vector2f(boundBattle.width, boundBattle.height));
@@ -315,9 +331,6 @@ void World::update(sf::Time dt)
 	while (!mCommandQueue.isEmpty())
 		mSceneGraph.onCommand(mCommandQueue.pop());
 
-	// Adapt Movements 
-	adaptEnemyMovements();
-
 	// control enemy fires
 	controlEnemyFire();
 
@@ -325,6 +338,9 @@ void World::update(sf::Time dt)
 	handleCollisions();
 
 	mSceneGraph.removeWrecks();
+
+	// Adapt Movements 
+	adaptEnemyMovements();
 
 	// Regular update step
 	mSceneGraph.update(dt, mCommandQueue);
@@ -600,12 +616,17 @@ void World::adaptEnemyMovements()
 
 	for (const auto& i : mEnemyNodes)
 	{
-		if (i->isDestroyed())
+		Invaders& enemy = static_cast<Invaders&>(*i);
+
+		if (enemy.isDestroyed())
 			continue;
 
-		if (!getMovementsfieldBounds().contains(i->getWorldPosition()))
+		if (!getMovementsfieldBounds().contains(enemy.getWorldPosition()))
 			changeDirection = true;
 	}
+
+	if (!changeDirection)
+		return;
 
 	// let invaders moving down and update condition of change direction
 	for (const auto& i : mEnemyNodes)

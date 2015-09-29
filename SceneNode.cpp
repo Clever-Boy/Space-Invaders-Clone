@@ -2,6 +2,7 @@
 #include "Command.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 
 SceneNode::SceneNode(Category::Type category)
@@ -54,6 +55,9 @@ void SceneNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	drawCurrent(target, states);
 	drawChildren(target, states);
+
+	// Draw bounding rectangle - disabled by default
+	//drawBoundingRect(target, states);
 }
 
 void SceneNode::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
@@ -65,6 +69,20 @@ void SceneNode::drawChildren(sf::RenderTarget& target, sf::RenderStates states) 
 {
 	for (const auto& child : mChildren)
 		child->draw(target, states);
+}
+
+void SceneNode::drawBoundingRect(sf::RenderTarget& target, sf::RenderStates) const
+{
+	sf::FloatRect rect = getBoundingRect();
+
+	sf::RectangleShape shape;
+	shape.setPosition(sf::Vector2f(rect.left, rect.top));
+	shape.setSize(sf::Vector2f(rect.width, rect.height));
+	shape.setFillColor(sf::Color::Transparent);
+	shape.setOutlineColor(sf::Color::Green);
+	shape.setOutlineThickness(1.f);
+
+	target.draw(shape);
 }
 
 sf::Vector2f SceneNode::getWorldPosition() const

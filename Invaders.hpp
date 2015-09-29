@@ -60,7 +60,7 @@ private:
 
 	bool 			mIsMarkedForRemoval;
 
-	sf::Time		mTravelledTime;
+	float			mTravelledDistance;
 	std::size_t		mDirectionIndex;
 	bool			mChaneDirction;
 
