@@ -136,9 +136,9 @@ void Invaders::requstChangeState()
 	if (mState == Left)
 	{
 		mAngle = 0.f;
-		mTravelledDistance = 0;
 		mState = Down;
 		mPreviousState = Left;
+		mTravelledDistance = 0;
 		return;
 	}
 
@@ -154,9 +154,9 @@ void Invaders::requstChangeState()
 			mState = Left;
 			mAngle = 90.f;
 		}
-		mTravelledDistance = 0;
+
 		mPreviousState = Down;
-		return;
+		mTravelledDistance = 0;
 	}
 }
 

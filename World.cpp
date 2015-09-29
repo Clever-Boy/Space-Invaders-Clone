@@ -613,6 +613,7 @@ bool World::hasPlayerWon() const
 void World::adaptEnemyMovements()
 {
 	bool changeDirection = false;
+	const auto TravelledDistance = 30.f;
 
 	for (const auto& i : mEnemyNodes)
 	{
@@ -623,7 +624,7 @@ void World::adaptEnemyMovements()
 
 		if (enemy.getCurrentState() == Invaders::Down)
 		{
-			if (enemy.getTravelledDistance() > 30.f)
+			if (enemy.getTravelledDistance() > TravelledDistance)
 				changeDirection = true;
 		}
 
