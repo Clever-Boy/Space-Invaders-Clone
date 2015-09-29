@@ -25,8 +25,9 @@ Invaders::Invaders(Type type, const TextureHolder& textures)
 	, mIsFiring(false)
 	, mIsMarkedForRemoval(false)
 	, mTravelledDistance()
-	, mDirectionIndex()
-	, mChaneDirction(false)
+	, mState(States::Right)
+	, mPreviousState(States::Right)
+	, mAngle(-90.f)
 	, mMaxSpeed(Table[mType].speed)
 	, mAnimateCountdown(sf::Time::Zero)
 	, mAnimateRate(Table[type].animateRate)
@@ -116,34 +117,58 @@ void Invaders::fire()
 		mIsFiring = true;
 }
 
-void Invaders::requestChangeDirection(bool ChangeDirction)
+float Invaders::getTravelledDistance() const
 {
-	mChaneDirction = ChangeDirction;
+	return mTravelledDistance;
+}
+
+void Invaders::requstChangeState()
+{
+	if (mState == Right)
+	{
+		mAngle = 0.f;
+		mState = Down;
+		mPreviousState = Right;
+		mTravelledDistance = 0;
+		return;
+	}
+
+	if (mState == Left)
+	{
+		mAngle = 0.f;
+		mTravelledDistance = 0;
+		mState = Down;
+		mPreviousState = Left;
+		return;
+	}
+
+	if (mState == Down)
+	{
+		if (mPreviousState == Left)
+		{
+			mState = Right;
+			mAngle = -90.f;
+		}
+		else
+		{
+			mState = Left;
+			mAngle = 90.f;
+		}
+		mTravelledDistance = 0;
+		mPreviousState = Down;
+		return;
+	}
+}
+
+Invaders::States Invaders::getCurrentState() const
+{
+	return mState;
 }
 
 void Invaders::updateMovementPattern(sf::Time dt)
 {
-	// Enemy Spaceships: Movement pattern
-	const std::vector<Direction>& directions = Table[mType].directions;
-
-	// Moved long enough in horizontal direction: Change direction to move down
-	if ((mDirectionIndex % 2 == 0) && mChaneDirction)
-	{
-		mDirectionIndex = (mDirectionIndex + 1) % directions.size();
-		mTravelledDistance = 0.f;
-		mChaneDirction = false;
-	}
-
-	// Moved long enough in vertical direction: Change direction to move aside
-	if ((mDirectionIndex % 2 != 0) && mTravelledDistance > directions[mDirectionIndex].distance)
-	{
-		mDirectionIndex = (mDirectionIndex + 1) % directions.size();
-		mTravelledDistance = 0.f;
-		mChaneDirction = false;
-	}
-
 	// Compute velocity from direction
-	auto radians = toRadian(directions[mDirectionIndex].angle + 90.f);
+	auto radians = toRadian(mAngle + 90.f);
 	auto vx = getMaxSpeed() * std::cos(radians);
 	auto vy = getMaxSpeed() * std::sin(radians);
 

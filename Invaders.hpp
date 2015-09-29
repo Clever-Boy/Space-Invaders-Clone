@@ -17,6 +17,13 @@ public:
 		TypeCount
 	};
 
+	enum States
+	{
+		Right,
+		Left,
+		Down
+	};
+
 
 public:
 	explicit		Invaders(Type type, const TextureHolder& textures);
@@ -30,7 +37,9 @@ public:
 	void 			fire();
 	Type			getType() const;
 
-	void			requestChangeDirection(bool ChangeDirction);
+	float			getTravelledDistance() const;
+	States			getCurrentState() const;
+	void			requstChangeState();
 
 
 private:
@@ -61,8 +70,9 @@ private:
 	bool 			mIsMarkedForRemoval;
 
 	float			mTravelledDistance;
-	std::size_t		mDirectionIndex;
-	bool			mChaneDirction;
+	States			mState;
+	States			mPreviousState;
+	float			mAngle;
 
 	int				mAnimateRate;
 	sf::Time		mAnimateCountdown;

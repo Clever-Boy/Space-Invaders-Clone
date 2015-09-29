@@ -43,7 +43,6 @@ struct InvadersData
 	sf::Vector2f					size;
 	sf::Time						fireInterval;
 	std::size_t						fireRate;
-	std::vector<Direction>			directions;
 	sf::Time						animationInterval;
 	int								animateRate;
 	sf::IntRect						textureRectExplosion;

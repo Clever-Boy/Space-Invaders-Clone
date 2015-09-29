@@ -33,10 +33,6 @@ std::vector<InvadersData> initializeInvadersData()
 	data[Invaders::Enemy1].speed = 50.f;
 	data[Invaders::Enemy1].texture = Textures::Enemies;
 	data[Invaders::Enemy1].textureRect = sf::IntRect(0, 0, 25, 20);
-	data[Invaders::Enemy1].directions.push_back(Direction(-90.f, 0.f));
-	data[Invaders::Enemy1].directions.push_back(Direction(0.f, 30.f));
-	data[Invaders::Enemy1].directions.push_back(Direction(+90.f, 0.f));
-	data[Invaders::Enemy1].directions.push_back(Direction(0.f, 30.f));
 	data[Invaders::Enemy1].fireInterval = sf::seconds(6);
 	data[Invaders::Enemy1].animationInterval = sf::seconds(2);
 	data[Invaders::Enemy1].textureRectExplosion = sf::IntRect(0, 0, 41, 34);
@@ -49,10 +45,6 @@ std::vector<InvadersData> initializeInvadersData()
 	data[Invaders::Enemy2].speed = 50.f;
 	data[Invaders::Enemy2].texture = Textures::Enemies;
 	data[Invaders::Enemy2].textureRect = sf::IntRect(0, 20, 25, 20);
-	data[Invaders::Enemy2].directions.push_back(Direction(-90.f, 0.f));
-	data[Invaders::Enemy2].directions.push_back(Direction(0.f, 30.f));
-	data[Invaders::Enemy2].directions.push_back(Direction(+90.f, 0.f));
-	data[Invaders::Enemy2].directions.push_back(Direction(0.f, 30.f));
 	data[Invaders::Enemy2].fireInterval = sf::seconds(6);
 	data[Invaders::Enemy2].animationInterval = sf::seconds(2);
 	data[Invaders::Enemy2].textureRectExplosion = sf::IntRect(0, 0, 41, 34);
@@ -65,10 +57,6 @@ std::vector<InvadersData> initializeInvadersData()
 	data[Invaders::Enemy3].speed = 50.f;
 	data[Invaders::Enemy3].texture = Textures::Enemies;
 	data[Invaders::Enemy3].textureRect = sf::IntRect(0, 40, 25, 20);
-	data[Invaders::Enemy3].directions.push_back(Direction(-90.f, 0.f ));
-	data[Invaders::Enemy3].directions.push_back(Direction(0.f, 30.f));
-	data[Invaders::Enemy3].directions.push_back(Direction(+90.f, 0.f));
-	data[Invaders::Enemy3].directions.push_back(Direction(0.f, 30.f));
 	data[Invaders::Enemy3].fireInterval = sf::seconds(6);
 	data[Invaders::Enemy3].animationInterval = sf::seconds(2);
 	data[Invaders::Enemy3].textureRectExplosion = sf::IntRect(0, 0, 41, 34);
