@@ -673,6 +673,8 @@ bool World::hasPlayerWon() const
 {
 	if(mEnemyNodes.empty())
 		return (mBoss->isDestroyed());
+
+	return false;
 }
 
 void World::adaptEnemyMovements()
