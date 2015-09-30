@@ -26,59 +26,59 @@ public:
 
 
 public:
-	explicit		Invaders(Type type, const TextureHolder& textures);
+	explicit				Invaders(Type type, const TextureHolder& textures);
 
-	unsigned int	getCategory() const override;
-	sf::FloatRect	getBoundingRect() const override;
+	unsigned int			getCategory() const override;
+	sf::FloatRect			getBoundingRect() const override;
 
-	float			getMaxSpeed() const;
-	void			setMaxSpeed(float point);
+	float					getMaxSpeed() const;
+	void					setMaxSpeed(float point);
 
-	void 			fire();
-	Type			getType() const;
+	void 					fire();
+	Type					getType() const;
 
-	float			getTravelledDistance() const;
-	States			getCurrentState() const;
-	void			requstChangeState();
-
-
-private:
-	void			drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const override;
-	void 			updateCurrent(sf::Time dt, CommandQueue& commands) override;
-
-	void			updateMovementPattern(sf::Time dt);
-	void			applyAnimation(sf::Time dt);
-
-	void			checkProjectileLaunch(sf::Time dt, CommandQueue& commands);
-	void			createBullets(SceneNode& node, const TextureHolder& textures) const;
-	void			createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const;
-
-	bool 			isMarkedForRemoval() const override;
-
-	void			playLocalSound(CommandQueue& commands, SoundEffect::ID effect);
+	float					getTravelledDistance() const;
+	States					getCurrentState() const;
+	void					requstChangeState();
 
 
 private:
-	Type			mType;
-	sf::Sprite		mSprite;
+	void					drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const override;
+	void 					updateCurrent(sf::Time dt, CommandQueue& commands) override;
 
-	Command 		mFireCommand;
-	sf::Time		mFireCountdown;
-	bool 			mIsFiring;
-	int				mFireRateLevel;
+	void					updateMovementPattern(sf::Time dt);
+	void					applyAnimation(sf::Time dt);
 
-	bool 			mIsMarkedForRemoval;
+	void					checkProjectileLaunch(sf::Time dt, CommandQueue& commands);
+	void					createBullets(SceneNode& node, const TextureHolder& textures) const;
+	void					createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const;
 
-	float			mTravelledDistance;
-	States			mState;
-	States			mPreviousState;
-	sf::Vector2f	mMovement;
+	bool 					isMarkedForRemoval() const override;
 
-	int				mAnimateRate;
-	sf::Time		mAnimateCountdown;
+	void					playLocalSound(CommandQueue& commands, SoundEffect::ID effect);
 
-	float			mMaxSpeed;
 
-	sf::Sprite		mExplosion;
-	bool			mPlayedExplosionSound;
+private:
+	Type					mType;
+	sf::Sprite				mSprite;
+
+	Command 				mFireCommand;
+	sf::Time				mFireCountdown;
+	bool 					mIsFiring;
+	int						mFireRateLevel;
+
+	bool 					mIsMarkedForRemoval;
+
+	float					mTravelledDistance;
+	States					mState;
+	States					mPreviousState;
+	sf::Vector2f			mMovement;
+
+	int						mAnimateRate;
+	sf::Time				mAnimateCountdown;
+
+	float					mMaxSpeed;
+
+	sf::Sprite				mExplosion;
+	bool					mPlayedExplosionSound;
 };

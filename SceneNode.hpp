@@ -9,10 +9,10 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/System/Time.hpp>
 
-#include <vector>
-#include <set>
-#include <memory>
 #include <utility>
+#include <vector>
+#include <memory>
+#include <set>
 
 
 struct Command;

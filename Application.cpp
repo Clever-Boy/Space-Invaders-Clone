@@ -58,7 +58,6 @@ void Application::run()
 			processInput();
 			update(TimePerFrame);
 
-			// Check inside this loop, because stack might be empty before update() call
 			if (mStateStack.isEmpty())
 				mWindow.close();
 		}
