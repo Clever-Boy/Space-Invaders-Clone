@@ -11,8 +11,9 @@ namespace
 	const std::vector<ProjectileData> Table = initializeProjectileData();
 }
 
+
 Projectile::Projectile(Type type, const TextureHolder& textures)
-	: Entity(1)
+	: Entity(Table[type].hitpoints)
 	, mType(type)
 	, mSprite(textures.get(Table[type].texture), Table[type].textureRect)
 {

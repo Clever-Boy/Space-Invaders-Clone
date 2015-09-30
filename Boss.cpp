@@ -14,16 +14,24 @@ namespace
 }
 
 
-Boss::Boss(Type type, const TextureHolder& textures)
+Boss::Boss(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, Dirction dirction)
 	: Entity(Table[type].hitpoints)
 	, mType(type)
 	, mSprite(textures.get(Table[type].texture))
-	, mTravelledDistance()
-	, mDirectionIndex()
+	, mDirectionIndex((dirction == MovingRight) ? +1.f : -1.f )
 	, mIsMarkedForRemoval(false)
 	, mExplosion()
+	, mShowExpolsion(true)
 	, mPlayedExplosionSound(false)
+	, mPlayedSound(false)
+	, mBounds()
 {
+	mBounds.left -= 100;
+	mBounds.width += bounds.width + 100 * 2;
+
+	mBounds.top += bounds.top;
+	mBounds.height += bounds.height;
+
 	mExplosion.setTexture(textures.get(Textures::EnemiesExplosion));
 	mExplosion.setColor(Table[type].color);
 	centerOrigin(mExplosion);
@@ -36,7 +44,7 @@ Boss::Boss(Type type, const TextureHolder& textures)
 
 void Boss::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	if (isDestroyed())
+	if (isDestroyed() && mShowExpolsion)
 		target.draw(mExplosion, states);
 	else
 		target.draw(mSprite, states);
@@ -50,7 +58,7 @@ void Boss::updateCurrent(sf::Time dt, CommandQueue& commands)
 		mIsMarkedForRemoval = true;
 
 		// Play explosion sound only once
-		if (!mPlayedExplosionSound)
+		if (!mPlayedExplosionSound && mShowExpolsion)
 		{
 			playLocalSound(commands, SoundEffect::EnemiesExplosion);
 
@@ -59,6 +67,13 @@ void Boss::updateCurrent(sf::Time dt, CommandQueue& commands)
 
 		return;
 	}
+
+	// Play sound 
+	playMovementSounds(dt, commands);
+
+	// delete it if boss goes out of range
+	if (!mBounds.contains(getWorldPosition()))
+		remove();
 
 	// Update enemy movement pattern; apply velocity
 	updateMovementPattern(dt);
@@ -88,24 +103,35 @@ float Boss::getMaxSpeed() const
 
 void Boss::updateMovementPattern(sf::Time dt)
 {
-	// Enemy Spaceships: Movement pattern
-	const std::vector<Direction>& directions = Table[mType].directions;
-
-	// Moved long enough in horizontal direction: flip direction to move aside
-	if ( mTravelledDistance > directions[mDirectionIndex].distance)
-	{
-		mDirectionIndex = (mDirectionIndex + 1) % directions.size();
-		mTravelledDistance = 0.f;
-	}
-
-	// Compute velocity from direction
-	auto radians = toRadian(directions[mDirectionIndex].angle + 90.f);
-	auto vx = getMaxSpeed() * std::cos(radians);
-	auto vy = getMaxSpeed() * std::sin(radians);
+	auto vx = getMaxSpeed() * mDirectionIndex;
+	auto vy = 0.f;
 
 	setVelocity(vx, vy);
+}
 
-	mTravelledDistance += getMaxSpeed() * dt.asSeconds();
+void Boss::playMovementSounds(sf::Time dt, CommandQueue& commands)
+{
+	if (!mPlayedSound)
+	{
+		playLocalSound(commands, SoundEffect::BossMovements);
+
+		mPlayedSound = true;
+	}
+
+	mTimer += dt;
+
+	if (mTimer > sf::seconds(3.f))
+	{
+		playLocalSound(commands, SoundEffect::BossMovements);
+
+		mTimer = sf::Time::Zero;
+	}
+}
+
+void Boss::remove()
+{
+	mShowExpolsion = false;
+	Entity::remove();
 }
 
 void Boss::playLocalSound(CommandQueue& commands, SoundEffect::ID effect)

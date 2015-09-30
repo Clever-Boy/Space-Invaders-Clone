@@ -65,6 +65,7 @@ struct PlayerData
 
 struct ProjectileData
 {
+	int								hitpoints;
 	int								damage;
 	float							speed;
 	sf::Color						color;

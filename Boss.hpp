@@ -17,14 +17,17 @@ public:
 		TypeCount
 	};
 
+	enum Dirction
+	{
+		MovingRight,
+		MovingLeft
+	};
 
 public:
-	explicit				Boss(Type type, const TextureHolder& textures);
+	explicit				Boss(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, Dirction dirction);
 
 	unsigned int			getCategory() const override;
 	sf::FloatRect			getBoundingRect() const override;
-
-	bool 					isMarkedForRemoval() const override;
 
 
 private:
@@ -33,19 +36,26 @@ private:
 
 	void					updateMovementPattern(sf::Time dt);
 	float					getMaxSpeed() const;
+	bool 					isMarkedForRemoval() const override;
 
 	void					playLocalSound(CommandQueue& commands, SoundEffect::ID effect);
+	void					playMovementSounds(sf::Time dt, CommandQueue& commands);
+	void					remove() override;
 
 
 private:
 	Type					mType;
 	sf::Sprite				mSprite;
 
-	float					mTravelledDistance;
-	std::size_t				mDirectionIndex;
+	float					mDirectionIndex;
 
 	bool 					mIsMarkedForRemoval;
 
 	sf::Sprite				mExplosion;
+	bool					mShowExpolsion;
 	bool					mPlayedExplosionSound;
+
+	sf::Time				mTimer;
+	sf::FloatRect			mBounds;
+	bool					mPlayedSound;
 };

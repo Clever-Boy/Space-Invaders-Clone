@@ -50,6 +50,7 @@ namespace SoundEffect
 		EnemiesGunfire,
 		EnemiesExplosion,
 		PlayerExplosion,
+		BossMovements,
 		Button,
 	};
 }

@@ -61,7 +61,6 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mWorldBounds(mWorldView.getCenter() - mWorldView.getSize() / 2.f, mWorldView.getSize())
 	, mSpawnPosition(mWorldView.getSize().x / 2.f, mWorldView.getSize().y / 2.f)
 	, mPlayerShip(nullptr)
-	, mIsBossDead(false)
 	, mQuadTreePrimary(1, mWorldBounds)
 	, mQuadTreeSecondary(1, mWorldBounds)
 	, mEnemyNodes()
@@ -74,6 +73,9 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mScoreText()
 	, mLivesText()
 	, mSounds(sounds)
+	, mTimer(sf::Time::Zero)
+	, mBossSpawn(true)
+	, mFirstSpawn(true)
 {
 	mStaticScoreText.setString("Score: ");
 	mStaticScoreText.setFont(mFonts.get(Fonts::Main));
@@ -140,11 +142,6 @@ void World::buildScene()
 	mPlayerShip->setPosition(mSpawnPosition + sf::Vector2f(0.f, 240.f));
 
 	mSceneLayers[Space]->attachChild(std::move(leader));
-
-	// Add Boss
-	auto boss(std::make_unique<Boss>(Boss::BossShip, mTextures));
-	boss->setPosition(MovementsPadding, Padding * 1.5);
-	mSceneLayers[Space]->attachChild(std::move(boss));
 
 	// Add enemy Spaceships
 	addEnemies();
@@ -216,6 +213,46 @@ void World::addEnemy(Invaders::Type type, float relX, float relY)
 	auto enemy(std::make_unique<Invaders>(type, mTextures));
 	enemy->setPosition(relX, relY);
 	mSceneLayers[Space]->attachChild(std::move(enemy));
+}
+
+void World::spawnBoss(sf::Time dt)
+{
+	Boss::Dirction dirction;
+	float position = 0.f;
+
+	mTimer += dt;
+
+	if (mFirstSpawn && mTimer > sf::seconds(5.f))
+	{
+		auto boss(std::make_unique<Boss>(Boss::BossShip, mTextures, mWorldBounds, Boss::MovingLeft));
+		boss->setPosition(mWorldBounds.left + mWorldBounds.width + MovementsPadding, Padding * 1.5);
+		mSceneLayers[Space]->attachChild(std::move(boss));
+		mTimer = sf::Time::Zero;
+		mFirstSpawn = false;
+		return;
+	}
+
+	if (mTimer < sf::seconds(20.f) || mEnemyNodes.size() < 5)
+		return;
+
+	if (mBossSpawn)
+	{
+		dirction = Boss::MovingRight;
+		position = -MovementsPadding;
+	}
+	else
+	{
+		dirction = Boss::MovingLeft;
+		position = mWorldBounds.left + mWorldBounds.width + MovementsPadding;
+	}
+
+	mBossSpawn = !mBossSpawn;
+
+	// Receate Boss
+	auto boss(std::make_unique<Boss>(Boss::BossShip, mTextures, mWorldBounds, dirction));
+	boss->setPosition(position, Padding * 1.5);
+	mSceneLayers[Space]->attachChild(std::move(boss));
+	mTimer = sf::Time::Zero;
 }
 
 sf::FloatRect World::getViewBounds() const
@@ -324,6 +361,8 @@ void World::update(sf::Time dt)
 
 	// Remove useless entities
 	destroyEntitiesOutsideView();
+
+	spawnBoss(dt);
 
 	// Update quadtree
 	checkForCollision();
@@ -434,6 +473,28 @@ void World::handleCollisions()
 	enemyProjectileCollision();
 	playerProjectileCollision();
 	enemyCollision();
+
+	// player projectiles vs enemy projectiles
+	for (const auto& node1 : mPlayerBulletNodes)
+	{
+		if (node1->isDestroyed())
+			continue;
+
+		for (const auto& node2 : mEnemyBulletNodes)
+		{
+			if (node2->isDestroyed())
+				continue;
+
+			if (!collision(*node1, *node2))
+				continue;
+
+			auto& playerProjectile = static_cast<Projectile&>(*node1);
+			auto& enemyProjectile = static_cast<Projectile&>(*node2);
+
+			playerProjectile.destroy();
+			enemyProjectile.destroy();
+		}
+	}
 }
 
 void World::playerProjectileCollision()
@@ -475,7 +536,6 @@ void World::playerProjectileCollision()
 				mScore += 100;
 
 				enemy.damage(projectile.getDamage());
-				mIsBossDead = enemy.isDestroyed();
 				projectile.destroy();
 			}
 			else if (node2->getCategory() & Category::EnemySpaceship)
@@ -608,7 +668,7 @@ bool World::hasAlivePlayer() const
 
 bool World::hasPlayerWon() const
 {
-	return(mEnemyNodes.empty() && mIsBossDead);
+	return (mEnemyNodes.empty());
 }
 
 void World::adaptEnemyMovements()

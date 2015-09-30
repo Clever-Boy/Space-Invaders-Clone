@@ -91,17 +91,21 @@ std::vector<ProjectileData> initializeProjectileData()
 {
 	std::vector<ProjectileData> data(Projectile::TypeCount);
 
+	data[Projectile::PlayerBullet].hitpoints = 1;
 	data[Projectile::PlayerBullet].damage = 1;
 	data[Projectile::PlayerBullet].speed = 300.f;
 	data[Projectile::PlayerBullet].size = sf::Vector2f(0.2f, 0.5f);
 	data[Projectile::PlayerBullet].texture = Textures::Bullet;
 	data[Projectile::PlayerBullet].textureRect = sf::IntRect(0, 0, 1, 1);
+	data[Projectile::PlayerBullet].color = sf::Color(255, 0, 0);
 
+	data[Projectile::EnemyBullet].hitpoints = 1;
 	data[Projectile::EnemyBullet].damage = 1;
 	data[Projectile::EnemyBullet].speed = 150.f;
 	data[Projectile::EnemyBullet].size = sf::Vector2f(0.2f, 0.5f);
 	data[Projectile::EnemyBullet].texture = Textures::Bullet;
 	data[Projectile::EnemyBullet].textureRect = sf::IntRect(0, 0, 1, 1);
+	data[Projectile::EnemyBullet].color = sf::Color(255, 0, 0);
 
 	return data;
 }

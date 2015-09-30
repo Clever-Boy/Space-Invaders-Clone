@@ -14,7 +14,7 @@
 class SoundPlayer final : private sf::NonCopyable
 {
 public:
-	SoundPlayer();
+								SoundPlayer();
 
 	void						play(SoundEffect::ID effect);
 	void						play(SoundEffect::ID effect, sf::Vector2f position);
