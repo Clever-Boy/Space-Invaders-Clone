@@ -49,8 +49,6 @@ Invaders::Invaders(Type type, const TextureHolder& textures)
 
 void Invaders::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform.combine(getTransform());
-
 	if (isDestroyed())
 		target.draw(mExplosion, states);
 	else

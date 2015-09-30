@@ -74,8 +74,6 @@ void Player::updateCurrent(sf::Time dt, CommandQueue& commands)
 
 void Player::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform.combine(getTransform());
-
 	if (isDestroyed())
 		target.draw(mExplosion, states);
 	else

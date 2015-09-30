@@ -17,19 +17,21 @@ namespace GUI
 
 
 	public:
-		explicit			Label(const std::string& text, const FontHolder& fonts);
+		explicit				Label(const std::string& text, const FontHolder& fonts);
 
-		bool				isSelectable() const override;
-		void				setText(const std::string& text);
+		bool					isSelectable() const override;
+		void					setText(const std::string& text);
 
-		void				handleEvent(const sf::Event&, sf::Vector2f) override;
-
-
-	private:
-		void				draw(sf::RenderTarget& target, sf::RenderStates states) const;
+		void					handleEvent(const sf::Event&, sf::Vector2f) override;
 
 
 	private:
-		sf::Text			mText;
+		void					draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+
+	private:
+		sf::Text				mText;
+		mutable bool			mDrity;
+		mutable sf::Transform	mTransform;
 	};
 }

@@ -38,8 +38,5 @@ private:
 	sf::FloatRect			mRectOnHit;
 	sf::Vector2f			mPositionOnHit;
 	bool					mOnHit;
-
-	mutable bool			mDrity;
-	mutable sf::Transform	mTransform;
 };
 

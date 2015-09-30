@@ -9,6 +9,8 @@ SceneNode::SceneNode(Category::Type category)
 	: mChildren()
 	, mParent(nullptr)
 	, mDefaultCategory(category)
+	, mDrity(true)
+	, mTransform()
 {
 }
 
@@ -53,6 +55,15 @@ void SceneNode::updateChildren(sf::Time dt, CommandQueue& commands)
 
 void SceneNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	if (mDrity )
+	{
+		mTransform = getTransform();
+		if (getCategory() & Category::Shield)
+			mDrity = false;
+	}
+
+	states.transform.combine(mTransform);
+
 	drawCurrent(target, states);
 	drawChildren(target, states);
 
@@ -142,4 +153,9 @@ bool SceneNode::isMarkedForRemoval() const
 {
 	// By default, remove node if entity is destroyed
 	return isDestroyed();
+}
+
+void SceneNode::setDirtyFlag(bool flag)
+{
+	mDrity = flag;
 }

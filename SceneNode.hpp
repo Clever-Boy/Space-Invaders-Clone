@@ -44,6 +44,7 @@ public:
 	virtual sf::FloatRect	getBoundingRect() const;
 	virtual bool			isDestroyed() const;
 	virtual bool			isMarkedForRemoval() const;
+	void					setDirtyFlag(bool flag);
 
 
 private:
@@ -55,8 +56,11 @@ private:
 	void					drawChildren(sf::RenderTarget& target, sf::RenderStates states) const;
 	void					drawBoundingRect(sf::RenderTarget& target, sf::RenderStates states) const;
 
+
 private:
 	std::vector<Ptr>		mChildren;
 	SceneNode*				mParent;
 	Category::Type			mDefaultCategory;
+	mutable bool			mDrity;
+	mutable sf::Transform	mTransform;
 };

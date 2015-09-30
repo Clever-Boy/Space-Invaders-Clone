@@ -131,6 +131,7 @@ void World::buildScene()
 	// Add the background sprite to the scene
 	auto backgroundSprite(std::make_unique<SpriteNode>(texture));
 	backgroundSprite->setPosition(mWorldBounds.left, mWorldBounds.top);
+	backgroundSprite->setDirtyFlag(false);
 	mSceneLayers[Background]->attachChild(std::move(backgroundSprite));
 
 	// Add player's spaceship

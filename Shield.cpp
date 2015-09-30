@@ -16,7 +16,6 @@ namespace
 Shield::Shield(const ImageHolder& images, sf::Vector2u windowsize)
 	: Entity(1)
 	, mImage(images.get(Images::Shield))
-	, mDrity(true)
 	, mOnHit(false)
 	, mRectOnHit()
 	, mPositionOnHit()
@@ -24,7 +23,6 @@ Shield::Shield(const ImageHolder& images, sf::Vector2u windowsize)
 	, mRenderTexture()
 	, mSprite()
 	, mTexture()
-	, mTransform()
 {
 	mRenderTexture.create(windowsize.x, windowsize.y);
 	mRenderTexture.clear();
@@ -35,13 +33,6 @@ Shield::Shield(const ImageHolder& images, sf::Vector2u windowsize)
 
 void Shield::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	if (mDrity)
-	{
-		mTransform.combine(getTransform());
-		mDrity = false;
-	}
-
-	states.transform = mTransform;
 	target.draw(mSprite, states);
 }
 

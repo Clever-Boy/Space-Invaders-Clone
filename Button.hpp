@@ -62,5 +62,8 @@ namespace GUI
 		bool					mIsToggle;
 		SoundPlayer&			mSounds;
 		sf::RenderWindow&		mWindow;
+
+		mutable bool			mDrity;
+		mutable sf::Transform	mTransform;
 	};
 }

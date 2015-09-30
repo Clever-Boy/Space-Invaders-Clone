@@ -22,7 +22,6 @@ Projectile::Projectile(Type type, const TextureHolder& textures)
 
 void Projectile::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform.combine(getTransform());
 	target.draw(mSprite, states);
 }
 
