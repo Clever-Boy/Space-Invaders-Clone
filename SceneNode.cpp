@@ -8,9 +8,9 @@
 SceneNode::SceneNode(Category::Type category)
 	: mChildren()
 	, mParent(nullptr)
-	, mDefaultCategory(category)
 	, mDrity(true)
 	, mTransform()
+	, mDefaultCategory(category)
 {
 }
 

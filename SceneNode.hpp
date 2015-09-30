@@ -3,10 +3,11 @@
 
 #include "Category.hpp"
 
-#include <SFML/System/NonCopyable.hpp>
-#include <SFML/System/Time.hpp>
+
 #include <SFML/Graphics/Transformable.hpp>
+#include <SFML/System/NonCopyable.hpp>
 #include <SFML/Graphics/Drawable.hpp>
+#include <SFML/System/Time.hpp>
 
 #include <vector>
 #include <set>
@@ -60,7 +61,7 @@ private:
 private:
 	std::vector<Ptr>		mChildren;
 	SceneNode*				mParent;
-	Category::Type			mDefaultCategory;
 	mutable bool			mDrity;
 	mutable sf::Transform	mTransform;
+	Category::Type			mDefaultCategory;
 };
