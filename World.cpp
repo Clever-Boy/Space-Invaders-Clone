@@ -61,6 +61,7 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mWorldBounds(mWorldView.getCenter() - mWorldView.getSize() / 2.f, mWorldView.getSize())
 	, mSpawnPosition(mWorldView.getSize().x / 2.f, mWorldView.getSize().y / 2.f)
 	, mPlayerShip(nullptr)
+	, mBoss(nullptr)
 	, mQuadTreePrimary(1, mWorldBounds)
 	, mQuadTreeSecondary(1, mWorldBounds)
 	, mEnemyNodes()
@@ -225,14 +226,15 @@ void World::spawnBoss(sf::Time dt)
 	if (mFirstSpawn && mTimer > sf::seconds(5.f))
 	{
 		auto boss(std::make_unique<Boss>(Boss::BossShip, mTextures, mWorldBounds, Boss::MovingLeft));
-		boss->setPosition(mWorldBounds.left + mWorldBounds.width + MovementsPadding, Padding * 1.5);
+		mBoss = boss.get();
+		mBoss->setPosition(mWorldBounds.left + mWorldBounds.width + MovementsPadding, Padding * 1.5);
 		mSceneLayers[Space]->attachChild(std::move(boss));
 		mTimer = sf::Time::Zero;
 		mFirstSpawn = false;
 		return;
 	}
 
-	if (mTimer < sf::seconds(20.f) || mEnemyNodes.size() < 5)
+	if (mTimer < sf::seconds(20.f))
 		return;
 
 	if (mBossSpawn)
@@ -250,7 +252,8 @@ void World::spawnBoss(sf::Time dt)
 
 	// Receate Boss
 	auto boss(std::make_unique<Boss>(Boss::BossShip, mTextures, mWorldBounds, dirction));
-	boss->setPosition(position, Padding * 1.5);
+	mBoss = boss.get();
+	mBoss->setPosition(position, Padding * 1.5);
 	mSceneLayers[Space]->attachChild(std::move(boss));
 	mTimer = sf::Time::Zero;
 }
@@ -668,7 +671,8 @@ bool World::hasAlivePlayer() const
 
 bool World::hasPlayerWon() const
 {
-	return (mEnemyNodes.empty());
+	if(mEnemyNodes.empty())
+		return (mBoss->isDestroyed());
 }
 
 void World::adaptEnemyMovements()
