@@ -19,21 +19,15 @@ Player::Player(Type type, const TextureHolder& textures)
 	: Entity(Table[type].hitpoints)
 	, mType(type)
 	, mSprite(textures.get(Table[type].texture), Table[type].textureRect)
-	, mExplosion(textures.get(Textures::PlayerExplosion))
 	, mFireCommand()
-	, mFireRateLevel(Table[type].fireRate)
-	, mFireCountdown(sf::Time::Zero)
 	, mIsFiring(false)
+	, mReadyToFire(true)
+	, mBullet(nullptr)
 	, mIsMarkedForRemoval(false)
-	, mAnimateCountdown(sf::Time::Zero)
-	, mTimer(sf::Time::Zero)
 	, mAnimateRate(Table[type].animateRate)
-	, mIsHit(false)
+	, mAnimateCountdown(sf::Time::Zero)
+	, mPlayExplosionSound(true)
 {
-	mExplosion.setTextureRect(Table[type].textureRectExplosion);
-	mExplosion.setColor(Table[type].color);
-	centerOrigin(mExplosion);
-
 	setScaleSize(mSprite, Table[type].size.x, Table[type].size.y);
 
 	centerOrigin(mSprite);
@@ -44,29 +38,23 @@ Player::Player(Type type, const TextureHolder& textures)
 
 void Player::updateCurrent(sf::Time dt, CommandQueue& commands)
 {
-	// Entity has been destroyed: mark for removal
-	if (isDestroyed())
+	if (mBullet != nullptr)
 	{
-		mIsMarkedForRemoval = true;
-		playLocalSound(commands, SoundEffect::PlayerExplosion);
-		return;
+		if (mBullet->isDestroyed())
+		{
+			mReadyToFire = true;
+		}
 	}
 
-	// Check if bullets or missiles are fired
+	// Check if bullets are fired
 	checkProjectileLaunch(dt, commands);
-
-	// player get hit
-	checkForHit(dt);
 
 	Entity::updateCurrent(dt, commands);
 }
 
 void Player::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	if (isDestroyed())
-		target.draw(mExplosion, states);
-	else
-		target.draw(mSprite, states);
+	target.draw(mSprite, states);
 }
 
 bool Player::isMarkedForRemoval() const
@@ -74,41 +62,28 @@ bool Player::isMarkedForRemoval() const
 	return mIsMarkedForRemoval;
 }
 
+void Player::setMarkToRemove()
+{
+	mIsMarkedForRemoval = true;
+}
+
 void Player::playerMover(float vx, float vy)
 {
 	accelerate(sf::Vector2f(vx, vy) * getMaxSpeed());
 }
 
-void Player::onHit()
+void Player::applyHitEffect(sf::Time dt, CommandQueue& commands)
 {
-	mIsHit = true;
-}
-
-void Player::checkForHit(sf::Time dt)
-{
-	auto textureRect(mSprite.getTextureRect());
-
-	if (mIsHit)
+	// Entity has been destroyed: play Explosion sound 
+	if (isDestroyed())
 	{
-		apllyHitEffect(dt);
+		if (mPlayExplosionSound)
+		{
+			playLocalSound(commands, SoundEffect::PlayerExplosion);
+			mPlayExplosionSound = false;
+		}
 	}
 
-	// start timer
-	mTimer += dt;
-
-	if (mTimer > Table[mType].animationInterval)
-	{
-		mIsHit = false;
-		textureRect = sf::IntRect(0, textureRect.top, textureRect.width, textureRect.height);
-		mSprite.setTextureRect(textureRect);
-		// reset timer
-		mTimer = sf::Time::Zero;
-		mAnimateCountdown = sf::Time::Zero;
-	}
-}
-
-void Player::apllyHitEffect(sf::Time dt)
-{
 	sf::Vector2i textureBounds(mSprite.getTexture()->getSize());
 	auto textureRect(mSprite.getTextureRect());
 
@@ -151,20 +126,15 @@ void Player::fire()
 
 void Player::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 {
-	// Check for automatic gunfire, allow only in intervals
-	if (mIsFiring && mFireCountdown <= sf::Time::Zero)
+	if (mIsFiring)
 	{
-		// Interval expired: We can fire a new bullet
-		commands.push(mFireCommand);
-		playLocalSound(commands, SoundEffect::PlayerGunfire);
+		if (mReadyToFire)
+		{
+			commands.push(mFireCommand);
+			playLocalSound(commands, SoundEffect::PlayerGunfire);
+			mReadyToFire = false;
+		}
 
-		mFireCountdown += Table[mType].fireInterval / (mFireRateLevel + 1.f);
-		mIsFiring = false;
-	}
-	else if (mFireCountdown > sf::Time::Zero)
-	{
-		// Interval not expired: Decrease it further
-		mFireCountdown -= dt;
 		mIsFiring = false;
 	}
 }
@@ -187,7 +157,7 @@ void Player::createProjectile(SceneNode& node, Projectile::Type type, float xOff
 	auto sign = -1.f;
 	projectile->setPosition(getWorldPosition() + offset * sign);
 	projectile->setVelocity(velocity * sign);
-
+	mBullet = projectile.get();
 	node.attachChild(std::move(projectile));
 }
 

@@ -68,6 +68,8 @@ private:
 	void					enemyCollision();
 
 	void					adaptEnemyMovements();
+	bool					checkPlayerDeath(sf::Time dt);
+	void					spawnPlayer();
 
 
 private:
@@ -117,7 +119,12 @@ private:
 	sf::Text				mLivesText;
 	SoundPlayer&			mSounds;
 
-	sf::Time				mTimer;
+	sf::Time				mBossTimer;
 	bool					mBossSpawn;
 	bool					mFirstSpawn;
+
+	sf::Time				mPlayerTimer;
+	bool					mIsPlayerDead;
+	std::size_t				mLivesCount;
+	sf::Vector2f			mPreviousPosition;
 };

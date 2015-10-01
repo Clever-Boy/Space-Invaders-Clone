@@ -15,7 +15,6 @@ Life::Life(Player::Type type, const TextureHolder& textures)
 	, mDrity(true)
 {
 	centerOrigin(mSprite);
-	mSprite.setColor(Table[type].color);
 	setScaleSize(mSprite, 2, 1);
 }
 

@@ -25,7 +25,8 @@ public:
 
 	void					playerMover(float vx, float vy);
 	void 					fire();
-	void					onHit();
+	void					applyHitEffect(sf::Time dt, CommandQueue& commands);
+	void					setMarkToRemove();
 
 
 private:
@@ -36,8 +37,6 @@ private:
 	void					createBullets(SceneNode& node, const TextureHolder& textures) const;
 	void					createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const;
 
-	void					checkForHit(sf::Time dt);
-	void					apllyHitEffect(sf::Time dt);
 	float					getMaxSpeed() const;
 
 	void					playLocalSound(CommandQueue& commands, SoundEffect::ID effect);
@@ -46,17 +45,12 @@ private:
 private:
 	Type					mType;
 	sf::Sprite				mSprite;
-	sf::Sprite				mExplosion;
-
 	Command 				mFireCommand;
-	sf::Time				mFireCountdown;
 	bool 					mIsFiring;
-	int						mFireRateLevel;
-
+	bool					mReadyToFire;
+	mutable Projectile*		mBullet;
 	bool 					mIsMarkedForRemoval;
-
 	int						mAnimateRate;
 	sf::Time				mAnimateCountdown;
-	sf::Time				mTimer;
-	bool					mIsHit;
+	bool					mPlayExplosionSound;
 };

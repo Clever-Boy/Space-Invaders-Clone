@@ -62,21 +62,16 @@ private:
 	Type					mType;
 	sf::Sprite				mSprite;
 	sf::Sprite				mExplosion;
-
 	Command 				mFireCommand;
 	sf::Time				mFireCountdown;
 	bool 					mIsFiring;
 	int						mFireRateLevel;
-
 	bool 					mIsMarkedForRemoval;
-
 	float					mTravelledDistance;
 	Dirction				mCurrentDirction;
 	Dirction				mPreviousDirction;
 	sf::Vector2f			mMovement;
-
 	int						mAnimateRate;
 	sf::Time				mAnimateCountdown;
-
 	float					mMaxSpeed;
 };

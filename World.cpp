@@ -74,9 +74,13 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mScoreText()
 	, mLivesText()
 	, mSounds(sounds)
-	, mTimer(sf::Time::Zero)
+	, mBossTimer(sf::Time::Zero)
+	, mPlayerTimer(sf::Time::Zero)
 	, mBossSpawn(true)
 	, mFirstSpawn(true)
+	, mIsPlayerDead(false)
+	, mLivesCount(3)
+	, mPreviousPosition()
 {
 	const auto TextPadding = 5.f;
 	mStaticScoreText.setString("Score: ");
@@ -226,20 +230,20 @@ void World::spawnBoss(sf::Time dt)
 	Boss::Dirction dirction;
 	auto position = 0.f;
 
-	mTimer += dt;
+	mBossTimer += dt;
 
-	if (mFirstSpawn && mTimer > sf::seconds(5.f))
+	if (mFirstSpawn && mBossTimer > sf::seconds(5.f))
 	{
 		auto boss(std::make_unique<Boss>(Boss::BossShip, mTextures, mWorldBounds, Boss::MovingLeft));
 		mBoss = boss.get();
 		mBoss->setPosition(mWorldBounds.left + mWorldBounds.width + MovementsPadding, Padding * 1.5);
 		mSceneLayers[Space]->attachChild(std::move(boss));
-		mTimer = sf::Time::Zero;
+		mBossTimer = sf::Time::Zero;
 		mFirstSpawn = false;
 		return;
 	}
 
-	if (mTimer < sf::seconds(20.f))
+	if (mBossTimer < sf::seconds(20.f))
 		return;
 
 	if (mBossSpawn)
@@ -260,7 +264,7 @@ void World::spawnBoss(sf::Time dt)
 	mBoss = boss.get();
 	mBoss->setPosition(position, Padding * 1.5);
 	mSceneLayers[Space]->attachChild(std::move(boss));
-	mTimer = sf::Time::Zero;
+	mBossTimer = sf::Time::Zero;
 }
 
 sf::FloatRect World::getViewBounds() const
@@ -386,10 +390,17 @@ void World::update(sf::Time dt)
 	// Collision detection and response (may destroy entities)
 	handleCollisions();
 
+	// Check if Player Dead
+	if (checkPlayerDeath(dt))
+		return;
+
 	mSceneGraph.removeWrecks();
 
 	// Adapt Movements 
 	adaptEnemyMovements();
+
+	// Spawn Player
+	spawnPlayer();
 
 	// Regular update step
 	mSceneGraph.update(dt, mCommandQueue);
@@ -400,6 +411,38 @@ void World::update(sf::Time dt)
 	updateText();
 
 	updateSounds();
+}
+
+bool World::checkPlayerDeath(sf::Time dt)
+{
+	if (mPlayerShip->isDestroyed() && !mIsPlayerDead)
+	{
+		mPlayerShip->applyHitEffect(dt, mCommandQueue);
+		mPlayerTimer += dt;
+
+		if (mPlayerTimer > sf::seconds(2.f))
+		{
+			mPlayerShip->setMarkToRemove();
+			mPreviousPosition = mPlayerShip->getWorldPosition();
+			mIsPlayerDead = true;
+			mPlayerTimer = sf::Time::Zero;
+		}
+		return true;
+	}
+
+	return false;
+}
+
+void World::spawnPlayer()
+{
+	if (mIsPlayerDead)
+	{
+		auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
+		mPlayerShip = leader.get();
+		mPlayerShip->setPosition(mPreviousPosition);
+		mSceneLayers[Space]->attachChild(std::move(leader));
+		mIsPlayerDead = false;
+	}
 }
 
 void World::updateText()
@@ -604,13 +647,13 @@ void World::enemyProjectileCollision()
 				auto& player = static_cast<Player&>(*node2);
 				auto& projectile = static_cast<Projectile&>(*node1);
 
-				player.onHit();
 				player.damage(projectile.getDamage());
 
 				projectile.destroy();
 
 				if (!mLives.empty())
 					mLives.pop_back();
+				mLivesCount--;
 			}
 		}
 	}
@@ -655,6 +698,7 @@ void World::enemyCollision()
 
 				if (!mLives.empty())
 					mLives.pop_back();
+				mLivesCount--;
 			}
 		}
 	}
@@ -662,13 +706,16 @@ void World::enemyCollision()
 
 bool World::hasAlivePlayer() const
 {
-	return !mPlayerShip->isMarkedForRemoval();
+	if (mLivesCount == 0)
+		return (!mPlayerShip->isMarkedForRemoval());
+
+	return true;
 }
 
 bool World::hasPlayerWon() const
 {
 	if(mEnemyNodes.empty())
-		return (mBoss->isDestroyed());
+		return (mBoss->isMarkedForRemoval());
 
 	return false;
 }

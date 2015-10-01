@@ -9,19 +9,6 @@
 
 #include <vector>
 
-
-struct Direction
-{
-	Direction(float angle, float distance)
-		: angle(angle)
-		, distance(distance)
-	{
-	}
-
-	float angle;
-	float distance;
-};
-
 struct BossData
 {
 	int								hitpoints;
@@ -29,8 +16,6 @@ struct BossData
 	Textures::ID					texture;
 	sf::Color						color;
 	sf::Vector2f					size;
-	std::vector<Direction>			directions;
-	sf::IntRect						textureRectExplosion;
 };
 
 struct InvadersData
@@ -45,7 +30,6 @@ struct InvadersData
 	std::size_t						fireRate;
 	sf::Time						animationInterval;
 	int								animateRate;
-	sf::IntRect						textureRectExplosion;
 };
 
 struct PlayerData
@@ -54,13 +38,9 @@ struct PlayerData
 	float							speed;
 	Textures::ID					texture;
 	sf::IntRect						textureRect;
-	sf::Color						color;
 	sf::Vector2f					size;
-	sf::Time						fireInterval;
-	std::size_t						fireRate;
 	sf::Time						animationInterval;
 	int								animateRate;
-	sf::IntRect						textureRectExplosion;
 };
 
 struct ProjectileData
@@ -68,10 +48,8 @@ struct ProjectileData
 	int								hitpoints;
 	int								damage;
 	float							speed;
-	sf::Color						color;
 	sf::Vector2f					size;
 	Textures::ID					texture;
-	sf::IntRect						textureRect;
 };
 
 std::vector<BossData>		initializeBossData();
