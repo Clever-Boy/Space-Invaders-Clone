@@ -680,13 +680,13 @@ void World::adaptEnemyMovements()
 		if (enemy.isDestroyed())
 			continue;
 
-		if (enemy.getCurrentState() == Invaders::MovingDown)
+		if (enemy.getCurrentDirction() == Invaders::MovingDown)
 		{
 			if (enemy.getTravelledDistance() > TravelledDistance)
 				changeDirection = true;
 		}
 
-		if (enemy.getCurrentState() == Invaders::MovingRight || enemy.getCurrentState() == Invaders::MovingLeft)
+		if (enemy.getCurrentDirction() == Invaders::MovingRight || enemy.getCurrentDirction() == Invaders::MovingLeft)
 		{
 			if (!getMovementsfieldBounds().contains(enemy.getWorldPosition()))
 				changeDirection = true;
@@ -701,7 +701,7 @@ void World::adaptEnemyMovements()
 	{
 		Invaders& enemy = static_cast<Invaders&>(*i);
 
-		enemy.requstChangeState();
+		enemy.requstChangeDirction();
 	}
 }
 

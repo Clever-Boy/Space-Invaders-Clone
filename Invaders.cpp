@@ -26,8 +26,8 @@ Invaders::Invaders(Type type, const TextureHolder& textures)
 	, mIsFiring(false)
 	, mIsMarkedForRemoval(false)
 	, mTravelledDistance()
-	, mState(States::MovingRight)
-	, mPreviousState(States::MovingRight)
+	, mCurrentDirction(Dirction::MovingRight)
+	, mPreviousDirction(Dirction::MovingRight)
 	, mMovement(1, 0)
 	, mMaxSpeed(Table[mType].speed)
 	, mAnimateCountdown(sf::Time::Zero)
@@ -110,47 +110,47 @@ float Invaders::getTravelledDistance() const
 	return mTravelledDistance;
 }
 
-void Invaders::requstChangeState()
+void Invaders::requstChangeDirction()
 {
-	if (mState == MovingRight)
+	if (mCurrentDirction == MovingRight)
 	{
-		mState = MovingDown;
-		mPreviousState = MovingRight;
+		mCurrentDirction = MovingDown;
+		mPreviousDirction = MovingRight;
 		mTravelledDistance = 0;
 		mMovement = sf::Vector2f(0, 1);
 		return;
 	}
 
-	if (mState == MovingLeft)
+	if (mCurrentDirction == MovingLeft)
 	{
-		mState = MovingDown;
-		mPreviousState = MovingLeft;
+		mCurrentDirction = MovingDown;
+		mPreviousDirction = MovingLeft;
 		mTravelledDistance = 0;
 		mMovement = sf::Vector2f(0, 1);
 		return;
 	}
 
-	if (mState == MovingDown)
+	if (mCurrentDirction == MovingDown)
 	{
-		if (mPreviousState == MovingLeft)
+		if (mPreviousDirction == MovingLeft)
 		{
-			mState = MovingRight;
+			mCurrentDirction = MovingRight;
 			mMovement = sf::Vector2f(1, 0);
 		}
 		else
 		{
-			mState = MovingLeft;
+			mCurrentDirction = MovingLeft;
 			mMovement = sf::Vector2f(-1, 0);
 		}
 
-		mPreviousState = MovingDown;
+		mPreviousDirction = MovingDown;
 		mTravelledDistance = 0;
 	}
 }
 
-Invaders::States Invaders::getCurrentState() const
+Invaders::Dirction Invaders::getCurrentDirction() const
 {
-	return mState;
+	return mCurrentDirction;
 }
 
 void Invaders::updateMovementPattern(sf::Time dt)

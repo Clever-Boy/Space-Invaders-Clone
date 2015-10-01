@@ -17,7 +17,7 @@ public:
 		TypeCount
 	};
 
-	enum States
+	enum Dirction
 	{
 		MovingRight,
 		MovingLeft,
@@ -38,8 +38,8 @@ public:
 	Type					getType() const;
 
 	float					getTravelledDistance() const;
-	States					getCurrentState() const;
-	void					requstChangeState();
+	Dirction				getCurrentDirction() const;
+	void					requstChangeDirction();
 
 
 private:
@@ -71,8 +71,8 @@ private:
 	bool 					mIsMarkedForRemoval;
 
 	float					mTravelledDistance;
-	States					mState;
-	States					mPreviousState;
+	Dirction				mCurrentDirction;
+	Dirction				mPreviousDirction;
 	sf::Vector2f			mMovement;
 
 	int						mAnimateRate;
