@@ -8,7 +8,7 @@
 
 namespace
 {
-	const std::vector<ProjectileData> Table = initializeProjectileData();
+	const std::vector<ProjectileData>& Table = initializeProjectileData();
 }
 
 

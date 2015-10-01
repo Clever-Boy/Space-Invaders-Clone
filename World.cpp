@@ -46,7 +46,7 @@ namespace
 		return false;
 	}
 
-	constexpr auto Padding = 40.f;
+	constexpr auto Padding			= 40.f;
 	constexpr auto MovementsPadding = 55.f;
 }
 
@@ -78,21 +78,24 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mBossSpawn(true)
 	, mFirstSpawn(true)
 {
+	const auto TextPadding = 5.f;
 	mStaticScoreText.setString("Score: ");
 	mStaticScoreText.setFont(mFonts.get(Fonts::Main));
-	mStaticScoreText.setPosition(5.f, 5.f);
+	mStaticScoreText.setPosition(TextPadding, TextPadding);
 	mStaticScoreText.setCharacterSize(30u);
 
 	mScoreText.setString(std::to_string(mScore));
 	mScoreText.setFont(mFonts.get(Fonts::Main));
-	mScoreText.setPosition(100.f, 25.f);
+	auto bounds(mStaticScoreText.getGlobalBounds());
+	mScoreText.setPosition(bounds.left + bounds.width + TextPadding, TextPadding * TextPadding);
 	mScoreText.setCharacterSize(25u);
 	mScoreText.setColor(sf::Color::Green);
 	centerOrigin(mScoreText);
 
 	mLivesText.setString("Lives: ");
 	mLivesText.setFont(mFonts.get(Fonts::Main));
-	mLivesText.setPosition(mWorldView.getSize().x - 200.f, 5.f);
+	const auto XPadding = mWorldView.getSize().x - mWorldView.getSize().x / 2 + mSpawnPosition.x / 2;
+	mLivesText.setPosition(XPadding, TextPadding);
 	mLivesText.setCharacterSize(30u);
 
 	loadTextures();
@@ -140,7 +143,9 @@ void World::buildScene()
 	// Add player's spaceship
 	auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
 	mPlayerShip = leader.get();
-	mPlayerShip->setPosition(mSpawnPosition + sf::Vector2f(0.f, 240.f));
+	auto bounds(getBattlefieldBounds());
+	auto YPadding = bounds.top + bounds.height - Padding / 2u - mSpawnPosition.y;
+	mPlayerShip->setPosition(mSpawnPosition + sf::Vector2f(0.f, YPadding));
 
 	mSceneLayers[Space]->attachChild(std::move(leader));
 
@@ -189,10 +194,10 @@ void World::addLife(float relX, float relY)
 void World::addEnemies()
 {
 	// Add enemies
-	constexpr auto numberOfEnemies = 66u;
-	constexpr auto enemiesPerRow = 11u;
-	constexpr auto horizontalSpacing = 40.f;
-	constexpr auto verticalSpacing = 35.f;
+	const auto numberOfEnemies		= 66u;
+	const auto enemiesPerRow		= 11;
+	const auto horizontalSpacing	= 40.f;
+	const auto verticalSpacing		= 35.f;
 
 	const sf::Vector2f positionOfTopLeft(MovementsPadding, Padding * 2.5);
 
@@ -219,7 +224,7 @@ void World::addEnemy(Invaders::Type type, float relX, float relY)
 void World::spawnBoss(sf::Time dt)
 {
 	Boss::Dirction dirction;
-	float position = 0.f;
+	auto position = 0.f;
 
 	mTimer += dt;
 
@@ -303,7 +308,7 @@ void World::draw()
 	for (const auto& i : mLives)
 		mTarget.draw(*i);
 
-	auto bounds = getBattlefieldBounds();
+	auto bounds(getBattlefieldBounds());
 
 	sf::Vertex line[] =
 	{
@@ -670,12 +675,12 @@ bool World::hasPlayerWon() const
 
 void World::adaptEnemyMovements()
 {
-	bool changeDirection = false;
-	const auto TravelledDistance = 30.f;
+	bool changeDirection			= false;
+	const auto TravelledDistance	= 30.f;
 
 	for (const auto& i : mEnemyNodes)
 	{
-		Invaders& enemy = static_cast<Invaders&>(*i);
+		auto& enemy = static_cast<Invaders&>(*i);
 
 		if (enemy.isDestroyed())
 			continue;
@@ -699,7 +704,7 @@ void World::adaptEnemyMovements()
 	// let invaders moving down and update condition of change direction
 	for (const auto& i : mEnemyNodes)
 	{
-		Invaders& enemy = static_cast<Invaders&>(*i);
+		auto& enemy = static_cast<Invaders&>(*i);
 
 		enemy.requstChangeDirction();
 	}
@@ -718,7 +723,7 @@ void World::controlEnemyFire()
 
 	for (auto i = 0u; i < size; ++i)
 	{
-		Invaders& enemy = static_cast<Invaders&>(*mEnemyNodes[i]);
+		auto& enemy = static_cast<Invaders&>(*mEnemyNodes[i]);
 
 		if (enemy.isDestroyed())
 			continue;

@@ -7,7 +7,7 @@
 
 namespace
 {
-	const std::vector<PlayerData> Table = initializePlayerData();
+	const std::vector<PlayerData>& Table = initializePlayerData();
 }
 
 Life::Life(Player::Type type, const TextureHolder& textures)

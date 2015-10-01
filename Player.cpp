@@ -11,7 +11,7 @@
 
 namespace
 {
-	const std::vector<PlayerData> Table = initializePlayerData();
+	const std::vector<PlayerData>& Table = initializePlayerData();
 }
 
 
@@ -110,7 +110,7 @@ void Player::checkForHit(sf::Time dt)
 void Player::apllyHitEffect(sf::Time dt)
 {
 	sf::Vector2i textureBounds(mSprite.getTexture()->getSize());
-	sf::IntRect textureRect = mSprite.getTextureRect();
+	auto textureRect(mSprite.getTextureRect());
 
 	if (mAnimateCountdown <= sf::Time::Zero)
 	{
@@ -171,7 +171,7 @@ void Player::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 
 void Player::createBullets(SceneNode& node, const TextureHolder& textures) const
 {
-	Projectile::Type type = Projectile::PlayerBullet;
+	auto type = Projectile::PlayerBullet;
 
 	createProjectile(node, type, 0.f, 0.5f, textures);
 
@@ -193,7 +193,7 @@ void Player::createProjectile(SceneNode& node, Projectile::Type type, float xOff
 
 void Player::playLocalSound(CommandQueue& commands, SoundEffect::ID effect)
 {
-	sf::Vector2f worldPosition = getWorldPosition();
+	auto worldPosition(getWorldPosition());
 
 	Command command;
 	command.category = Category::SoundEffect;

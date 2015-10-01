@@ -40,10 +40,10 @@ void QuadTree::clear()
 
 void QuadTree::split()
 {
-	auto subWidth = mBounds.width / 2.f;
-	auto subHeight = mBounds.height / 2.f;
-	auto x = mBounds.left;
-	auto y = mBounds.top;
+	auto subWidth	= mBounds.width / 2.f;
+	auto subHeight	= mBounds.height / 2.f;
+	auto x			= mBounds.left;
+	auto y			= mBounds.top;
 
 	mChildren[0] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x + subWidth, y, subWidth, subHeight)));
 	mChildren[1] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x, y, subWidth, subHeight)));

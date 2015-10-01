@@ -11,7 +11,7 @@
 
 namespace
 {
-	const std::vector<InvadersData> Table = initializeInvadersData();
+	const std::vector<InvadersData>& Table = initializeInvadersData();
 }
 
 
@@ -204,7 +204,7 @@ void Invaders::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 
 void Invaders::createBullets(SceneNode& node, const TextureHolder& textures) const
 {
-	Projectile::Type type = Projectile::EnemyBullet;
+	auto type(Projectile::EnemyBullet);
 
 	createProjectile(node, type, 0.f, 0.5f, textures);
 }
@@ -229,7 +229,7 @@ bool Invaders::isMarkedForRemoval() const
 
 void Invaders::playLocalSound(CommandQueue& commands, SoundEffect::ID effect)
 {
-	sf::Vector2f worldPosition = getWorldPosition();
+	auto worldPosition(getWorldPosition());
 
 	Command command;
 	command.category = Category::SoundEffect;

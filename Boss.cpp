@@ -10,7 +10,7 @@
 
 namespace
 {
-	const std::vector<BossData> Table	= initializeBossData();
+	const std::vector<BossData>& Table	= initializeBossData();
 	constexpr auto SpawnPadding			= 60.f;
 }
 
@@ -107,7 +107,7 @@ void Boss::remove()
 
 void Boss::playLocalSound(CommandQueue& commands)
 {
-	sf::Vector2f worldPosition = getWorldPosition();
+	auto worldPosition(getWorldPosition());
 
 	Command command;
 	command.category = Category::SoundEffect;

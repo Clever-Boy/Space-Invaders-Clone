@@ -4,6 +4,12 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
+namespace
+{
+	constexpr auto Padding			= 150.f;
+	constexpr auto EffectInterval	= 0.5f;
+	const sf::Vector2f ScaleSize(1.25f, 1.f);
+}
 
 TitleState::TitleState(StateStack& stack, Context context)
 	: State(stack, context)
@@ -12,11 +18,11 @@ TitleState::TitleState(StateStack& stack, Context context)
 	, mTextEffectTime(sf::Time::Zero)
 {
 	mBackgroundSprite.setTexture(context.textures.get(Textures::TitleScreen));
-	mBackgroundSprite.setScale(1.25f, 1.f);
+	mBackgroundSprite.setScale(ScaleSize);
 	mText.setFont(context.fonts.get(Fonts::Main));
 	mText.setString("Press any key to start");
 	centerOrigin(mText);
-	mText.setPosition(context.window.getSize().x / 2.f, context.window.getSize().y / 2.f + 150.f);
+	mText.setPosition(context.window.getSize().x / 2.f, context.window.getSize().y / 2.f + Padding);
 }
 
 void TitleState::draw()
@@ -32,7 +38,7 @@ bool TitleState::update(sf::Time dt)
 {
 	mTextEffectTime += dt;
 
-	if (mTextEffectTime >= sf::seconds(0.5f))
+	if (mTextEffectTime >= sf::seconds(EffectInterval))
 	{
 		mShowText = !mShowText;
 		mTextEffectTime = sf::Time::Zero;
