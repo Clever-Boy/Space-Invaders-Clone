@@ -21,7 +21,12 @@ SoundPlayer::SoundPlayer()
 	mSoundBuffers.load(SoundEffect::EnemiesGunfire, "Media/Sounds/EnemiesGunfire.wav");
 	mSoundBuffers.load(SoundEffect::PlayerExplosion, "Media/Sounds/PlayerExplosion.wav");
 	mSoundBuffers.load(SoundEffect::EnemiesExplosion, "Media/Sounds/EnemiesExplosion.wav");
+	mSoundBuffers.load(SoundEffect::BossMovements, "Media/Sounds/BossMovements.wav");
 	mSoundBuffers.load(SoundEffect::Button, "Media/Sounds/Button.wav");
+
+	mSound.setBuffer(mSoundBuffers.get(SoundEffect::BossMovements));
+	mSound.setAttenuation(Attenuation);
+	mSound.setMinDistance(MinDistance3D);
 
 	// Listener points towards the screen (default in SFML)
 	sf::Listener::setDirection(0.f, 0.f, -1.f);
@@ -43,6 +48,19 @@ void SoundPlayer::play(SoundEffect::ID effect, sf::Vector2f position)
 	sound.setMinDistance(MinDistance3D);
 
 	sound.play();
+}
+
+void SoundPlayer::playRepeatedSound(sf::Vector2f position)
+{
+	mSound.setPosition(position.x, -position.y, 0.f);
+	if (mSound.getStatus() == sf::Sound::Stopped)
+		mSound.play();
+}
+
+void SoundPlayer::stopRepeatedSound()
+{
+	if (mSound.getStatus() == sf::Sound::Playing)
+		mSound.stop();
 }
 
 void SoundPlayer::removeStoppedSounds()

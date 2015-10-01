@@ -10,10 +10,6 @@
 namespace
 {
 	const std::vector<BossData> Table	= initializeBossData();
-	constexpr auto ListenerZ			= 300.f;
-	constexpr auto Attenuation			= 8.f;
-	constexpr auto MinDistance2D		= 200.f;
-	const float MinDistance3D			= std::sqrt(MinDistance2D * MinDistance2D + ListenerZ * ListenerZ);
 }
 
 
@@ -26,16 +22,7 @@ Boss::Boss(Type type, const TextureHolder& textures, const sf::FloatRect& bounds
 	, mExplosion(textures.get(Textures::EnemiesExplosion))
 	, mShowExpolsion(true)
 	, mBounds()
-	, mSound()
-	, mSoundBuffers()
 {
-	mSoundBuffers.load(SoundEffect::BossMovements, "Media/Sounds/BossMovements.wav");
-
-	mSound.setBuffer(mSoundBuffers.get(SoundEffect::BossMovements));
-	mSound.setPosition(getWorldPosition().x, -getWorldPosition().y, 0.f);
-	mSound.setAttenuation(Attenuation);
-	mSound.setMinDistance(MinDistance3D);
-
 	mBounds.left -= 100;
 	mBounds.width += bounds.width + 100 * 2;
 
@@ -64,16 +51,14 @@ void Boss::updateCurrent(sf::Time dt, CommandQueue& commands)
 	// Entity has been destroyed: mark for removal
 	if (isDestroyed())
 	{
-		if (mSound.getStatus() == sf::Sound::Playing)
-			mSound.stop();
+		stopLocalSound(commands);
 
 		mIsMarkedForRemoval = true;
 		return;
 	}
 
 	// Play sound 
-	if (mSound.getStatus() == sf::Sound::Stopped)
-		mSound.play();
+	playLocalSound(commands);
 
 	// delete it if boss goes out of range
 	if (!mBounds.contains(getWorldPosition()))
@@ -117,4 +102,24 @@ void Boss::remove()
 {
 	mShowExpolsion = false;
 	Entity::remove();
+}
+
+void Boss::playLocalSound(CommandQueue& commands)
+{
+	sf::Vector2f worldPosition = getWorldPosition();
+
+	Command command;
+	command.category = Category::SoundEffect;
+	command.action = derivedAction<SoundNode>(std::bind(&SoundNode::playRepeatedSound, std::placeholders::_1, worldPosition));
+
+	commands.push(command);
+}
+
+void Boss::stopLocalSound(CommandQueue& commands)
+{
+	Command command;
+	command.category = Category::SoundEffect;
+	command.action = derivedAction<SoundNode>(std::bind(&SoundNode::stopRepeatedSound, std::placeholders::_1));
+
+	commands.push(command);
 }

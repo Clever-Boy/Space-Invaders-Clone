@@ -13,6 +13,10 @@ public:
 	explicit				SoundNode(SoundPlayer& player);
 
 	void					playSound(SoundEffect::ID sound, sf::Vector2f position);
+
+	void					playRepeatedSound(sf::Vector2f position);
+	void					stopRepeatedSound();
+
 	unsigned int			getCategory() const override;
 
 

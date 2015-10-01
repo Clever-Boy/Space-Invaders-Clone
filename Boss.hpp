@@ -7,8 +7,6 @@
 #include "ResourceHolder.hpp"
 
 #include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Audio/SoundBuffer.hpp>
-#include <SFML/Audio/Sound.hpp>
 
 
 class Boss final : public Entity
@@ -42,6 +40,9 @@ private:
 	bool 					isMarkedForRemoval() const override;
 	void					remove() override;
 
+	void					playLocalSound(CommandQueue& commands);
+	void					stopLocalSound(CommandQueue& commands);
+
 
 private:
 	Type					mType;
@@ -53,8 +54,5 @@ private:
 
 	sf::Sprite				mExplosion;
 	bool					mShowExpolsion;
-
-	SoundBufferHolder		mSoundBuffers;
 	sf::FloatRect			mBounds;
-	sf::Sound				mSound;
 };

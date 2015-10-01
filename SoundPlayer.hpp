@@ -1,11 +1,11 @@
 #pragma once
 
 
-#include "ResourceHolder.hpp"
 #include "ResourceIdentifiers.hpp"
+#include "ResourceHolder.hpp"
 
-#include <SFML/System/Vector2.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <SFML/Audio/Sound.hpp>
 
 #include <list>
@@ -19,6 +19,9 @@ public:
 	void						play(SoundEffect::ID effect);
 	void						play(SoundEffect::ID effect, sf::Vector2f position);
 
+	void						playRepeatedSound(sf::Vector2f position);
+	void						stopRepeatedSound();
+
 	void						removeStoppedSounds();
 	void						setListenerPosition(sf::Vector2f position);
 	sf::Vector2f				getListenerPosition() const;
@@ -26,5 +29,6 @@ public:
 
 private:
 	SoundBufferHolder			mSoundBuffers;
-	std::list<sf::Sound>		mSounds; 
+	std::list<sf::Sound>		mSounds;
+	sf::Sound					mSound;
 };
