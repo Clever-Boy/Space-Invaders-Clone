@@ -26,5 +26,5 @@ public:
 
 private:
 	SoundBufferHolder			mSoundBuffers;
-	std::list<sf::Sound>		mSounds;
+	std::list<sf::Sound>		mSounds; 
 };

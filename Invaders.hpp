@@ -61,6 +61,7 @@ private:
 private:
 	Type					mType;
 	sf::Sprite				mSprite;
+	sf::Sprite				mExplosion;
 
 	Command 				mFireCommand;
 	sf::Time				mFireCountdown;
@@ -78,7 +79,4 @@ private:
 	sf::Time				mAnimateCountdown;
 
 	float					mMaxSpeed;
-
-	sf::Sprite				mExplosion;
-	bool					mPlayedExplosionSound;
 };

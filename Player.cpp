@@ -19,6 +19,7 @@ Player::Player(Type type, const TextureHolder& textures)
 	: Entity(Table[type].hitpoints)
 	, mType(type)
 	, mSprite(textures.get(Table[type].texture), Table[type].textureRect)
+	, mExplosion(textures.get(Textures::PlayerExplosion))
 	, mFireCommand()
 	, mFireRateLevel(Table[type].fireRate)
 	, mFireCountdown(sf::Time::Zero)
@@ -28,11 +29,7 @@ Player::Player(Type type, const TextureHolder& textures)
 	, mTimer(sf::Time::Zero)
 	, mAnimateRate(Table[type].animateRate)
 	, mIsHit(false)
-	, mExplosion()
-	, mPlayedExplosionSound(false)
 {
-
-	mExplosion.setTexture(textures.get(Textures::PlayerExplosion));
 	mExplosion.setTextureRect(Table[type].textureRectExplosion);
 	mExplosion.setColor(Table[type].color);
 	centerOrigin(mExplosion);
@@ -51,15 +48,7 @@ void Player::updateCurrent(sf::Time dt, CommandQueue& commands)
 	if (isDestroyed())
 	{
 		mIsMarkedForRemoval = true;
-
-		// Play explosion sound only once
-		if (!mPlayedExplosionSound)
-		{
-			playLocalSound(commands, SoundEffect::PlayerExplosion);
-
-			mPlayedExplosionSound = true;
-		}
-
+		playLocalSound(commands, SoundEffect::PlayerExplosion);
 		return;
 	}
 

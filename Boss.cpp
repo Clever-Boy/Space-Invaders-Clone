@@ -2,7 +2,6 @@
 #include "DataTables.hpp"
 #include "Utility.hpp"
 #include "CommandQueue.hpp"
-#include "ResourceHolder.hpp"
 #include "SoundNode.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -10,7 +9,11 @@
 
 namespace
 {
-	const std::vector<BossData> Table = initializeBossData();
+	const std::vector<BossData> Table	= initializeBossData();
+	constexpr auto ListenerZ			= 300.f;
+	constexpr auto Attenuation			= 8.f;
+	constexpr auto MinDistance2D		= 200.f;
+	const float MinDistance3D			= std::sqrt(MinDistance2D * MinDistance2D + ListenerZ * ListenerZ);
 }
 
 
@@ -20,19 +23,25 @@ Boss::Boss(Type type, const TextureHolder& textures, const sf::FloatRect& bounds
 	, mSprite(textures.get(Table[type].texture))
 	, mDirectionIndex((dirction == MovingRight) ? +1.f : -1.f )
 	, mIsMarkedForRemoval(false)
-	, mExplosion()
+	, mExplosion(textures.get(Textures::EnemiesExplosion))
 	, mShowExpolsion(true)
-	, mPlayedExplosionSound(false)
-	, mPlayedSound(false)
 	, mBounds()
+	, mSound()
+	, mSoundBuffers()
 {
+	mSoundBuffers.load(SoundEffect::BossMovements, "Media/Sounds/BossMovements.wav");
+
+	mSound.setBuffer(mSoundBuffers.get(SoundEffect::BossMovements));
+	mSound.setPosition(getWorldPosition().x, -getWorldPosition().y, 0.f);
+	mSound.setAttenuation(Attenuation);
+	mSound.setMinDistance(MinDistance3D);
+
 	mBounds.left -= 100;
 	mBounds.width += bounds.width + 100 * 2;
 
 	mBounds.top += bounds.top;
 	mBounds.height += bounds.height;
 
-	mExplosion.setTexture(textures.get(Textures::EnemiesExplosion));
 	mExplosion.setColor(Table[type].color);
 	centerOrigin(mExplosion);
 
@@ -55,21 +64,16 @@ void Boss::updateCurrent(sf::Time dt, CommandQueue& commands)
 	// Entity has been destroyed: mark for removal
 	if (isDestroyed())
 	{
+		if (mSound.getStatus() == sf::Sound::Playing)
+			mSound.stop();
+
 		mIsMarkedForRemoval = true;
-
-		// Play explosion sound only once
-		if (!mPlayedExplosionSound && mShowExpolsion)
-		{
-			playLocalSound(commands, SoundEffect::EnemiesExplosion);
-
-			mPlayedExplosionSound = true;
-		}
-
 		return;
 	}
 
 	// Play sound 
-	playMovementSounds(dt, commands);
+	if (mSound.getStatus() == sf::Sound::Stopped)
+		mSound.play();
 
 	// delete it if boss goes out of range
 	if (!mBounds.contains(getWorldPosition()))
@@ -109,38 +113,8 @@ void Boss::updateMovementPattern(sf::Time dt)
 	setVelocity(vx, vy);
 }
 
-void Boss::playMovementSounds(sf::Time dt, CommandQueue& commands)
-{
-	if (!mPlayedSound)
-	{
-		playLocalSound(commands, SoundEffect::BossMovements);
-
-		mPlayedSound = true;
-	}
-
-	mTimer += dt;
-
-	if (mTimer > sf::seconds(3.f))
-	{
-		playLocalSound(commands, SoundEffect::BossMovements);
-
-		mTimer = sf::Time::Zero;
-	}
-}
-
 void Boss::remove()
 {
 	mShowExpolsion = false;
 	Entity::remove();
-}
-
-void Boss::playLocalSound(CommandQueue& commands, SoundEffect::ID effect)
-{
-	sf::Vector2f worldPosition = getWorldPosition();
-
-	Command command;
-	command.category = Category::SoundEffect;
-	command.action = derivedAction<SoundNode>(std::bind(&SoundNode::playSound, std::placeholders::_1, effect, worldPosition));
-
-	commands.push(command);
 }

@@ -4,8 +4,11 @@
 #include "Entity.hpp"
 #include "Command.hpp"
 #include "ResourceIdentifiers.hpp"
+#include "ResourceHolder.hpp"
 
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Audio/SoundBuffer.hpp>
+#include <SFML/Audio/Sound.hpp>
 
 
 class Boss final : public Entity
@@ -37,9 +40,6 @@ private:
 	void					updateMovementPattern(sf::Time dt);
 	float					getMaxSpeed() const;
 	bool 					isMarkedForRemoval() const override;
-
-	void					playLocalSound(CommandQueue& commands, SoundEffect::ID effect);
-	void					playMovementSounds(sf::Time dt, CommandQueue& commands);
 	void					remove() override;
 
 
@@ -53,9 +53,8 @@ private:
 
 	sf::Sprite				mExplosion;
 	bool					mShowExpolsion;
-	bool					mPlayedExplosionSound;
 
-	sf::Time				mTimer;
+	SoundBufferHolder		mSoundBuffers;
 	sf::FloatRect			mBounds;
-	bool					mPlayedSound;
+	sf::Sound				mSound;
 };

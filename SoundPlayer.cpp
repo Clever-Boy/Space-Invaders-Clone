@@ -21,7 +21,6 @@ SoundPlayer::SoundPlayer()
 	mSoundBuffers.load(SoundEffect::EnemiesGunfire, "Media/Sounds/EnemiesGunfire.wav");
 	mSoundBuffers.load(SoundEffect::PlayerExplosion, "Media/Sounds/PlayerExplosion.wav");
 	mSoundBuffers.load(SoundEffect::EnemiesExplosion, "Media/Sounds/EnemiesExplosion.wav");
-	mSoundBuffers.load(SoundEffect::BossMovements, "Media/Sounds/BossMovements.wav");
 	mSoundBuffers.load(SoundEffect::Button, "Media/Sounds/Button.wav");
 
 	// Listener points towards the screen (default in SFML)

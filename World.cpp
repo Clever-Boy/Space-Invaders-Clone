@@ -365,6 +365,7 @@ void World::update(sf::Time dt)
 	// Remove useless entities
 	destroyEntitiesOutsideView();
 
+	// create Boss 
 	spawnBoss(dt);
 
 	// Update quadtree

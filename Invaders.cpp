@@ -19,6 +19,7 @@ Invaders::Invaders(Type type, const TextureHolder& textures)
 	: Entity(Table[type].hitpoints)
 	, mType(type)
 	, mSprite(textures.get(Table[type].texture), Table[type].textureRect)
+	, mExplosion(textures.get(Textures::EnemiesExplosion))
 	, mFireCommand()
 	, mFireRateLevel(Table[type].fireRate)
 	, mFireCountdown(sf::Time::Zero)
@@ -31,10 +32,7 @@ Invaders::Invaders(Type type, const TextureHolder& textures)
 	, mMaxSpeed(Table[mType].speed)
 	, mAnimateCountdown(sf::Time::Zero)
 	, mAnimateRate(Table[type].animateRate)
-	, mExplosion()
-	, mPlayedExplosionSound(false)
 {
-	mExplosion.setTexture(textures.get(Textures::EnemiesExplosion));
 	mExplosion.setColor(Table[type].color);
 	centerOrigin(mExplosion);
 
@@ -61,15 +59,7 @@ void Invaders::updateCurrent(sf::Time dt, CommandQueue& commands)
 	if (isDestroyed())
 	{
 		mIsMarkedForRemoval = true;
-
-		// Play explosion sound only once
-		if (!mPlayedExplosionSound)
-		{
-			playLocalSound(commands, SoundEffect::EnemiesExplosion);
-
-			mPlayedExplosionSound = true;
-		}
-
+		playLocalSound(commands, SoundEffect::EnemiesExplosion);
 		return;
 	}
 
