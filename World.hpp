@@ -103,6 +103,7 @@ private:
 
 	QuadTree				mQuadTreePrimary;
 	QuadTree				mQuadTreeSecondary;
+
 	NodeContainer			mEnemyNodes;
 	NodeContainer			mPlayerBulletNodes;
 	NodeContainer			mEnemyBulletNodes;

@@ -448,6 +448,7 @@ void World::checkForCollision()
 		else if (node.getCategory() & Category::EnemyProjectile)
 		{
 			mEnemyBulletNodes.push_back(&node);
+			mQuadTreePrimary.insert(node);
 		}
 		else if (node.getCategory() & Category::EnemySpaceship)
 		{
@@ -477,28 +478,6 @@ void World::handleCollisions()
 	enemyProjectileCollision();
 	playerProjectileCollision();
 	enemyCollision();
-
-	// player projectiles vs enemy projectiles
-	for (const auto& node1 : mPlayerBulletNodes)
-	{
-		if (node1->isDestroyed())
-			continue;
-
-		for (const auto& node2 : mEnemyBulletNodes)
-		{
-			if (node2->isDestroyed())
-				continue;
-
-			if (!collision(*node1, *node2))
-				continue;
-
-			auto& playerProjectile = static_cast<Projectile&>(*node1);
-			auto& enemyProjectile = static_cast<Projectile&>(*node2);
-
-			playerProjectile.destroy();
-			enemyProjectile.destroy();
-		}
-	}
 }
 
 void World::playerProjectileCollision()
@@ -528,6 +507,17 @@ void World::playerProjectileCollision()
 					shield.onHit(projectile.getBoundingRect(), projectile.getPosition(), projectile.getCategory());
 					projectile.destroy();
 				}
+			}
+			else if (node2->getCategory() & Category::EnemyProjectile)
+			{
+				if (!collision(*node1, *node2))
+					continue;
+
+				auto& playerProjectile = static_cast<Projectile&>(*node1);
+				auto& enemyProjectile = static_cast<Projectile&>(*node2);
+
+				playerProjectile.destroy();
+				enemyProjectile.destroy();
 			}
 			else if (node2->getCategory() & Category::BossSpaceship)
 			{
