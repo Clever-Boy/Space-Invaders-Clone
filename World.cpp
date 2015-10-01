@@ -435,14 +435,14 @@ bool World::checkPlayerDeath(sf::Time dt)
 
 void World::spawnPlayer()
 {
-	if (mIsPlayerDead)
-	{
-		auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
-		mPlayerShip = leader.get();
-		mPlayerShip->setPosition(mPreviousPosition);
-		mSceneLayers[Space]->attachChild(std::move(leader));
-		mIsPlayerDead = false;
-	}
+	if (!mIsPlayerDead)
+		return;
+
+	auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
+	mPlayerShip = leader.get();
+	mPlayerShip->setPosition(mPreviousPosition);
+	mSceneLayers[Space]->attachChild(std::move(leader));
+	mIsPlayerDead = false;
 }
 
 void World::updateText()

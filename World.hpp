@@ -68,6 +68,7 @@ private:
 	void					enemyCollision();
 
 	void					adaptEnemyMovements();
+
 	bool					checkPlayerDeath(sf::Time dt);
 	void					spawnPlayer();
 
