@@ -26,8 +26,8 @@ Invaders::Invaders(Type type, const TextureHolder& textures)
 	, mIsFiring(false)
 	, mIsMarkedForRemoval(false)
 	, mTravelledDistance()
-	, mState(States::Right)
-	, mPreviousState(States::Right)
+	, mState(States::MovingRight)
+	, mPreviousState(States::MovingRight)
 	, mMovement(1, 0)
 	, mMaxSpeed(Table[mType].speed)
 	, mAnimateCountdown(sf::Time::Zero)
@@ -112,38 +112,38 @@ float Invaders::getTravelledDistance() const
 
 void Invaders::requstChangeState()
 {
-	if (mState == Right)
+	if (mState == MovingRight)
 	{
-		mState = Down;
-		mPreviousState = Right;
+		mState = MovingDown;
+		mPreviousState = MovingRight;
 		mTravelledDistance = 0;
 		mMovement = sf::Vector2f(0, 1);
 		return;
 	}
 
-	if (mState == Left)
+	if (mState == MovingLeft)
 	{
-		mState = Down;
-		mPreviousState = Left;
+		mState = MovingDown;
+		mPreviousState = MovingLeft;
 		mTravelledDistance = 0;
 		mMovement = sf::Vector2f(0, 1);
 		return;
 	}
 
-	if (mState == Down)
+	if (mState == MovingDown)
 	{
-		if (mPreviousState == Left)
+		if (mPreviousState == MovingLeft)
 		{
-			mState = Right;
+			mState = MovingRight;
 			mMovement = sf::Vector2f(1, 0);
 		}
 		else
 		{
-			mState = Left;
+			mState = MovingLeft;
 			mMovement = sf::Vector2f(-1, 0);
 		}
 
-		mPreviousState = Down;
+		mPreviousState = MovingDown;
 		mTravelledDistance = 0;
 	}
 }

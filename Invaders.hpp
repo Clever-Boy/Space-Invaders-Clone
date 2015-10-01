@@ -19,9 +19,9 @@ public:
 
 	enum States
 	{
-		Right,
-		Left,
-		Down
+		MovingRight,
+		MovingLeft,
+		MovingDown
 	};
 
 

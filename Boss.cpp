@@ -2,6 +2,7 @@
 #include "DataTables.hpp"
 #include "Utility.hpp"
 #include "CommandQueue.hpp"
+#include "ResourceHolder.hpp"
 #include "SoundNode.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -10,7 +11,7 @@
 namespace
 {
 	const std::vector<BossData> Table	= initializeBossData();
-	constexpr auto SpawnPadding = 60.f;
+	constexpr auto SpawnPadding			= 60.f;
 }
 
 
