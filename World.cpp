@@ -415,22 +415,21 @@ void World::update(sf::Time dt)
 
 bool World::checkPlayerDeath(sf::Time dt)
 {
-	if (mPlayerShip->isDestroyed() && !mIsPlayerDead)
-	{
-		mPlayerShip->applyHitEffect(dt, mCommandQueue);
-		mPlayerTimer += dt;
+	if (!mPlayerShip->isDestroyed() || mIsPlayerDead)
+		return false;
 
-		if (mPlayerTimer > sf::seconds(2.f))
-		{
-			mPlayerShip->setMarkToRemove();
-			mPreviousPosition = mPlayerShip->getWorldPosition();
-			mIsPlayerDead = true;
-			mPlayerTimer = sf::Time::Zero;
-		}
-		return true;
+	mPlayerShip->applyHitEffect(dt, mCommandQueue);
+	mPlayerTimer += dt;
+
+	if (mPlayerTimer > sf::seconds(2.f))
+	{
+		mPlayerShip->setMarkToRemove();
+		mPreviousPosition = mPlayerShip->getWorldPosition();
+		mIsPlayerDead = true;
+		mPlayerTimer = sf::Time::Zero;
 	}
 
-	return false;
+	return true;
 }
 
 void World::spawnPlayer()
