@@ -10,6 +10,7 @@
 namespace
 {
 	const std::vector<BossData> Table	= initializeBossData();
+	constexpr auto SpawnPadding = 60.f;
 }
 
 
@@ -23,8 +24,8 @@ Boss::Boss(Type type, const TextureHolder& textures, const sf::FloatRect& bounds
 	, mShowExpolsion(true)
 	, mBounds()
 {
-	mBounds.left -= 100;
-	mBounds.width += bounds.width + 100 * 2;
+	mBounds.left -= SpawnPadding;
+	mBounds.width += bounds.width + SpawnPadding * 2;
 
 	mBounds.top += bounds.top;
 	mBounds.height += bounds.height;
@@ -52,7 +53,6 @@ void Boss::updateCurrent(sf::Time dt, CommandQueue& commands)
 	if (isDestroyed())
 	{
 		stopLocalSound(commands);
-
 		mIsMarkedForRemoval = true;
 		return;
 	}
