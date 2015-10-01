@@ -126,17 +126,17 @@ void Player::fire()
 
 void Player::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 {
-	if (mIsFiring)
-	{
-		if (mReadyToFire)
-		{
-			commands.push(mFireCommand);
-			playLocalSound(commands, SoundEffect::PlayerGunfire);
-			mReadyToFire = false;
-		}
+	if (!mIsFiring)
+		return;
 
-		mIsFiring = false;
-	}
+	mIsFiring = false;
+
+	if (!mReadyToFire)
+		return;
+
+	commands.push(mFireCommand);
+	playLocalSound(commands, SoundEffect::PlayerGunfire);
+	mReadyToFire = false;
 }
 
 void Player::createBullets(SceneNode& node, const TextureHolder& textures) const
