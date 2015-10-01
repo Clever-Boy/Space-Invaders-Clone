@@ -15,9 +15,13 @@ namespace
 Projectile::Projectile(Type type, const TextureHolder& textures)
 	: Entity(Table[type].hitpoints)
 	, mType(type)
-	, mSprite(textures.get(Table[type].texture), Table[type].textureRect)
+	, mSprite(textures.get(Table[type].texture))
 {
 	setScaleSize(mSprite, Table[type].size.x, Table[type].size.y);
+
+	if (type == PlayerBullet)
+		mSprite.rotate(180.f);
+
 	centerOrigin(mSprite);
 }
 
