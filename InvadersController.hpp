@@ -3,16 +3,19 @@
 
 #include "CommandQueue.hpp"
 
+#include <SFML/System/NonCopyable.hpp>
 
-class InvadersController
+
+class InvadersController : private sf::NonCopyable
 {
 public:
-	InvadersController(CommandQueue& commands);
-	void requstChangeDirectionCommands();
-	void update();
+	explicit				InvadersController(CommandQueue& commands);
+
+	void					requstChangeDirectionCommands();
+	void					update();
 
 
 private:
-	CommandQueue&	mCommands;
-	bool			mIsRequstCommand;
+	CommandQueue&			mCommands;
+	bool					mIsRequstCommand;
 };
