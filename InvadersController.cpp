@@ -3,9 +3,8 @@
 #include "Invaders.hpp"
 
 
-InvadersController::InvadersController(CommandQueue& commands)
-	: mCommands(commands)
-	, mIsRequstCommand(false)
+InvadersController::InvadersController()
+	: mIsRequstCommand(false)
 {
 }
 
@@ -14,7 +13,7 @@ void InvadersController::requstChangeDirectionCommands()
 	mIsRequstCommand = true;
 }
 
-void InvadersController::update()
+void InvadersController::update(CommandQueue& commands)
 {
 	if (!mIsRequstCommand)
 		return;
@@ -25,5 +24,5 @@ void InvadersController::update()
 	command.category = Category::EnemySpaceship;
 	command.action = derivedAction<Invaders>(std::bind(&Invaders::requstChangeDirction, std::placeholders::_1));
 
-	mCommands.push(command);
+	commands.push(command);
 }

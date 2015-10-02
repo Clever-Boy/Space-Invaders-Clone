@@ -83,7 +83,7 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mPreviousPosition()
 	, mIsGameEnded(false)
 	, mEndGame(false)
-	, mInvadersController(mCommandQueue)
+	, mInvadersController()
 {
 	const auto TextPadding = 5.f;
 	mStaticScoreText.setString("Score: ");
@@ -384,7 +384,7 @@ void World::update(sf::Time dt)
 	checkForCollision();
 
 	// update Invaders controller: Adapt Movements 
-	mInvadersController.update();
+	mInvadersController.update(mCommandQueue);
 
 	// Forward commands to scene graph
 	while (!mCommandQueue.isEmpty())
