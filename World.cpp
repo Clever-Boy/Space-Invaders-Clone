@@ -83,6 +83,7 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mPreviousPosition()
 	, mIsGameEnded(false)
 	, mEndGame(false)
+	, mInvadersController(mCommandQueue)
 {
 	const auto TextPadding = 5.f;
 	mStaticScoreText.setString("Score: ");
@@ -222,7 +223,7 @@ void World::addEnemies()
 
 void World::addEnemy(Invaders::Type type, float relX, float relY)
 {
-	auto enemy(std::make_unique<Invaders>(type, mTextures));
+	auto enemy(std::make_unique<Invaders>(type, mTextures, getMovementsfieldBounds(), mInvadersController));
 	enemy->setPosition(relX, relY);
 	mSceneLayers[Space]->attachChild(std::move(enemy));
 }
@@ -382,6 +383,9 @@ void World::update(sf::Time dt)
 	// Update quadtree
 	checkForCollision();
 
+	// update Invaders controller: Adapt Movements 
+	mInvadersController.update();
+
 	// Forward commands to scene graph
 	while (!mCommandQueue.isEmpty())
 		mSceneGraph.onCommand(mCommandQueue.pop());
@@ -397,9 +401,6 @@ void World::update(sf::Time dt)
 		return;
 
 	mSceneGraph.removeWrecks();
-
-	// Adapt Movements 
-	adaptEnemyMovements();
 
 	// Spawn Player
 	spawnPlayer();
@@ -721,43 +722,6 @@ bool World::hasPlayerWon() const
 		return (mBoss->isMarkedForRemoval());
 
 	return false;
-}
-
-void World::adaptEnemyMovements()
-{
-	bool changeDirection			= false;
-	const auto TravelledDistance	= 30.f;
-
-	for (const auto& i : mEnemyNodes)
-	{
-		auto& enemy = static_cast<Invaders&>(*i);
-
-		if (enemy.isDestroyed())
-			continue;
-
-		if (enemy.getCurrentDirction() == Invaders::MovingDown)
-		{
-			if (enemy.getTravelledDistance() > TravelledDistance)
-				changeDirection = true;
-		}
-
-		if (enemy.getCurrentDirction() == Invaders::MovingRight || enemy.getCurrentDirction() == Invaders::MovingLeft)
-		{
-			if (!getMovementsfieldBounds().contains(enemy.getWorldPosition()))
-				changeDirection = true;
-		}
-	}
-
-	if (!changeDirection)
-		return;
-
-	// let invaders moving down and update condition of change direction
-	for (const auto& i : mEnemyNodes)
-	{
-		auto& enemy = static_cast<Invaders&>(*i);
-
-		enemy.requstChangeDirction();
-	}
 }
 
 void World::controlEnemyFire()

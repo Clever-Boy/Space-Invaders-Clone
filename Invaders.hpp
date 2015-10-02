@@ -4,7 +4,7 @@
 #include "Entity.hpp"
 #include "Command.hpp"
 #include "Projectile.hpp"
-
+#include "InvadersController.hpp"
 
 class Invaders final : public Entity
 {
@@ -26,7 +26,7 @@ public:
 
 
 public:
-	explicit				Invaders(Type type, const TextureHolder& textures);
+	explicit				Invaders(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, InvadersController& InvadersController);
 
 	unsigned int			getCategory() const override;
 	sf::FloatRect			getBoundingRect() const override;
@@ -36,9 +36,6 @@ public:
 
 	void 					fire();
 	Type					getType() const;
-
-	float					getTravelledDistance() const;
-	Dirction				getCurrentDirction() const;
 	void					requstChangeDirction();
 
 
@@ -54,6 +51,10 @@ private:
 	void					createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const;
 
 	bool 					isMarkedForRemoval() const override;
+
+	float					getTravelledDistance() const;
+	Dirction				getCurrentDirction() const;
+	void					adaptEnemyMovements(CommandQueue& commands);
 
 	void					playLocalSound(CommandQueue& commands, SoundEffect::ID effect);
 
@@ -74,4 +75,7 @@ private:
 	int						mAnimateRate;
 	sf::Time				mAnimateCountdown;
 	float					mMaxSpeed;
+	sf::FloatRect			mBounds;
+	InvadersController&		mInvadersController;
+	bool					mIsChangeDirection;
 };

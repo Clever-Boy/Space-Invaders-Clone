@@ -15,7 +15,7 @@ namespace
 }
 
 
-Invaders::Invaders(Type type, const TextureHolder& textures)
+Invaders::Invaders(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, InvadersController& InvadersController)
 	: Entity(Table[type].hitpoints)
 	, mType(type)
 	, mSprite(textures.get(Table[type].texture), Table[type].textureRect)
@@ -32,6 +32,9 @@ Invaders::Invaders(Type type, const TextureHolder& textures)
 	, mMaxSpeed(Table[mType].speed)
 	, mAnimateCountdown(sf::Time::Zero)
 	, mAnimateRate(Table[type].animateRate)
+	, mBounds(bounds)
+	, mInvadersController(InvadersController)
+	, mIsChangeDirection(false)
 {
 	mExplosion.setColor(Table[type].color);
 	centerOrigin(mExplosion);
@@ -62,6 +65,8 @@ void Invaders::updateCurrent(sf::Time dt, CommandQueue& commands)
 		playLocalSound(commands, SoundEffect::EnemiesExplosion);
 		return;
 	}
+
+	adaptEnemyMovements(commands);
 
 	// Check if bullets or missiles are fired
 	checkProjectileLaunch(dt, commands);
@@ -112,6 +117,8 @@ float Invaders::getTravelledDistance() const
 
 void Invaders::requstChangeDirction()
 {
+	mIsChangeDirection = true;
+
 	if (mCurrentDirction == MovingRight)
 	{
 		mCurrentDirction = MovingDown;
@@ -146,6 +153,35 @@ void Invaders::requstChangeDirction()
 		mPreviousDirction = MovingDown;
 		mTravelledDistance = 0;
 	}
+}
+
+void Invaders::adaptEnemyMovements(CommandQueue& commands)
+{
+	bool changeDirection = false;
+	const auto TravelledDistance = 30.f;
+
+	if (getCurrentDirction() == Invaders::MovingDown)
+	{
+		if (getTravelledDistance() > TravelledDistance)
+			changeDirection = true;
+
+	}
+
+	if (getCurrentDirction() == Invaders::MovingRight || getCurrentDirction() == Invaders::MovingLeft)
+	{
+		if (!mBounds.contains(getWorldPosition()))
+			changeDirection = true;
+	}
+
+	if (!changeDirection)
+	{
+		mIsChangeDirection = false;
+		return;
+	}
+
+	if (!mIsChangeDirection)
+		mInvadersController.requstChangeDirectionCommands();
+
 }
 
 Invaders::Dirction Invaders::getCurrentDirction() const

@@ -10,6 +10,7 @@
 #include "Life.hpp"
 #include "Shield.hpp"
 #include "SoundPlayer.hpp"
+#include "InvadersController.hpp"
 
 #include <SFML\Graphics\View.hpp>
 #include <SFML\Graphics\Text.hpp>
@@ -66,8 +67,6 @@ private:
 	void					enemyProjectileCollision();
 	void					playerProjectileCollision();
 	void					enemyCollision();
-
-	void					adaptEnemyMovements();
 
 	bool					checkPlayerDeath(sf::Time dt);
 	void					spawnPlayer();
@@ -131,4 +130,5 @@ private:
 
 	bool					mIsGameEnded;
 	bool					mEndGame;
+	InvadersController		mInvadersController;
 };
