@@ -1,9 +1,10 @@
 #pragma once
 
 
-#include "CommandQueue.hpp"
-
 #include <SFML/System/NonCopyable.hpp>
+
+
+class CommandQueue;
 
 
 class InvadersController : private sf::NonCopyable
