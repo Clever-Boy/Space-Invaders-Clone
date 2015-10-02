@@ -708,10 +708,8 @@ bool World::hasAlivePlayer() const
 {
 	if (mLivesCount == 0)
 		return (!mPlayerShip->isMarkedForRemoval());
-	else if (mEndGame)
-		return false;
 
-	return true;
+	return (!mEndGame);
 }
 
 bool World::hasPlayerWon() const
