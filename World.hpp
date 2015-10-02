@@ -130,5 +130,6 @@ private:
 
 	bool					mIsGameEnded;
 	bool					mEndGame;
+
 	InvadersController		mInvadersController;
 };

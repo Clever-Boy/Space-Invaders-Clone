@@ -1,6 +1,7 @@
 #include "InvadersController.hpp"
 #include "Invaders.hpp"
 
+
 InvadersController::InvadersController(CommandQueue& commands)
 	: mCommands(commands)
 	, mIsRequstCommand(false)
