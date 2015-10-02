@@ -181,7 +181,6 @@ void Invaders::adaptEnemyMovements(CommandQueue& commands)
 
 	if (!mIsChangeDirection)
 		mInvadersController.requstChangeDirectionCommands();
-
 }
 
 Invaders::Dirction Invaders::getCurrentDirction() const
