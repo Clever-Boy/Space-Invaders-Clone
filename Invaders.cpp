@@ -110,11 +110,6 @@ void Invaders::fire()
 		mIsFiring = true;
 }
 
-float Invaders::getTravelledDistance() const
-{
-	return mTravelledDistance;
-}
-
 void Invaders::requstChangeDirction()
 {
 	mIsChangeDirection = true;
@@ -160,14 +155,14 @@ void Invaders::adaptEnemyMovements(CommandQueue& commands)
 	bool changeDirection = false;
 	const auto TravelledDistance = 30.f;
 
-	if (getCurrentDirction() == Invaders::MovingDown)
+	if (mCurrentDirction == Invaders::MovingDown)
 	{
-		if (getTravelledDistance() > TravelledDistance)
+		if (mTravelledDistance > TravelledDistance)
 			changeDirection = true;
 
 	}
 
-	if (getCurrentDirction() == Invaders::MovingRight || getCurrentDirction() == Invaders::MovingLeft)
+	if (mCurrentDirction == Invaders::MovingRight || mCurrentDirction == Invaders::MovingLeft)
 	{
 		if (!mBounds.contains(getWorldPosition()))
 			changeDirection = true;
@@ -181,11 +176,6 @@ void Invaders::adaptEnemyMovements(CommandQueue& commands)
 
 	if (!mIsChangeDirection)
 		mInvadersController.requstChangeDirectionCommands();
-}
-
-Invaders::Dirction Invaders::getCurrentDirction() const
-{
-	return mCurrentDirction;
 }
 
 void Invaders::updateMovementPattern(sf::Time dt)

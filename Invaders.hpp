@@ -6,6 +6,7 @@
 #include "Projectile.hpp"
 #include "InvadersController.hpp"
 
+
 class Invaders final : public Entity
 {
 public:
@@ -15,13 +16,6 @@ public:
 		Enemy2,
 		Enemy3,
 		TypeCount
-	};
-
-	enum Dirction
-	{
-		MovingRight,
-		MovingLeft,
-		MovingDown
 	};
 
 
@@ -52,29 +46,42 @@ private:
 
 	bool 					isMarkedForRemoval() const override;
 
-	float					getTravelledDistance() const;
-	Dirction				getCurrentDirction() const;
 	void					adaptEnemyMovements(CommandQueue& commands);
 
 	void					playLocalSound(CommandQueue& commands, SoundEffect::ID effect);
 
 
 private:
+	enum Dirction
+	{
+		MovingRight,
+		MovingLeft,
+		MovingDown
+	};
+
+
+private:
 	Type					mType;
 	sf::Sprite				mSprite;
 	sf::Sprite				mExplosion;
+
 	Command 				mFireCommand;
 	sf::Time				mFireCountdown;
 	bool 					mIsFiring;
 	int						mFireRateLevel;
+
 	bool 					mIsMarkedForRemoval;
+
 	float					mTravelledDistance;
 	Dirction				mCurrentDirction;
 	Dirction				mPreviousDirction;
 	sf::Vector2f			mMovement;
+
 	int						mAnimateRate;
 	sf::Time				mAnimateCountdown;
+
 	float					mMaxSpeed;
+
 	sf::FloatRect			mBounds;
 	InvadersController&		mInvadersController;
 	bool					mIsChangeDirection;

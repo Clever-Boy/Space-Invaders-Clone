@@ -45,12 +45,16 @@ private:
 private:
 	Type					mType;
 	sf::Sprite				mSprite;
+
 	Command 				mFireCommand;
 	bool 					mIsFiring;
 	bool					mReadyToFire;
 	mutable Projectile*		mBullet;
+
 	bool 					mIsMarkedForRemoval;
+
 	int						mAnimateRate;
 	sf::Time				mAnimateCountdown;
+
 	bool					mPlayExplosionSound;
 };
