@@ -12,14 +12,14 @@ TitleState::TitleState(StateStack& stack, Context context)
 	, mTextEffectTime(sf::Time::Zero)
 {
 	const auto Padding = 150.f;
-	const sf::Vector2f ScaleSize(1.25f, 1.f);
 
 	mBackgroundSprite.setTexture(context.textures.get(Textures::TitleScreen));
-	mBackgroundSprite.setScale(ScaleSize);
+	mBackgroundSprite.setScale(1.25f, 1.f);
 	mText.setFont(context.fonts.get(Fonts::Main));
 	mText.setString("Press any key to start");
 	centerOrigin(mText);
-	mText.setPosition(context.window.getSize().x / 2.f, context.window.getSize().y / 2.f + Padding);
+	sf::Vector2f position(context.window.getSize() / 2u);
+	mText.setPosition(position.x, position.y + Padding);
 }
 
 void TitleState::draw()
