@@ -37,7 +37,7 @@ namespace
 				auto relX = x - shieldBounds.left;
 
 				auto relY = (object.getCategory() & Category::EnemyProjectile) ? y - shieldBounds.top - objectBounds.height : y - shieldBounds.top;
-				
+
 				if (shield.getPixel(relX, relY))
 					return true;
 			}
@@ -60,7 +60,7 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mSceneLayers()
 	, mWorldBounds(mWorldView.getCenter() - mWorldView.getSize() / 2.f, mWorldView.getSize())
 	, mSpawnPosition(mWorldView.getSize().x / 2.f, mWorldView.getSize().y / 2.f)
-	, mPlayerShip(nullptr)
+	, mPlayer(nullptr)
 	, mBoss(nullptr)
 	, mQuadTreePrimary(1, mWorldBounds)
 	, mQuadTreeSecondary(1, mWorldBounds)
@@ -81,6 +81,7 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mIsPlayerDead(false)
 	, mLivesCount(3)
 	, mPreviousPosition()
+	, mIsGameEnded(false)
 	, mEndGame(false)
 {
 	const auto TextPadding = 5.f;
@@ -147,10 +148,10 @@ void World::buildScene()
 
 	// Add player's spaceship
 	auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
-	mPlayerShip = leader.get();
+	mPlayer = leader.get();
 	auto bounds(getBattlefieldBounds());
 	auto YPadding = bounds.top + bounds.height - Padding / 2u - mSpawnPosition.y;
-	mPlayerShip->setPosition(mSpawnPosition + sf::Vector2f(0.f, YPadding));
+	mPlayer->setPosition(mSpawnPosition + sf::Vector2f(0.f, YPadding));
 
 	mSceneLayers[Space]->attachChild(std::move(leader));
 
@@ -199,10 +200,10 @@ void World::addLife(float relX, float relY)
 void World::addEnemies()
 {
 	// Add enemies
-	const auto numberOfEnemies		= 66u;
-	const auto enemiesPerRow		= 11;
-	const auto horizontalSpacing	= 40.f;
-	const auto verticalSpacing		= 35.f;
+	const auto numberOfEnemies = 66u;
+	const auto enemiesPerRow = 11;
+	const auto horizontalSpacing = 40.f;
+	const auto verticalSpacing = 35.f;
 
 	const sf::Vector2f positionOfTopLeft(MovementsPadding, Padding * 2.5);
 
@@ -291,7 +292,7 @@ sf::FloatRect World::getMovementsfieldBounds() const
 	auto bounds(getViewBounds());
 
 	bounds.top += MovementsPadding;
-	bounds.height -= MovementsPadding * 2 ;
+	bounds.height -= MovementsPadding * 2;
 
 	bounds.left += MovementsPadding;
 	bounds.width -= MovementsPadding * 2;
@@ -370,7 +371,7 @@ void World::draw()
 void World::update(sf::Time dt)
 {
 	// reset player velocity
-	mPlayerShip->setVelocity(0.f, 0.f);
+	mPlayer->setVelocity(0.f, 0.f);
 
 	// Remove useless entities
 	destroyEntitiesOutsideView();
@@ -416,17 +417,19 @@ void World::update(sf::Time dt)
 
 bool World::checkPlayerDeath(sf::Time dt)
 {
-	if (!mPlayerShip->isDestroyed() || mIsPlayerDead)
+	if (!mPlayer->isDestroyed() || mIsPlayerDead)
 		return false;
 
-	mPlayerShip->applyHitEffect(dt, mCommandQueue);
+	mPlayer->applyHitEffect(dt, mCommandQueue);
 	mPlayerTimer += dt;
 
 	if (mPlayerTimer > sf::seconds(2.f))
 	{
-		mPlayerShip->setMarkToRemove();
-		mPreviousPosition = mPlayerShip->getWorldPosition();
+		mPlayer->setMarkToRemove();
+		mPreviousPosition = mPlayer->getWorldPosition();
 		mIsPlayerDead = true;
+		if(mIsGameEnded)
+			mEndGame = true;
 		mPlayerTimer = sf::Time::Zero;
 	}
 
@@ -439,8 +442,8 @@ void World::spawnPlayer()
 		return;
 
 	auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
-	mPlayerShip = leader.get();
-	mPlayerShip->setPosition(mPreviousPosition);
+	mPlayer = leader.get();
+	mPlayer->setPosition(mPreviousPosition);
 	mSceneLayers[Space]->attachChild(std::move(leader));
 	mIsPlayerDead = false;
 }
@@ -455,12 +458,12 @@ void World::adaptPlayerPosition()
 	// Keep player's position inside the screen bounds, at least borderDistance units from the border
 	auto Bounds(getMovementsfieldBounds());
 
-	sf::Vector2f position = mPlayerShip->getPosition();
+	sf::Vector2f position = mPlayer->getPosition();
 
 	position.x = std::max(position.x, Bounds.left);
 	position.x = std::min(position.x, Bounds.left + Bounds.width);
 
-	mPlayerShip->setPosition(position);
+	mPlayer->setPosition(position);
 }
 
 void World::destroyEntitiesOutsideView()
@@ -606,7 +609,7 @@ void World::playerProjectileCollision()
 				enemy.damage(projectile.getDamage());
 				projectile.destroy();
 			}
-		}	
+		}
 	}
 }
 
@@ -684,7 +687,7 @@ void World::enemyCollision()
 				if (PixelcollidesPair(shield, enemy))
 					shield.onHit(enemy.getBoundingRect(), enemy.getPosition(), enemy.getCategory());
 			}
-			else if(node2->getCategory() & Category::PlayerSpaceship)
+			else if (node2->getCategory() & Category::PlayerSpaceship)
 			{
 				if (!collision(*node1, *node2))
 					continue;
@@ -707,14 +710,14 @@ void World::enemyCollision()
 bool World::hasAlivePlayer() const
 {
 	if (mLivesCount == 0)
-		return (!mPlayerShip->isMarkedForRemoval());
+		return (!mPlayer->isMarkedForRemoval());
 
 	return (!mEndGame);
 }
 
 bool World::hasPlayerWon() const
 {
-	if(mEnemyNodes.empty())
+	if (mEnemyNodes.empty())
 		return (mBoss->isMarkedForRemoval());
 
 	return false;
@@ -776,7 +779,10 @@ void World::controlEnemyFire()
 			continue;
 
 		if (enemy.getWorldPosition().y >= mDeadLine - 20.f)
-			mEndGame = true;
+		{
+			mPlayer->damage(enemy.getHitpoints());
+			mIsGameEnded = true;
+		}
 
 		if (mEnemyNodes.size() <= 3)
 			enemy.setMaxSpeed(enemy.getMaxSpeed() + 1.f);
@@ -789,7 +795,7 @@ void World::controlEnemyFire()
 void World::updateSounds()
 {
 	// Set listener's position to player position
-	mSounds.setListenerPosition(mPlayerShip->getWorldPosition());
+	mSounds.setListenerPosition(mPlayer->getWorldPosition());
 
 	// Remove unused sounds
 	mSounds.removeStoppedSounds();

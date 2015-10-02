@@ -101,7 +101,7 @@ private:
 	sf::FloatRect			mWorldBounds;
 	sf::Vector2f			mSpawnPosition;
 
-	Player*					mPlayerShip;
+	Player*					mPlayer;
 	Boss*					mBoss;
 
 	QuadTree				mQuadTreePrimary;
@@ -129,5 +129,6 @@ private:
 	std::size_t				mLivesCount;
 	sf::Vector2f			mPreviousPosition;
 
+	bool					mIsGameEnded;
 	bool					mEndGame;
 };
