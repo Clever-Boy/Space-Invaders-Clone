@@ -20,32 +20,14 @@ void Entity::setVelocity(float vx, float vy)
 	mVelocity.y = vy;
 }
 
-sf::Vector2f Entity::getVelocity() const
-{
-	return mVelocity;
-}
-
 void Entity::accelerate(sf::Vector2f velocity)
 {
 	mVelocity += velocity;
 }
 
-void Entity::accelerate(float vx, float vy)
-{
-	mVelocity.x += vx;
-	mVelocity.y += vy;
-}
-
 int Entity::getHitpoints() const
 {
 	return mHitpoints;
-}
-
-void Entity::repair(int points)
-{
-	assert(points > 0);
-
-	mHitpoints += points;
 }
 
 void Entity::damage(int points)
