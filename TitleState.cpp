@@ -4,12 +4,6 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
-namespace
-{
-	constexpr auto Padding			= 150.f;
-	constexpr auto EffectInterval	= 0.5f;
-	const sf::Vector2f ScaleSize(1.25f, 1.f);
-}
 
 TitleState::TitleState(StateStack& stack, Context context)
 	: State(stack, context)
@@ -17,6 +11,9 @@ TitleState::TitleState(StateStack& stack, Context context)
 	, mShowText(true)
 	, mTextEffectTime(sf::Time::Zero)
 {
+	const auto Padding = 150.f;
+	const sf::Vector2f ScaleSize(1.25f, 1.f);
+
 	mBackgroundSprite.setTexture(context.textures.get(Textures::TitleScreen));
 	mBackgroundSprite.setScale(ScaleSize);
 	mText.setFont(context.fonts.get(Fonts::Main));
@@ -36,6 +33,8 @@ void TitleState::draw()
 
 bool TitleState::update(sf::Time dt)
 {
+	const auto EffectInterval = 0.5f;
+
 	mTextEffectTime += dt;
 
 	if (mTextEffectTime >= sf::seconds(EffectInterval))

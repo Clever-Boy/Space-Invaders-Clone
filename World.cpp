@@ -371,6 +371,9 @@ void World::draw()
 
 void World::update(sf::Time dt)
 {
+	// Spawn Player
+	spawnPlayer();
+
 	// reset player velocity
 	mPlayer->setVelocity(0.f, 0.f);
 
@@ -401,9 +404,6 @@ void World::update(sf::Time dt)
 		return;
 
 	mSceneGraph.removeWrecks();
-
-	// Spawn Player
-	spawnPlayer();
 
 	// Regular update step
 	mSceneGraph.update(dt, mCommandQueue);
