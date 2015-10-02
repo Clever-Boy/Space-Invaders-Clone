@@ -28,8 +28,8 @@ std::vector<InvadersData> initializeInvadersData()
 	data[Invaders::Enemy1].speed = 50.f;
 	data[Invaders::Enemy1].texture = Textures::Enemies;
 	data[Invaders::Enemy1].textureRect = sf::IntRect(0, 0, 25, 20);
-	data[Invaders::Enemy1].fireInterval = sf::seconds(6);
-	data[Invaders::Enemy1].animationInterval = sf::seconds(2);
+	data[Invaders::Enemy1].fireInterval = sf::seconds(6.f);
+	data[Invaders::Enemy1].animationInterval = sf::seconds(2.f);
 	data[Invaders::Enemy1].animateRate = 1;
 
 	data[Invaders::Enemy2].hitpoints = 1;
@@ -39,8 +39,8 @@ std::vector<InvadersData> initializeInvadersData()
 	data[Invaders::Enemy2].speed = 50.f;
 	data[Invaders::Enemy2].texture = Textures::Enemies;
 	data[Invaders::Enemy2].textureRect = sf::IntRect(0, 20, 25, 20);
-	data[Invaders::Enemy2].fireInterval = sf::seconds(6);
-	data[Invaders::Enemy2].animationInterval = sf::seconds(2);
+	data[Invaders::Enemy2].fireInterval = sf::seconds(6.f);
+	data[Invaders::Enemy2].animationInterval = sf::seconds(2.f);
 	data[Invaders::Enemy2].animateRate = 1;
 
 	data[Invaders::Enemy3].hitpoints = 1;
@@ -50,8 +50,8 @@ std::vector<InvadersData> initializeInvadersData()
 	data[Invaders::Enemy3].speed = 50.f;
 	data[Invaders::Enemy3].texture = Textures::Enemies;
 	data[Invaders::Enemy3].textureRect = sf::IntRect(0, 40, 25, 20);
-	data[Invaders::Enemy3].fireInterval = sf::seconds(6);
-	data[Invaders::Enemy3].animationInterval = sf::seconds(2);
+	data[Invaders::Enemy3].fireInterval = sf::seconds(6.f);
+	data[Invaders::Enemy3].animationInterval = sf::seconds(2.f);
 	data[Invaders::Enemy3].animateRate = 1;
 
 	return data;
@@ -68,7 +68,7 @@ std::vector<PlayerData> initializePlayerData()
 	data[Player::PlayerShip].texture = Textures::Player;
 	data[Player::PlayerShip].textureRect = sf::IntRect(0, 0, 30, 20);
 
-	data[Player::PlayerShip].animationInterval = sf::seconds(2);
+	data[Player::PlayerShip].animationInterval = sf::seconds(0.25f);
 	data[Player::PlayerShip].animateRate = 4;
 
 	return data;

@@ -424,7 +424,7 @@ bool World::checkPlayerDeath(sf::Time dt)
 	mPlayer->applyHitEffect(dt, mCommandQueue);
 	mPlayerTimer += dt;
 
-	if (mPlayerTimer > sf::seconds(2.f))
+	if (mPlayerTimer > sf::seconds(0.25f))
 	{
 		mPlayer->setMarkToRemove();
 		mPreviousPosition = mPlayer->getWorldPosition();
