@@ -7,7 +7,7 @@
 class CommandQueue;
 
 
-class InvadersController : private sf::NonCopyable
+class InvadersController final : private sf::NonCopyable
 {
 public:
 							InvadersController();
