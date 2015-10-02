@@ -81,6 +81,7 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mIsPlayerDead(false)
 	, mLivesCount(3)
 	, mPreviousPosition()
+	, mEndGame(false)
 {
 	const auto TextPadding = 5.f;
 	mStaticScoreText.setString("Score: ");
@@ -707,6 +708,8 @@ bool World::hasAlivePlayer() const
 {
 	if (mLivesCount == 0)
 		return (!mPlayerShip->isMarkedForRemoval());
+	else if (mEndGame)
+		return false;
 
 	return true;
 }
@@ -775,7 +778,7 @@ void World::controlEnemyFire()
 			continue;
 
 		if (enemy.getWorldPosition().y >= mDeadLine - 20.f)
-			mPlayerShip->destroy();
+			mEndGame = true;
 
 		if (mEnemyNodes.size() <= 3)
 			enemy.setMaxSpeed(enemy.getMaxSpeed() + 1.f);

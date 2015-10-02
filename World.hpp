@@ -128,4 +128,6 @@ private:
 	bool					mIsPlayerDead;
 	std::size_t				mLivesCount;
 	sf::Vector2f			mPreviousPosition;
+
+	bool					mEndGame;
 };
