@@ -18,8 +18,8 @@ Life::Life(Player::Type type, const TextureHolder& textures)
 {
 	using namespace utility;
 
-	centerOrigin(mSprite);
 	setScaleSize(mSprite, 2, 1);
+	centerOrigin(mSprite);
 }
 
 void Life::draw(sf::RenderTarget& target, sf::RenderStates states) const
