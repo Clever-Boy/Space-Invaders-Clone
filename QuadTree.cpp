@@ -40,15 +40,15 @@ void QuadTree::clear()
 
 void QuadTree::split()
 {
-	auto subWidth	= mBounds.width / 2.f;
-	auto subHeight	= mBounds.height / 2.f;
-	auto x			= mBounds.left;
-	auto y			= mBounds.top;
+	auto width	= mBounds.width / 2.f;
+	auto height	= mBounds.height / 2.f;
+	auto x		= mBounds.left;
+	auto y		= mBounds.top;
 
-	mChildren[0] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x + subWidth, y, subWidth, subHeight)));
-	mChildren[1] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x, y, subWidth, subHeight)));
-	mChildren[2] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x, y + subHeight, subWidth, subHeight)));
-	mChildren[3] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x + subWidth, y + subHeight, subWidth, subHeight)));
+	mChildren[0] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x + width, y, width, height)));
+	mChildren[1] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x, y, width, height)));
+	mChildren[2] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x, y + height, width, height)));
+	mChildren[3] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x + width, y + height, width, height)));
 }
 
 int QuadTree::getIndex(const sf::FloatRect& Rect)
