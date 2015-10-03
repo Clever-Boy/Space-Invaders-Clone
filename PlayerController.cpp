@@ -53,7 +53,7 @@ void PlayerController::assignKey(Action action, sf::Keyboard::Key key)
 	}
 
 	// Insert new binding
-	mKeyBinding[key] = action;
+	mKeyBinding.insert(std::make_pair(key, action));
 }
 
 sf::Keyboard::Key PlayerController::getAssignedKey(Action action) const
