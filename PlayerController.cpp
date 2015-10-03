@@ -92,10 +92,7 @@ bool PlayerController::isRealtimeAction(Action action)
 	{
 	case MoveLeft:
 	case MoveRight:
-	case Fire:
-		return true;
-
-	default:
-		return false;
+	case Fire:return true;
+	default:return false;
 	}
 }
