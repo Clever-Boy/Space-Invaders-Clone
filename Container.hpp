@@ -20,29 +20,29 @@ namespace GUI
 
 
 	public:
-		explicit			Container(SoundPlayer& soundplayer);
+		explicit				Container(SoundPlayer& soundplayer);
 
-		void				pack(Component::Ptr component);
+		void					pack(Component::Ptr component);
 
-		bool				isSelectable() const override;
-		void				handleEvent(const sf::Event& event, sf::Vector2f) override;
-
-
-	private:
-		void				draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-
-		bool				hasSelection() const;
-		void				select(std::size_t index);
-		void				selectNext();
-		void				selectPrevious();
-		void				validateChild(sf::Vector2f position);
+		bool					isSelectable() const override;
+		void					handleEvent(const sf::Event& event, sf::Vector2f) override;
 
 
 	private:
-		ComponentContainer	mChildren;
-		Component::Ptr		mHovered;
-		int					mSelectedChild;
-		SoundPlayer&		mSounds;
+		void					draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
+		bool					hasSelection() const;
+		void					select(std::size_t index);
+		void					selectNext();
+		void					selectPrevious();
+		void					validateChild(sf::Vector2f position);
+
+
+	private:
+		ComponentContainer		mChildren;
+		Component::Ptr			mHovered;
+		int						mSelectedChild;
+		SoundPlayer&			mSounds;
 		mutable bool			mDrity;
 		mutable sf::Transform	mTransform;
 	};
