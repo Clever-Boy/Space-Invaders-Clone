@@ -50,14 +50,12 @@ void Shield::updateCurrent(sf::Time dt, CommandQueue& commands)
 
 	using namespace utility;
 
-	const auto ExplosionRadius = 10.f;
-
 	mRenderTexture.clear();
 
 	mRenderTexture.draw(*this, sf::BlendNone);
 	mRenderTexture.display();
 
-	auto radius = (mRectOnHit.width > ExplosionRadius) ? mRectOnHit.width : ExplosionRadius;
+	auto radius = std::sqrtf(mRectOnHit.width * mRectOnHit.width + mRectOnHit.height * mRectOnHit.height);
 	sf::CircleShape circle(radius, 10);
 	circle.setPosition(mPositionOnHit.x, mPositionOnHit.y + circle.getRadius() / 2.f * mSign);
 	circle.setFillColor(sf::Color::Transparent);
