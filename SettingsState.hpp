@@ -19,21 +19,21 @@ class SettingsState final : public State
 
 
 public:
-	explicit						SettingsState(StateStack& stack, Context context);
+	explicit				SettingsState(StateStack& stack, Context context);
 
-	void							draw() override;
-	bool							update(sf::Time dt) override;
-	bool							handleEvent(const sf::Event& event) override;
-
-
-private:
-	void							updateLabels();
-	void							addButtonLabel(PlayerController::Action action, float y, const std::string& text, Context context);
+	void					draw() override;
+	bool					update(sf::Time dt) override;
+	bool					handleEvent(const sf::Event& event) override;
 
 
 private:
-	sf::Sprite						mBackgroundSprite;
-	GUI::Container					mGUIContainer;
-	BindingButtons					mBindingButtons;
-	BindingLabels 					mBindingLabels;
+	void					updateLabels();
+	void					addButtonLabel(PlayerController::Action action, float y, const std::string& text, Context context);
+
+
+private:
+	sf::Sprite				mBackgroundSprite;
+	GUI::Container			mGUIContainer;
+	BindingButtons			mBindingButtons;
+	BindingLabels 			mBindingLabels;
 };

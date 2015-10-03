@@ -10,14 +10,14 @@
 class GameOverState final : public State
 {
 public:
-	explicit			GameOverState(StateStack& stack, Context context);
+	explicit				GameOverState(StateStack& stack, Context context);
 
-	void				draw() override;
-	bool				update(sf::Time dt) override;
-	bool				handleEvent(const sf::Event& event) override;
+	void					draw() override;
+	bool					update(sf::Time dt) override;
+	bool					handleEvent(const sf::Event& event) override;
 
 
 private:
-	sf::Text			mGameOverText;
-	sf::Time			mElapsedTime;
+	sf::Text				mGameOverText;
+	sf::Time				mElapsedTime;
 };
