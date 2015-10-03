@@ -11,6 +11,8 @@ TitleState::TitleState(StateStack& stack, Context context)
 	, mShowText(true)
 	, mTextEffectTime(sf::Time::Zero)
 {
+	using namespace utility;
+
 	const auto Padding = 150.f;
 
 	mBackgroundSprite.setTexture(context.textures.get(Textures::TitleScreen));

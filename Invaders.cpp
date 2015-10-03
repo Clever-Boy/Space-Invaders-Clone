@@ -11,7 +11,7 @@
 
 namespace
 {
-	const std::vector<InvadersData>& Table = initializeInvadersData();
+	const std::vector<InvadersData>& Table = data::initializeInvadersData();
 }
 
 
@@ -28,7 +28,7 @@ Invaders::Invaders(Type type, const TextureHolder& textures, const sf::FloatRect
 	, mTravelledDistance()
 	, mCurrentDirction(Dirction::MovingRight)
 	, mPreviousDirction(Dirction::MovingRight)
-	, mMovement(1, 0)
+	, mMovement(Table[type].movement)
 	, mMaxSpeed(Table[mType].speed)
 	, mAnimateCountdown(sf::Time::Zero)
 	, mAnimateRate(Table[type].animateRate)
@@ -36,12 +36,13 @@ Invaders::Invaders(Type type, const TextureHolder& textures, const sf::FloatRect
 	, mInvadersController(InvadersController)
 	, mIsChangeDirection(false)
 {
+	using namespace utility;
+
 	mExplosion.setColor(Table[type].color);
 	centerOrigin(mExplosion);
 
 	setScaleSize(mSprite, Table[type].size.x, Table[type].size.y);
 	mSprite.setColor(Table[type].color);
-
 	centerOrigin(mSprite);
 
 	mFireCommand.category = Category::SceneSpaceLayer;
@@ -106,6 +107,8 @@ void Invaders::setMaxSpeed(float point)
 
 void Invaders::fire()
 {
+	using namespace utility;
+
 	if (randomInt(50) == 0)
 		mIsFiring = true;
 }
@@ -118,8 +121,8 @@ void Invaders::requstChangeDirction()
 	{
 		mCurrentDirction = MovingDown;
 		mPreviousDirction = MovingRight;
-		mTravelledDistance = 0;
-		mMovement = sf::Vector2f(0, 1);
+		mTravelledDistance = 0.f;
+		mMovement = sf::Vector2f(0.f, 1.f);
 		return;
 	}
 
@@ -127,8 +130,8 @@ void Invaders::requstChangeDirction()
 	{
 		mCurrentDirction = MovingDown;
 		mPreviousDirction = MovingLeft;
-		mTravelledDistance = 0;
-		mMovement = sf::Vector2f(0, 1);
+		mTravelledDistance = 0.f;
+		mMovement = sf::Vector2f(0.f, 1.f);
 		return;
 	}
 
@@ -137,16 +140,16 @@ void Invaders::requstChangeDirction()
 		if (mPreviousDirction == MovingLeft)
 		{
 			mCurrentDirction = MovingRight;
-			mMovement = sf::Vector2f(1, 0);
+			mMovement = sf::Vector2f(1.f, 0.f);
 		}
 		else
 		{
 			mCurrentDirction = MovingLeft;
-			mMovement = sf::Vector2f(-1, 0);
+			mMovement = sf::Vector2f(-1.f, 0.f);
 		}
 
 		mPreviousDirction = MovingDown;
-		mTravelledDistance = 0;
+		mTravelledDistance = 0.f;
 	}
 }
 

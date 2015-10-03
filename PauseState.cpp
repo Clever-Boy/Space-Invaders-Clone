@@ -13,8 +13,13 @@ PauseState::PauseState(StateStack& stack, Context context)
 	, mPausedText()
 	, mGUIContainer(context.sounds)
 {
-	auto& font = context.fonts.get(Fonts::Main);
+	using namespace utility;
+
+	auto& font(context.fonts.get(Fonts::Main));
 	auto windowSize(context.window.getSize());
+
+	const sf::Vector2f Padding(100.f, 75.f);
+	const auto Height = 50.f;
 
 	mPausedText.setFont(font);
 	mPausedText.setString("Game Paused");
@@ -22,16 +27,16 @@ PauseState::PauseState(StateStack& stack, Context context)
 	centerOrigin(mPausedText);
 	mPausedText.setPosition(0.5f * windowSize.x, 0.4f * windowSize.y);
 
-	auto returnButton = std::make_shared<GUI::Button>(context);
-	returnButton->setPosition(0.5f * windowSize.x - 100, 0.4f * windowSize.y + 75);
+	auto returnButton(std::make_shared<GUI::Button>(context));
+	returnButton->setPosition(0.5f * windowSize.x - Padding.x, 0.4f * windowSize.y + Padding.y);
 	returnButton->setText("Return");
 	returnButton->setCallback([this]()
 	{
 		requestStackPop();
 	});
 
-	auto backToMenuButton = std::make_shared<GUI::Button>(context);
-	backToMenuButton->setPosition(0.5f * windowSize.x - 100, 0.4f * windowSize.y + 125);
+	auto backToMenuButton(std::make_shared<GUI::Button>(context));
+	backToMenuButton->setPosition(0.5f * windowSize.x - Padding.x, 0.4f * windowSize.y + Padding.y + Height);
 	backToMenuButton->setText("Back to menu");
 	backToMenuButton->setCallback([this]()
 	{

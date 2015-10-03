@@ -12,12 +12,15 @@ MenuState::MenuState(StateStack& stack, Context context)
 	: State(stack, context)
 	, mGUIContainer(context.sounds)
 {
-	auto& texture = context.textures.get(Textures::TitleScreen);
+	auto& texture(context.textures.get(Textures::TitleScreen));
 	mBackgroundSprite.setTexture(texture);
 	mBackgroundSprite.setScale(1.25f, 1.f);
 
-	auto playButton = std::make_shared<GUI::Button>(context);
-	playButton->setPosition(300, 350);
+	const sf::Vector2f PositionTopLeft(300, 350);
+	const auto Padding = 50.f;
+
+	auto playButton(std::make_shared<GUI::Button>(context));
+	playButton->setPosition(PositionTopLeft);
 	playButton->setText("Play");
 	playButton->setCallback([this]()
 	{
@@ -25,16 +28,16 @@ MenuState::MenuState(StateStack& stack, Context context)
 		requestStackPush(States::Game);
 	});
 
-	auto settingsButton = std::make_shared<GUI::Button>(context);
-	settingsButton->setPosition(300, 400);
+	auto settingsButton(std::make_shared<GUI::Button>(context));
+	settingsButton->setPosition(PositionTopLeft.x, PositionTopLeft.y + Padding);
 	settingsButton->setText("Settings");
 	settingsButton->setCallback([this]()
 	{
 		requestStackPush(States::Settings);
 	});
 
-	auto exitButton = std::make_shared<GUI::Button>(context);
-	exitButton->setPosition(300, 450);
+	auto exitButton(std::make_shared<GUI::Button>(context));
+	exitButton->setPosition(PositionTopLeft.x, PositionTopLeft.y + Padding * 2);
 	exitButton->setText("Exit");
 	exitButton->setCallback([this]()
 	{

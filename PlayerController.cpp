@@ -81,8 +81,8 @@ void PlayerController::initializeActions()
 {
 	using namespace std::placeholders;
 
-	mActionBinding[MoveLeft].action		= derivedAction<Player>(std::bind(&Player::playerMover, _1, -1.f, 0.f));
-	mActionBinding[MoveRight].action	= derivedAction<Player>(std::bind(&Player::playerMover, _1, 1.f, 0.f));
+	mActionBinding[MoveLeft].action		= derivedAction<Player>(std::bind(&Player::accelerate, _1, -1.f, 0.f));
+	mActionBinding[MoveRight].action	= derivedAction<Player>(std::bind(&Player::accelerate, _1, 1.f, 0.f));
 	mActionBinding[Fire].action			= derivedAction<Player>(std::bind(&Player::fire, _1));
 }
 

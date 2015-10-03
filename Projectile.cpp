@@ -8,7 +8,7 @@
 
 namespace
 {
-	const std::vector<ProjectileData>& Table = initializeProjectileData();
+	const std::vector<ProjectileData>& Table = data::initializeProjectileData();
 }
 
 
@@ -17,6 +17,8 @@ Projectile::Projectile(Type type, const TextureHolder& textures)
 	, mType(type)
 	, mSprite(textures.get(Table[type].texture))
 {
+	using namespace utility;
+
 	setScaleSize(mSprite, Table[type].size.x, Table[type].size.y);
 
 	if (type == PlayerBullet)

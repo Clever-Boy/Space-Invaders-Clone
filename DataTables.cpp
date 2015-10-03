@@ -4,7 +4,8 @@
 #include "Player.hpp"
 #include "Projectile.hpp"
 
-std::vector<BossData> initializeBossData()
+
+std::vector<BossData> data::initializeBossData()
 {
 	std::vector<BossData> data(Boss::TypeCount);
 
@@ -17,7 +18,7 @@ std::vector<BossData> initializeBossData()
 	return data;
 }
 
-std::vector<InvadersData> initializeInvadersData()
+std::vector<InvadersData> data::initializeInvadersData()
 {
 	std::vector<InvadersData> data(Invaders::TypeCount);
 
@@ -31,6 +32,7 @@ std::vector<InvadersData> initializeInvadersData()
 	data[Invaders::Enemy1].fireInterval = sf::seconds(6.f);
 	data[Invaders::Enemy1].animationInterval = sf::seconds(2.f);
 	data[Invaders::Enemy1].animateRate = 1;
+	data[Invaders::Enemy1].movement = sf::Vector2f(1.f, 0.f);
 
 	data[Invaders::Enemy2].hitpoints = 1;
 	data[Invaders::Enemy2].color = sf::Color(255, 255, 255);
@@ -42,6 +44,7 @@ std::vector<InvadersData> initializeInvadersData()
 	data[Invaders::Enemy2].fireInterval = sf::seconds(6.f);
 	data[Invaders::Enemy2].animationInterval = sf::seconds(2.f);
 	data[Invaders::Enemy2].animateRate = 1;
+	data[Invaders::Enemy2].movement = sf::Vector2f(1.f, 0.f);
 
 	data[Invaders::Enemy3].hitpoints = 1;
 	data[Invaders::Enemy3].color = sf::Color(255, 255, 255);
@@ -53,11 +56,12 @@ std::vector<InvadersData> initializeInvadersData()
 	data[Invaders::Enemy3].fireInterval = sf::seconds(6.f);
 	data[Invaders::Enemy3].animationInterval = sf::seconds(2.f);
 	data[Invaders::Enemy3].animateRate = 1;
+	data[Invaders::Enemy3].movement = sf::Vector2f(1.f, 0.f);
 
 	return data;
 }
 
-std::vector<PlayerData> initializePlayerData()
+std::vector<PlayerData> data::initializePlayerData()
 {
 	std::vector<PlayerData> data(Player::TypeCount);
 
@@ -74,7 +78,7 @@ std::vector<PlayerData> initializePlayerData()
 	return data;
 }
 
-std::vector<ProjectileData> initializeProjectileData()
+std::vector<ProjectileData> data::initializeProjectileData()
 {
 	std::vector<ProjectileData> data(Projectile::TypeCount);
 

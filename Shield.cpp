@@ -7,12 +7,6 @@
 #include <SFML/Graphics/CircleShape.hpp>
 
 
-namespace
-{
-	constexpr auto ExplosionRadius = 10.f;
-}
-
-
 Shield::Shield(const ImageHolder& images, sf::Vector2u windowsize)
 	: Entity(1)
 	, mImage(images.get(Images::Shield))
@@ -54,6 +48,10 @@ void Shield::updateCurrent(sf::Time dt, CommandQueue& commands)
 	if (!mOnHit)
 		return;
 
+	using namespace utility;
+
+	const auto ExplosionRadius = 10.f;
+
 	mRenderTexture.clear();
 
 	mRenderTexture.draw(*this, sf::BlendNone);
@@ -68,8 +66,11 @@ void Shield::updateCurrent(sf::Time dt, CommandQueue& commands)
 	mRenderTexture.draw(circle, sf::BlendNone);
 	mRenderTexture.display();
 
-	sf::Vector2u position(static_cast<std::size_t>(getPosition().x - mTexture.getSize().x / 2u), static_cast<std::size_t>(getPosition().y - mTexture.getSize().y / 2u));
-	mImage.copy(mRenderTexture.getTexture().copyToImage(), 0u, 0u, sf::IntRect(position.x, position.y, mTexture.getSize().x, mTexture.getSize().y));
+	auto x = static_cast<std::size_t>(getPosition().x - mTexture.getSize().x / 2u);
+	auto y = static_cast<std::size_t>(getPosition().y - mTexture.getSize().y / 2u);
+	auto bounds(sf::IntRect(x, y, mTexture.getSize().x, mTexture.getSize().y));
+
+	mImage.copy(mRenderTexture.getTexture().copyToImage(), 0u, 0u, bounds);
 	mImage.createMaskFromColor(sf::Color::Transparent);
 
 	updateSprite();
@@ -90,6 +91,8 @@ bool Shield::getPixel(std::size_t x, std::size_t y) const
 
 void Shield::updateSprite()
 {
+	using namespace utility;
+
 	mTexture.loadFromImage(mImage);
 	mSprite.setTexture(mTexture);
 	centerOrigin(mSprite);

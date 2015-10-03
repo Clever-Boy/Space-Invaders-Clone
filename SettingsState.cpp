@@ -77,6 +77,8 @@ bool SettingsState::handleEvent(const sf::Event& event)
 
 void SettingsState::updateLabels()
 {
+	using namespace utility;
+
 	auto& player = getContext().playerController;
 
 	for (auto i = 0u; i < PlayerController::ActionCount; ++i)

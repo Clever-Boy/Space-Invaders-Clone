@@ -5,15 +5,19 @@
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
+
 namespace
 {
-	const std::vector<PlayerData>& Table = initializePlayerData();
+	const std::vector<PlayerData>& Table = data::initializePlayerData();
 }
+
 
 Life::Life(Player::Type type, const TextureHolder& textures)
 	: mSprite(textures.get(Table[type].texture), Table[type].textureRect)
 	, mDrity(true)
 {
+	using namespace utility;
+
 	centerOrigin(mSprite);
 	setScaleSize(mSprite, 2, 1);
 }

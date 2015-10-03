@@ -6,6 +6,7 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
+
 namespace GUI
 {
 
@@ -32,6 +33,8 @@ namespace GUI
 
 	void Button::setText(const std::string& text)
 	{
+		using namespace utility;
+
 		mText.setString(text);
 		centerOrigin(mText);
 	}

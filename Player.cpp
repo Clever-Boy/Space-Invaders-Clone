@@ -11,7 +11,7 @@
 
 namespace
 {
-	const std::vector<PlayerData>& Table = initializePlayerData();
+	const std::vector<PlayerData>& Table = data::initializePlayerData();
 }
 
 
@@ -28,6 +28,8 @@ Player::Player(Type type, const TextureHolder& textures)
 	, mAnimateCountdown(sf::Time::Zero)
 	, mPlayExplosionSound(true)
 {
+	using namespace utility;
+
 	setScaleSize(mSprite, Table[type].size.x, Table[type].size.y);
 
 	centerOrigin(mSprite);
@@ -67,9 +69,9 @@ void Player::setMarkToRemove()
 	mIsMarkedForRemoval = true;
 }
 
-void Player::playerMover(float vx, float vy)
+void Player::accelerate(float vx, float vy)
 {
-	accelerate(sf::Vector2f(vx, vy) * getMaxSpeed());
+	Entity::accelerate(sf::Vector2f(vx, vy) * getMaxSpeed());
 }
 
 void Player::applyHitEffect(sf::Time dt, CommandQueue& commands)

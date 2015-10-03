@@ -10,8 +10,7 @@
 
 namespace
 {
-	const std::vector<BossData>& Table	= initializeBossData();
-	constexpr auto SpawnPadding			= 60.f;
+	const std::vector<BossData>& Table = data::initializeBossData();
 }
 
 
@@ -25,6 +24,10 @@ Boss::Boss(Type type, const TextureHolder& textures, const sf::FloatRect& bounds
 	, mShowExpolsion(true)
 	, mBounds()
 {
+	using namespace utility;
+
+	const auto SpawnPadding = 60.f;
+
 	mBounds.left -= SpawnPadding;
 	mBounds.width += bounds.width + SpawnPadding * 2;
 
@@ -36,7 +39,6 @@ Boss::Boss(Type type, const TextureHolder& textures, const sf::FloatRect& bounds
 
 	setScaleSize(mSprite, Table[type].size.x, Table[type].size.y);
 	mSprite.setColor(Table[type].color);
-
 	centerOrigin(mSprite);
 }
 

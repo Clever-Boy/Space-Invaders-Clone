@@ -7,6 +7,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 
+
 //#define DEBUG
 
 namespace
@@ -85,6 +86,8 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mEndGame(false)
 	, mInvadersController()
 {
+	using namespace utility;
+
 	const auto TextPadding = 5.f;
 	mStaticScoreText.setString("Score: ");
 	mStaticScoreText.setFont(mFonts.get(Fonts::Main));
@@ -758,9 +761,7 @@ void World::controlEnemyFire()
 
 void World::updateSounds()
 {
-	// Set listener's position to player position
 	mSounds.setListenerPosition(mPlayer->getWorldPosition());
 
-	// Remove unused sounds
 	mSounds.removeStoppedSounds();
 }

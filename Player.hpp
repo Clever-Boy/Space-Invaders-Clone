@@ -23,7 +23,7 @@ public:
 	sf::FloatRect			getBoundingRect() const override;
 	bool 					isMarkedForRemoval() const override;
 
-	void					playerMover(float vx, float vy);
+	void					accelerate(float vx, float vy);
 	void 					fire();
 	void					applyHitEffect(sf::Time dt, CommandQueue& commands);
 	void					setMarkToRemove();

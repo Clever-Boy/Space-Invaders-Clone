@@ -23,6 +23,7 @@ public:
 		MovingLeft
 	};
 
+
 public:
 	explicit				Boss(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, Dirction dirction);
 

@@ -9,6 +9,7 @@
 
 #include <vector>
 
+
 struct BossData
 {
 	int								hitpoints;
@@ -30,6 +31,7 @@ struct InvadersData
 	std::size_t						fireRate;
 	sf::Time						animationInterval;
 	int								animateRate;
+	sf::Vector2f					movement;
 };
 
 struct PlayerData
@@ -52,7 +54,10 @@ struct ProjectileData
 	Textures::ID					texture;
 };
 
-std::vector<BossData>		initializeBossData();
-std::vector<InvadersData>	initializeInvadersData();
-std::vector<PlayerData>		initializePlayerData();
-std::vector<ProjectileData>	initializeProjectileData();
+namespace data
+{
+	std::vector<BossData>		initializeBossData();
+	std::vector<InvadersData>	initializeInvadersData();
+	std::vector<PlayerData>		initializePlayerData();
+	std::vector<ProjectileData>	initializeProjectileData();
+}

@@ -12,6 +12,8 @@ GameOverState::GameOverState(StateStack& stack, Context context)
 	, mGameOverText()
 	, mElapsedTime(sf::Time::Zero)
 {
+	using namespace utility;
+
 	auto& font = context.fonts.get(Fonts::Main);
 	auto windowSize(context.window.getSize());
 
