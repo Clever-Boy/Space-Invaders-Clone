@@ -32,35 +32,39 @@ class StateStack final : private sf::NonCopyable
 		States::ID			stateID;
 	};
 
+	using StatesFactoryMap = std::map<States::ID, std::function<State::Ptr()>>;
+	using StatesContainer  = std::vector<State::Ptr>;
+	using PendingContainer = std::vector<PendingChange>;
+
 
 public:
-	explicit			StateStack(State::Context context);
+	explicit				StateStack(State::Context context);
 
 	template <typename T>
-	void				registerState(States::ID stateID);
+	void					registerState(States::ID stateID);
 
-	void				update(sf::Time dt);
-	void				draw();
-	void				handleEvent(const sf::Event& event);
+	void					update(sf::Time dt);
+	void					draw();
+	void					handleEvent(const sf::Event& event);
 
-	void				pushState(States::ID stateID);
-	void				popState();
-	void				clearStates();
+	void					pushState(States::ID stateID);
+	void					popState();
+	void					clearStates();
 
-	bool				isEmpty() const;
-
-
-private:
-	State::Ptr			createState(States::ID stateID);
-	void				applyPendingChanges();
+	bool					isEmpty() const;
 
 
 private:
-	std::vector<State::Ptr>								mStack;
-	std::vector<PendingChange>							mPendingList;
+	State::Ptr				createState(States::ID stateID);
+	void					applyPendingChanges();
 
-	State::Context										mContext;
-	std::map<States::ID, std::function<State::Ptr()>>	mFactories;
+
+private:
+	StatesContainer			mStack;
+	PendingContainer		mPendingList;
+
+	State::Context			mContext;
+	StatesFactoryMap		mFactories;
 };
 
 
