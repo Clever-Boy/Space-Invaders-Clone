@@ -122,7 +122,7 @@ void QuadTree::insert(SceneNode& object)
 		int index = getIndex((*i)->getBoundingRect());
 		if (index != -1)
 		{
-			SceneNode& temp = **i;
+			auto& temp(**i);
 			i = mObjects.erase(i);
 			mChildren[index]->insert(temp);
 		}
