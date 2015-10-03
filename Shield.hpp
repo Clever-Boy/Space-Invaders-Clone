@@ -37,6 +37,6 @@ private:
 	int						mSign;
 	sf::FloatRect			mRectOnHit;
 	sf::Vector2f			mPositionOnHit;
-	bool					mOnHit;
+	bool					mIsHit;
 };
 

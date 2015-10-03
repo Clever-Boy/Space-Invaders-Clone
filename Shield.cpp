@@ -10,7 +10,7 @@
 Shield::Shield(const ImageHolder& images, sf::Vector2u windowsize)
 	: Entity(1)
 	, mImage(images.get(Images::Shield))
-	, mOnHit(false)
+	, mIsHit(false)
 	, mRectOnHit()
 	, mPositionOnHit()
 	, mSign()
@@ -39,13 +39,13 @@ void Shield::onHit(sf::FloatRect rect, sf::Vector2f position, unsigned int categ
 {
 	mRectOnHit = rect;
 	mPositionOnHit = position;
-	mOnHit = true;
+	mIsHit = true;
 	mSign = (category & Category::PlayerProjectile) ? 1 : -1;
 }
 
 void Shield::updateCurrent(sf::Time dt, CommandQueue& commands)
 {
-	if (!mOnHit)
+	if (!mIsHit)
 		return;
 
 	using namespace utility;
@@ -94,5 +94,5 @@ void Shield::updateSprite()
 	mTexture.loadFromImage(mImage);
 	mSprite.setTexture(mTexture);
 	centerOrigin(mSprite);
-	mOnHit = false;
+	mIsHit = false;
 }

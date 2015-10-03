@@ -29,7 +29,7 @@ namespace Images
 {
 	enum ID
 	{
-		Shield,
+		Shield
 	};
 }
 
@@ -37,8 +37,7 @@ namespace Fonts
 {
 	enum ID
 	{
-		Main,
-		Vector,
+		Main
 	};
 }
 
