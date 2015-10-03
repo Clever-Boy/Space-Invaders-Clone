@@ -8,18 +8,21 @@
 
 class MusicPlayer final : private sf::NonCopyable
 {
+	using ResourceMap = std::map<Music::ID, std::string>;
+
+
 public:
-	MusicPlayer();
+							MusicPlayer();
 
-	void						play(Music::ID theme);
-	void						stop();
+	void					play(Music::ID theme);
+	void					stop();
 
-	void						setPaused(bool paused);
-	void						setVolume(float volume);
+	void					setPaused(bool paused);
+	void					setVolume(float volume);
 
 
 private:
-	sf::Music							mMusic;
-	std::map<Music::ID, std::string>	mFilenames;
-	float								mVolume;
+	sf::Music				mMusic;
+	ResourceMap				mFilenames;
+	float					mVolume;
 };

@@ -14,21 +14,21 @@
 class SoundPlayer final : private sf::NonCopyable
 {
 public:
-								SoundPlayer();
+							SoundPlayer();
 
-	void						play(SoundEffect::ID effect);
-	void						play(SoundEffect::ID effect, sf::Vector2f position);
+	void					play(SoundEffect::ID effect);
+	void					play(SoundEffect::ID effect, sf::Vector2f position);
 
-	void						playRepeatedSound(sf::Vector2f position);
-	void						stopRepeatedSound();
+	void					playRepeatedSound(sf::Vector2f position);
+	void					stopRepeatedSound();
 
-	void						removeStoppedSounds();
-	void						setListenerPosition(sf::Vector2f position);
-	sf::Vector2f				getListenerPosition() const;
+	void					removeStoppedSounds();
+	void					setListenerPosition(sf::Vector2f position);
+	sf::Vector2f			getListenerPosition() const;
 
 
 private:
-	SoundBufferHolder			mSoundBuffers;
-	std::list<sf::Sound>		mSounds;
-	sf::Sound					mSound;
+	SoundBufferHolder		mSoundBuffers;
+	std::list<sf::Sound>	mSounds;
+	sf::Sound				mSound;
 };

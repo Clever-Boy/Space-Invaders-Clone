@@ -12,19 +12,22 @@
 template <typename Resource, typename Identifier>
 class ResourceHolder final : private sf::NonCopyable
 {
+	using ResourceMap = std::map<Identifier, std::unique_ptr<Resource>>;
+
+
 public:
-	void						load(Identifier id, const std::string& filename);
+	void					load(Identifier id, const std::string& filename);
 
-	Resource&					get(Identifier id);
-	const Resource&				get(Identifier id) const;
-
-
-private:
-	void						insertResource(Identifier id, std::unique_ptr<Resource> resource);
+	Resource&				get(Identifier id);
+	const Resource&			get(Identifier id) const;
 
 
 private:
-	std::map<Identifier, std::unique_ptr<Resource>>	mResourceMap;
+	void					insertResource(Identifier id, std::unique_ptr<Resource> resource);
+
+
+private:
+	ResourceMap				mResourceMap;
 };
 
 #include "ResourceHolder.inl"
