@@ -21,6 +21,9 @@ namespace GUI
 	{
 	public:
 		using Ptr = std::shared_ptr<Button>;
+
+
+	private:
 		using Callback = std::function<void()>;
 
 		enum Type

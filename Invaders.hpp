@@ -21,6 +21,15 @@ public:
 	};
 
 
+private:
+	enum Dirction
+	{
+		MovingRight,
+		MovingLeft,
+		MovingDown
+	};
+
+
 public:
 	explicit				Invaders(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, InvadersController& InvadersController);
 
@@ -51,15 +60,6 @@ private:
 	void					adaptEnemyMovements(CommandQueue& commands);
 
 	void					playLocalSound(CommandQueue& commands, SoundEffect::ID effect);
-
-
-private:
-	enum Dirction
-	{
-		MovingRight,
-		MovingLeft,
-		MovingDown
-	};
 
 
 private:

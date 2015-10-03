@@ -24,6 +24,18 @@ namespace sf
 
 class World final : private sf::NonCopyable
 {
+	enum Layer
+	{
+		Background,
+		Space,
+		LayerCount
+	};
+
+	using LayerContainer = std::array<SceneNode*, LayerCount>;
+	using LivesContainer = std::list<std::unique_ptr<Life>>;
+	using NodeContainer	 = std::vector<SceneNode*>;
+
+
 public:
 	explicit				World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds);
 
@@ -70,19 +82,6 @@ private:
 
 	bool					checkPlayerDeath(sf::Time dt);
 	void					spawnPlayer();
-
-
-private:
-	enum Layer
-	{
-		Background,
-		Space,
-		LayerCount
-	};
-
-	using LayerContainer	= std::array<SceneNode*, LayerCount>;
-	using LivesContainer	= std::list<std::unique_ptr<Life>>;
-	using NodeContainer		= std::vector<SceneNode*>;
 
 
 private:
