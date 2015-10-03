@@ -133,7 +133,7 @@ void QuadTree::insert(SceneNode& object)
 	}
 }
 
-void QuadTree::getCloseObjects(const sf::FloatRect& Bounds, std::vector<SceneNode*>& returnObjects)
+void QuadTree::getCloseObjects(const sf::FloatRect& Bounds, ObjectsContainer& returnObjects)
 {
 	auto index = getIndex(Bounds);
 

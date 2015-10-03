@@ -12,27 +12,31 @@ public:
 	using Ptr = std::unique_ptr<QuadTree>;
 
 
+private:
+	static constexpr auto DefaultNodes	= 4u;
+	using ChildrenContainer				= std::array<Ptr, DefaultNodes>;
+	using ObjectsContainer				= std::vector<SceneNode*>;
+
+
 public:
-	explicit							QuadTree(std::size_t Level, const sf::FloatRect& Bounds);
-										~QuadTree();
+	explicit				QuadTree(std::size_t Level, const sf::FloatRect& Bounds);
+							~QuadTree();
 
-	void								clear();
-	void								insert(SceneNode& object);
-	void								getCloseObjects(const sf::FloatRect& Bounds, std::vector<SceneNode*>& returnObjects);
-
-
-private:
-	void								draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-	void								split();
-	int									getIndex(const sf::FloatRect& Rect);
+	void					clear();
+	void					insert(SceneNode& object);
+	void					getCloseObjects(const sf::FloatRect& Bounds, ObjectsContainer& returnObjects);
 
 
 private:
-	static constexpr auto				DefaultNodes	= 4u;
+	void					draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	void					split();
+	int						getIndex(const sf::FloatRect& Rect);
 
-	sf::FloatRect						mBounds;
-	std::size_t							mlevel;
 
-	std::vector<SceneNode*>				mObjects;
-	std::array<Ptr, DefaultNodes>		mChildren;
+private:
+	ObjectsContainer		mObjects;
+	ChildrenContainer		mChildren;
+
+	sf::FloatRect			mBounds;
+	std::size_t				mlevel;
 };
