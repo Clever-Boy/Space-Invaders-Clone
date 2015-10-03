@@ -22,8 +22,11 @@ class CommandQueue;
 class SceneNode : public sf::Transformable, public sf::Drawable, private sf::NonCopyable
 {
 public:
-	using Ptr = std::unique_ptr<SceneNode>;
 	using Pair = std::pair<SceneNode*, SceneNode*>;
+
+
+private:
+	using Ptr = std::unique_ptr<SceneNode>;
 
 
 public:

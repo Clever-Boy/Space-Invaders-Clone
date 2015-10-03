@@ -8,12 +8,8 @@
 
 class QuadTree final : public sf::Drawable, private sf::NonCopyable
 {
-public:
-	using Ptr = std::unique_ptr<QuadTree>;
-
-
-private:
-	static constexpr auto DefaultNodes	= 4u;
+	static constexpr auto DefaultNodes  = 4u;
+	using Ptr							= std::unique_ptr<QuadTree>;
 	using ChildrenContainer				= std::array<Ptr, DefaultNodes>;
 	using ObjectsContainer				= std::vector<SceneNode*>;
 

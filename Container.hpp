@@ -11,11 +11,6 @@ namespace GUI
 {
 	class Container final : public Component
 	{
-	public:
-		using Ptr = std::shared_ptr<Container>;
-
-
-	private:
 		using ComponentContainer = std::vector<Component::Ptr>;
 
 

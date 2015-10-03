@@ -29,7 +29,7 @@ public:
 
 	struct Context
 	{
-		Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, PlayerController& playerController, MusicPlayer& music, SoundPlayer& sounds);
+		explicit			Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, PlayerController& playerController, MusicPlayer& music, SoundPlayer& sounds);
 
 		sf::RenderWindow&	window;
 		TextureHolder&		textures;
@@ -41,23 +41,23 @@ public:
 
 
 public:
-	explicit			State(StateStack& stack, Context context);
-	virtual				~State() = default;
+	explicit				State(StateStack& stack, Context context);
+	virtual					~State() = default;
 
-	virtual void		draw() = 0;
-	virtual bool		update(sf::Time dt) = 0;
-	virtual bool		handleEvent(const sf::Event& event) = 0;
+	virtual void			draw() = 0;
+	virtual bool			update(sf::Time dt) = 0;
+	virtual bool			handleEvent(const sf::Event& event) = 0;
 
 
 protected:
-	void				requestStackPush(States::ID stateID);
-	void				requestStackPop();
-	void				requestStateClear();
+	void					requestStackPush(States::ID stateID);
+	void					requestStackPop();
+	void					requestStateClear();
 
-	Context				getContext() const;
+	Context					getContext() const;
 
 
 private:
-	StateStack&			mStack;
-	Context				mContext;
+	StateStack&				mStack;
+	Context					mContext;
 };

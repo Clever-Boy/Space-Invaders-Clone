@@ -14,14 +14,22 @@ namespace sf
 	class RenderWindow;
 }
 
+
 class StateStack final : private sf::NonCopyable
 {
-public:
 	enum Action
 	{
 		Push,
 		Pop,
 		Clear,
+	};
+
+	struct PendingChange
+	{
+		explicit			PendingChange(Action action, States::ID stateID = States::None);
+
+		Action				action;
+		States::ID			stateID;
 	};
 
 
@@ -45,16 +53,6 @@ public:
 private:
 	State::Ptr			createState(States::ID stateID);
 	void				applyPendingChanges();
-
-
-private:
-	struct PendingChange
-	{
-		explicit			PendingChange(Action action, States::ID stateID = States::None);
-
-		Action				action;
-		States::ID			stateID;
-	};
 
 
 private:

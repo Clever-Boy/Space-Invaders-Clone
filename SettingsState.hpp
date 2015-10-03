@@ -14,7 +14,6 @@
 
 class SettingsState final : public State
 {
-public:
 	using BindingButtons = std::array<GUI::Button::Ptr, PlayerController::ActionCount>;
 	using BindingLabels = std::array<GUI::Label::Ptr, PlayerController::ActionCount>;
 
