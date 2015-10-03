@@ -4,6 +4,7 @@
 #include "CommandQueue.hpp"
 #include "ResourceHolder.hpp"
 #include "SoundNode.hpp"
+#include "InvadersController.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Texture.hpp>

@@ -4,7 +4,9 @@
 #include "Entity.hpp"
 #include "Command.hpp"
 #include "Projectile.hpp"
-#include "InvadersController.hpp"
+
+
+class InvadersController;
 
 
 class Invaders final : public Entity
