@@ -12,6 +12,7 @@ namespace sf
 	class Sprite;
 }
 
+
 namespace utility
 {
 	// Call setOrigin() with the center of the object
@@ -19,7 +20,7 @@ namespace utility
 	void centerOrigin(Resource& resource);
 
 	// Convert enumerators to strings
-	std::string		toString(sf::Keyboard::Key key);
+	std::string	toString(sf::Keyboard::Key key);
 
 	void setScaleSize(sf::Sprite& sprite, float x, float y);
 
@@ -33,7 +34,6 @@ namespace utility
 	// Vector operations
 	float length(sf::Vector2f vector);
 	sf::Vector2f unitVector(sf::Vector2f vector);
-
-#include "Utility.inl"
 }
 
+#include "Utility.inl"

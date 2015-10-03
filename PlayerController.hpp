@@ -11,6 +11,7 @@
 
 class CommandQueue;
 
+
 class PlayerController final : private sf::NonCopyable
 {
 public:

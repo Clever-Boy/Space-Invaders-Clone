@@ -3,7 +3,6 @@
 
 #include "Category.hpp"
 
-
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/System/NonCopyable.hpp>
 #include <SFML/Graphics/Drawable.hpp>

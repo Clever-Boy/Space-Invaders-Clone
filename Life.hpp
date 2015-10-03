@@ -7,7 +7,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 
 
-class Life final : public sf::Drawable, public sf::Transformable
+class Life final : public sf::Drawable, public sf::Transformable, sf::NonCopyable
 {
 public:
 	explicit 				Life(Player::Type type, const TextureHolder& textures);

@@ -7,15 +7,17 @@
 #include <functional>
 #include <cassert>
 
+
 class SceneNode;
+
 
 struct Command
 {
 	using Action = std::function<void(SceneNode&)>;
 
-	Command();
-	Action						action;
-	unsigned int				category;
+					Command();
+	Action			action;
+	unsigned int	category;
 };
 
 template <typename GameObject, typename Function>

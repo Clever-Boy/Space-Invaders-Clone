@@ -11,15 +11,15 @@
 class PauseState final : public State
 {
 public:
-	explicit			PauseState(StateStack& stack, Context context);
+	explicit				PauseState(StateStack& stack, Context context);
 
-	void				draw() override;
-	bool				update(sf::Time dt) override;
-	bool				handleEvent(const sf::Event& event) override;
+	void					draw() override;
+	bool					update(sf::Time dt) override;
+	bool					handleEvent(const sf::Event& event) override;
 
 
 private:
-	sf::Sprite			mBackgroundSprite;
-	sf::Text			mPausedText;
-	GUI::Container 		mGUIContainer;
+	sf::Sprite				mBackgroundSprite;
+	sf::Text				mPausedText;
+	GUI::Container 			mGUIContainer;
 };

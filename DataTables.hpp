@@ -12,46 +12,46 @@
 
 struct BossData
 {
-	int								hitpoints;
-	float							speed;
-	Textures::ID					texture;
-	sf::Color						color;
-	sf::Vector2f					size;
+	int				hitpoints;
+	float			speed;
+	Textures::ID	texture;
+	sf::Color		color;
+	sf::Vector2f	size;
 };
 
 struct InvadersData
 {
-	int								hitpoints;
-	float							speed;
-	Textures::ID					texture;
-	sf::IntRect						textureRect;
-	sf::Color						color;
-	sf::Vector2f					size;
-	sf::Time						fireInterval;
-	std::size_t						fireRate;
-	sf::Time						animationInterval;
-	int								animateRate;
-	sf::Vector2f					movement;
+	int				hitpoints;
+	float			speed;
+	Textures::ID	texture;
+	sf::IntRect		textureRect;
+	sf::Color		color;
+	sf::Vector2f	size;
+	sf::Time		fireInterval;
+	std::size_t		fireRate;
+	sf::Time		animationInterval;
+	int				animateRate;
+	sf::Vector2f	movement;
 };
 
 struct PlayerData
 {
-	int								hitpoints;
-	float							speed;
-	Textures::ID					texture;
-	sf::IntRect						textureRect;
-	sf::Vector2f					size;
-	sf::Time						animationInterval;
-	int								animateRate;
+	int				hitpoints;
+	float			speed;
+	Textures::ID	texture;
+	sf::IntRect		textureRect;
+	sf::Vector2f	size;
+	sf::Time		animationInterval;
+	int				animateRate;
 };
 
 struct ProjectileData
 {
-	int								hitpoints;
-	int								damage;
-	float							speed;
-	sf::Vector2f					size;
-	Textures::ID					texture;
+	int				hitpoints;
+	int				damage;
+	float			speed;
+	sf::Vector2f	size;
+	Textures::ID	texture;
 };
 
 namespace data

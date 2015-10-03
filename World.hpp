@@ -22,6 +22,7 @@ namespace sf
 	class RenderWindow;
 }
 
+
 class World final : private sf::NonCopyable
 {
 	enum Layer

@@ -1,5 +1,6 @@
 #pragma once
 
+
 // Forward declaration of SFML classes
 namespace sf
 {

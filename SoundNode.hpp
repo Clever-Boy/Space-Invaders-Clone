@@ -7,6 +7,7 @@
 
 class SoundPlayer;
 
+
 class SoundNode final : public SceneNode
 {
 public:
