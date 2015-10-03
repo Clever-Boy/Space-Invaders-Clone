@@ -31,7 +31,6 @@ Player::Player(Type type, const TextureHolder& textures)
 	using namespace utility;
 
 	setScaleSize(mSprite, Table[type].size.x, Table[type].size.y);
-
 	centerOrigin(mSprite);
 
 	mFireCommand.category = Category::SceneSpaceLayer;
@@ -40,7 +39,7 @@ Player::Player(Type type, const TextureHolder& textures)
 
 void Player::updateCurrent(sf::Time dt, CommandQueue& commands)
 {
-	if (mBullet != nullptr)
+	if (mBullet)
 	{
 		if (mBullet->isDestroyed())
 		{
