@@ -6,12 +6,12 @@ MusicPlayer::MusicPlayer()
 	, mFilenames()
 	, mVolume(100.f)
 {
-	mFilenames.insert(std::make_pair(Music::MenuTheme,"Media/Musics/MenuTheme.ogg"));
+	mFilenames.emplace(std::make_pair(Music::MenuTheme,"Media/Musics/MenuTheme.ogg"));
 }
 
 void MusicPlayer::play(Music::ID theme)
 {
-	std::string filename = mFilenames[theme];
+	std::string filename(mFilenames[theme]);
 
 	if (!mMusic.openFromFile(filename))
 		throw std::runtime_error("Music " + filename + " could not be loaded.");

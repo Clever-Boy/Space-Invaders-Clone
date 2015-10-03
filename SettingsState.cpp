@@ -19,7 +19,7 @@ SettingsState::SettingsState(StateStack& stack, Context context)
 
 	updateLabels();
 
-	auto backButton = std::make_shared<GUI::Button>(context);
+	auto backButton(std::make_shared<GUI::Button>(context));
 	backButton->setPosition(80.f, 540.f);
 	backButton->setText("Back");
 	backButton->setCallback(std::bind(&SettingsState::requestStackPop, this));
@@ -29,7 +29,7 @@ SettingsState::SettingsState(StateStack& stack, Context context)
 
 void SettingsState::draw()
 {
-	sf::RenderWindow& window = getContext().window;
+	auto& window(getContext().window);
 
 	window.clear();
 	window.draw(mBackgroundSprite);
@@ -53,7 +53,7 @@ bool SettingsState::handleEvent(const sf::Event& event)
 			isKeyBinding = true;
 			if (event.type == sf::Event::KeyReleased)
 			{
-				auto& player = getContext().playerController;
+				auto& player(getContext().playerController);
 				player.assignKey(static_cast<PlayerController::Action>(action), event.key.code);
 				mBindingButtons[action]->deactivate();
 			}
@@ -63,11 +63,13 @@ bool SettingsState::handleEvent(const sf::Event& event)
 
 	// If pressed button changed key bindings, update labels; otherwise consider other buttons in container
 	if (isKeyBinding)
+	{
 		updateLabels();
+	}
 	else
 	{
-		const auto& window = getContext().window;
-		auto position = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+		const auto& window(getContext().window);
+		auto position(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
 
 		mGUIContainer.handleEvent(event, position);
 	}
@@ -79,11 +81,11 @@ void SettingsState::updateLabels()
 {
 	using namespace utility;
 
-	auto& player = getContext().playerController;
+	auto& player(getContext().playerController);
 
 	for (auto i = 0u; i < PlayerController::ActionCount; ++i)
 	{
-		sf::Keyboard::Key key = player.getAssignedKey(static_cast<PlayerController::Action>(i));
+		auto key(player.getAssignedKey(static_cast<PlayerController::Action>(i)));
 		mBindingLabels[i]->setText(toString(key));
 	}
 }

@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
+
 GameState::GameState(StateStack& stack, Context context)
 	: State(stack, context)
 	, mWorld(context.window, context.fonts, context.sounds)
@@ -34,7 +35,7 @@ bool GameState::update(sf::Time dt)
 		requestStackPush(States::GameOver);
 	}
 
-	auto& commands = mWorld.getCommandQueue();
+	auto& commands(mWorld.getCommandQueue());
 	mPlayerController.handleRealtimeInput(commands);
 
 	return true;
@@ -43,7 +44,7 @@ bool GameState::update(sf::Time dt)
 bool GameState::handleEvent(const sf::Event& event)
 {
 	// Game input handling
-	auto& commands = mWorld.getCommandQueue();
+	auto& commands(mWorld.getCommandQueue());
 	mPlayerController.handleEvent(event, commands);
 
 	// Escape pressed, trigger the pause screen

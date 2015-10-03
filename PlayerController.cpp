@@ -24,7 +24,7 @@ void PlayerController::handleEvent(const sf::Event& event, CommandQueue& command
 	if (event.type == sf::Event::KeyPressed)
 	{
 		// Check if pressed key appears in key binding, trigger command if so
-		auto found = mKeyBinding.find(event.key.code);
+		auto found(mKeyBinding.find(event.key.code));
 		if (found != mKeyBinding.end() && !isRealtimeAction(found->second))
 			commands.push(mActionBinding[found->second]);
 	}

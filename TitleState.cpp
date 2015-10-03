@@ -26,7 +26,8 @@ TitleState::TitleState(StateStack& stack, Context context)
 
 void TitleState::draw()
 {
-	auto& window = getContext().window;
+	auto& window(getContext().window);
+
 	window.draw(mBackgroundSprite);
 
 	if (mShowText)

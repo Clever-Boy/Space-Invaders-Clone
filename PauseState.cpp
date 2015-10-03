@@ -50,7 +50,7 @@ PauseState::PauseState(StateStack& stack, Context context)
 
 void PauseState::draw()
 {
-	auto& window = getContext().window;
+	auto& window(getContext().window);
 	window.setView(window.getDefaultView());
 
 	sf::RectangleShape backgroundShape;
@@ -69,8 +69,8 @@ bool PauseState::update(sf::Time)
 
 bool PauseState::handleEvent(const sf::Event& event)
 {
-	const auto& window = getContext().window;
-	auto position = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+	const auto& window(getContext().window);
+	auto position(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
 
 	mGUIContainer.handleEvent(event, position);
 	return false;

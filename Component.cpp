@@ -1,8 +1,8 @@
 #include "Component.hpp"
 
+
 namespace GUI
 {
-
 	Component::Component()
 		: mIsSelected(false)
 		, mIsActive(false)

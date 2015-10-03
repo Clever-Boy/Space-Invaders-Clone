@@ -54,7 +54,7 @@ MenuState::MenuState(StateStack& stack, Context context)
 
 void MenuState::draw()
 {
-	auto& window = getContext().window;
+	auto& window(getContext().window);
 
 	window.setView(window.getDefaultView());
 
@@ -69,8 +69,8 @@ bool MenuState::update(sf::Time)
 
 bool MenuState::handleEvent(const sf::Event& event)
 {
-	const auto& window = getContext().window;
-	auto position = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+	const auto& window(getContext().window);
+	auto position(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
 
 	mGUIContainer.handleEvent(event, position);
 	return false;

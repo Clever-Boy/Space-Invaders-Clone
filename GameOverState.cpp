@@ -14,7 +14,7 @@ GameOverState::GameOverState(StateStack& stack, Context context)
 {
 	using namespace utility;
 
-	auto& font = context.fonts.get(Fonts::Main);
+	auto& font(context.fonts.get(Fonts::Main));
 	auto windowSize(context.window.getSize());
 
 	mGameOverText.setFont(font);
@@ -31,7 +31,7 @@ GameOverState::GameOverState(StateStack& stack, Context context)
 
 void GameOverState::draw()
 {
-	auto& window = getContext().window;
+	auto& window(getContext().window);
 	window.setView(window.getDefaultView());
 
 	// Create dark, semitransparent background

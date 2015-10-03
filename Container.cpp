@@ -6,7 +6,6 @@
 
 namespace GUI
 {
-
 	Container::Container(SoundPlayer& soundplayer)
 		: mChildren()
 		, mSelectedChild(-1)
@@ -19,7 +18,7 @@ namespace GUI
 
 	void Container::pack(Component::Ptr component)
 	{
-		auto& temp = *component.get();
+		auto& temp(*component.get());
 		mChildren.push_back(std::move(component));
 
 		if (!hasSelection() && temp.isSelectable())

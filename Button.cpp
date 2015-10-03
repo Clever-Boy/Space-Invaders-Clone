@@ -9,7 +9,6 @@
 
 namespace GUI
 {
-
 	Button::Button(State::Context context)
 		: mCallback()
 		, mSprite(context.textures.get(Textures::Buttons))
@@ -22,7 +21,7 @@ namespace GUI
 	{
 		changeTexture(Normal);
 
-		auto bounds = mSprite.getLocalBounds();
+		auto bounds(mSprite.getLocalBounds());
 		mText.setPosition(bounds.width / 2.f, bounds.height / 2.f);
 	}
 

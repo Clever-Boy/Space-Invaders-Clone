@@ -22,11 +22,11 @@ void SceneNode::attachChild(Ptr child)
 
 SceneNode::Ptr SceneNode::detachChild(const SceneNode& node)
 {
-	auto found = std::find_if(mChildren.begin(), mChildren.end(), 
+	auto found(std::find_if(mChildren.begin(), mChildren.end(), 
 		[&](const auto& p) 
 	{
 		return(p.get() == &node);
-	});
+	}));
 
 	assert(found != mChildren.end());
 
@@ -131,7 +131,7 @@ unsigned int SceneNode::getCategory() const
 void SceneNode::removeWrecks()
 {
 	// Remove all children which request so
-	auto wreckfieldBegin = std::remove_if(mChildren.begin(), mChildren.end(), std::mem_fn(&SceneNode::isMarkedForRemoval));
+	auto wreckfieldBegin(std::remove_if(mChildren.begin(), mChildren.end(), std::mem_fn(&SceneNode::isMarkedForRemoval)));
 	mChildren.erase(wreckfieldBegin, mChildren.end());
 
 	// Call function recursively for all remaining children
