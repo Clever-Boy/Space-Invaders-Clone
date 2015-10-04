@@ -10,13 +10,22 @@
 
 class SpriteNode final : public SceneNode
 {
+public:
+	enum Type
+	{
+		Background,
+		Line
+	};
+
+
+private:
 	static const auto Vertices	= 2u;
 	using LineContainer			= std::array<sf::Vertex, Vertices>;
 
 
 public:
-	explicit				SpriteNode(const sf::Texture& texture);
-							SpriteNode(const sf::FloatRect& bounds);
+	explicit				SpriteNode(Type type, const sf::Texture& texture);
+							SpriteNode(Type type, const sf::FloatRect& bounds);
 
 
 private:
@@ -24,6 +33,7 @@ private:
 
 
 private:
+	Type					mType;
 	sf::Sprite				mSprite;
 	LineContainer			mLine;
 };

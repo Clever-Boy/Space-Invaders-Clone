@@ -3,15 +3,17 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 
-SpriteNode::SpriteNode(const sf::Texture& texture)
-	: mSprite(texture)
+SpriteNode::SpriteNode(Type type, const sf::Texture& texture)
+	: mType(type)
+	, mSprite(texture)
 	, mLine()
 {
 	mSprite.setScale(3.f, 4.f);
 }
 
-SpriteNode::SpriteNode(const sf::FloatRect& bounds)
-	: mSprite()
+SpriteNode::SpriteNode(Type type, const sf::FloatRect& bounds)
+	: mType(type)
+	, mSprite()
 	, mLine()
 {
 	mLine[0] = sf::Vertex(sf::Vector2f(bounds.left, bounds.top + bounds.height));
@@ -23,6 +25,8 @@ SpriteNode::SpriteNode(const sf::FloatRect& bounds)
 
 void SpriteNode::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(mSprite, states);
-	target.draw(mLine.data(), 2, sf::Lines);
+	if(mType == Background)
+		target.draw(mSprite, states);
+	else
+		target.draw(mLine.data(), 2, sf::Lines);
 }
