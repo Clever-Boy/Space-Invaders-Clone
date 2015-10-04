@@ -10,8 +10,8 @@
 
 class SpriteNode final : public SceneNode
 {
-	static const std::size_t Vertices	= 2u;
-	using LineContainer					= std::array<sf::Vertex, Vertices>;
+	static const auto Vertices	= 2u;
+	using LineContainer			= std::array<sf::Vertex, Vertices>;
 
 
 public:
