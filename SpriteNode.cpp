@@ -28,5 +28,5 @@ void SpriteNode::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) 
 	if(mType == Background)
 		target.draw(mSprite, states);
 	else
-		target.draw(mLine.data(), 2, sf::Lines);
+		target.draw(mLine.data(), Vertices, sf::Lines);
 }
