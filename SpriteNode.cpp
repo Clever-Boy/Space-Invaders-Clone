@@ -3,14 +3,14 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 
-SpriteNode::SpriteNode(Type type, const sf::Texture& texture)
+SpriteNode::SpriteNode(const sf::Texture& texture)
 	: mSprite(texture)
 	, mLine()
 {
 	mSprite.setScale(3.f, 4.f);
 }
 
-SpriteNode::SpriteNode(Type type, const sf::FloatRect& bounds)
+SpriteNode::SpriteNode(const sf::FloatRect& bounds)
 	: mSprite()
 	, mLine()
 {

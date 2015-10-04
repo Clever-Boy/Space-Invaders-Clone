@@ -17,7 +17,7 @@ LifeNode::LifeNode(Player::Type type, const TextureHolder& textures)
 {
 	using namespace utility;
 
-	const auto LivesCount	= 2;
+	const auto LivesCount	= 2u;
 	const auto Padding		= 50.f;
 	const sf::Vector2f position(700.f, 25.f);
 
