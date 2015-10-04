@@ -114,12 +114,12 @@ void World::buildScene()
 	auto& texture(mTextures.get(Textures::Background));
 
 	// Add the background sprite to the scene
-	auto backgroundSprite(std::make_unique<SpriteNode>(SpriteNode::Background, texture));
+	auto backgroundSprite(std::make_unique<SpriteNode>(texture));
 	backgroundSprite->setDirtyFlag(false);
 	mSceneLayers[Background]->attachChild(std::move(backgroundSprite));
 
 	// add Line
-	auto lineSprite(std::make_unique<SpriteNode>(SpriteNode::Line, getBattlefieldBounds()));
+	auto lineSprite(std::make_unique<SpriteNode>(getBattlefieldBounds()));
 	lineSprite->setDirtyFlag(false);
 	mSceneLayers[Background]->attachChild(std::move(lineSprite));
 
