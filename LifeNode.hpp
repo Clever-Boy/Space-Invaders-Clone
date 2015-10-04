@@ -1,11 +1,8 @@
 #pragma once
 
 
-#include "ResourceIdentifiers.hpp"
 #include "SceneNode.hpp"
 #include "Player.hpp"
-
-#include <SFML/Graphics/Sprite.hpp>
 
 #include <list>
 
@@ -23,5 +20,5 @@ private:
 
 
 private:
-	std::list<sf::Sprite>		mSprites;
+	std::list<sf::Sprite>	mSprites;
 };
