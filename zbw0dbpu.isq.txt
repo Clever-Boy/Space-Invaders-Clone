@@ -1,0 +1,198 @@
+﻿pick 534ce33 fix player bullet not showing on edges
+pick d5a8354 Create README.md
+pick c6a917b working on QaudTree
+pick 554aa77 more working on QuadTree
+pick 8b0511a fix QuadTree now its playable in debug mode
+pick ef95d55 re-write QuadTree
+pick d3fb3c4 add make_unique to nodes
+pick 72774cd adjust spaceing
+pick 07d0aee more cleaning
+pick 9dd176c replace deque with vector
+pick fc8bd08 Update QuadTree.cpp
+pick d9d23b8 clean up
+pick e54c902 rename const variable
+pick df4ca3c removing animation class n working on Spaceship class
+pick 9c11e5f clean up
+pick 11277a2 add centerOrigin()
+pick a9c37b1 Update README.md
+pick 5484de4 Update Spaceship.cpp
+pick 466272f more clean up
+pick 6128718 change to ref
+pick a3cc67c rename function
+pick 2f13125 deleting dup headers few c++11 impl
+pick 0529219 deleting dup headers
+pick 3a8fd27 deleting dup headers
+pick b83b667 deleting dup header files
+pick 7075492 add title
+pick 00ae1ac little changes
+pick 85a8197 impl dirty flag
+pick 77614c9 Update World.hpp
+pick 111be30 Update World.cpp
+pick 464e33d Update QuadTree.hpp
+pick 16fdb4d Update QuadTree.cpp
+pick 4465e40 Update QuadTree.hpp
+pick dd7eeea Update QuadTree.hpp
+pick 830a784 Update QuadTree.cpp
+pick f7e444b Update World.cpp
+pick 7c607a9 Update QuadTree.cpp
+pick be40b60 Update QuadTree.hpp
+pick 79a35ed Update QuadTree.cpp
+pick e044e70 Update World.cpp
+pick f05a801 again imp dirty flag
+pick b3ea2bc delete header file
+pick 7264a0e spaceing
+pick a19a58a more deleting header files
+pick 3008e77 deleting headers
+pick f485560 easy with Command
+pick fb45d97 clean up
+pick 7587239 spacing
+pick 4a6e716 spacing
+pick fbe6b6a remove useless header
+pick 89318aa back to command
+pick dcf50ec fix order of updates
+pick 252ffda again deleting header
+pick 3c071b3 modify game loop
+pick 8a8adc6 typoooo
+pick 589807d remove casting
+pick 3f70ac0 new shield
+pick 5d0d3a3 new shield
+pick 6ca8314 init
+pick 1accab6 removing magic numbers
+pick 5bd0589 add mRenderTexture.clear()
+pick 0cedd0b few changing
+pick dd33c13 correct the spelling
+pick 240c48a few changing
+pick c3de4e7 changing == with &
+pick bef31b8 yet again changing == with &
+pick ef7699d few changing
+pick 2c7fd4d ugly fix pixel-collision-detection
+pick 28c5c1d fix pixel collision detection
+pick 4769cd6 clean up
+pick d3f5a23 using template for collision functions
+pick 2dd87fd remove assert
+pick 4e727d5 clean up
+pick 5082168 spacing
+pick a9fa389 clean up
+pick 09fa0fc auto everywhere
+pick a8c4782 clean up
+pick 84b730e clean up
+pick 0e4578b working on states
+pick f41fad6 deleting useless header files
+pick 202ecd3 add auto keyword
+pick 39b81a5 deleting useless header files
+pick 548346e deleting useless header file
+pick 4eb519f deleting useless header file
+pick bfe23ed deleting useless header file
+pick 4924e50 again deleting useless header file
+pick 8bf6b5a making it non-copyable
+pick a203f7b new movements pattern for invaders
+pick 6fc2b0b fix bug
+pick d27840b clean up
+pick 32fff2f second try to fix bug
+pick 01703ab working on bug to fix it
+pick 93baec1 spelling
+pick 3c40c93 fixed bug
+pick 5e0c0d2 clean up
+pick f35f2fa clean up
+pick c732c53 clean up
+pick 641e8c8 clean up
+pick 7e92ac6 re-writing game
+pick ad8add5 clean up
+pick 3b49e64 clean up
+pick 5fd4fbd clean up
+pick 5b44d48 clean up
+pick a3119e6 clean up
+pick 3739b32 fix the bug
+pick e3adfc2 delete old files
+pick 65b7502 clean up
+pick 1b0964c clean up
+pick 5c183ac clean up
+pick 04b3bcf i hope the damn bug is fixed by now
+pick b3703fd trying fix bug
+pick a927ae8 back
+pick edc1a82 working on bug
+pick cb9fdf4 back to acceptable work on bug
+pick 95864ba clean up
+pick d4463aa clean up
+pick b921e23 more auto keyword
+pick 3fc341c changing invaders movements algorithm
+pick 9958e19 clean up
+pick 725dad8 clean up
+pick 21b70c3 on release mode
+pick 26bb1cc implement dirty flag every where
+pick d8d1802 clean up
+pick de9960d making getMaxSpeed private in player class
+pick c571a96 add boss spawning
+pick d4b978b adjust condition if player won
+pick ee680ac remove warning
+pick a67bcc0 working on boss spawning
+pick 2feb8d5 new bullet texture
+pick 4c700d7 working on sound
+pick 24728b4 clean up
+pick 337b997 clean up
+pick 9d14354 clean up
+pick c883f18 clean up
+pick 405fb31 clean up
+pick 2ff0488 clean up
+pick 0db428d Player spawn after its death
+pick 575d3c2 clean up
+pick 5add9fc clean up
+pick 49a6fe9 clean up
+pick 5916e2b fixed end of game
+pick 8133613 clean up
+pick cce613a making player animated when invaders reach bottom
+pick 18120f9 clean up
+pick 89d0ec9 clean up
+pick a7a08a8 add Invaders Controller,
+pick 517c7dc clean up
+pick 2373d27 clean up
+pick 434de3e clean up
+pick 12fd75a clean up
+pick b4fd20e clean up
+pick e9e74cc clean up
+pick 58acd82 clean up
+pick 3f86867 clean up
+pick e4fd53a back
+pick a8071de clean up
+pick dbd27e3 adjust player's death animating interval
+pick bcd866f add namespace for utility
+pick cb52c36 clean up
+pick bf13abd radius for bullets
+pick 51d67c1 clean up
+pick f0c1a4f clean up
+pick a8dd0ba clean up
+pick 01f0adf clean up
+pick def17e8 clean up
+pick e0b0e48 clean up
+pick efb433e clean up
+pick 7649f99 clean up
+pick 7cc4b53 clean up
+pick c36fdfc clean up
+pick bcc83c1 clean up
+pick 69c436c clean up
+pick 3337065 clean up
+pick 65dc41a clean up
+pick 080e25f clean up
+pick 095823c clean up
+pick 1224bc4 clean up
+pick be47e3a clean up
+pick 7e60096 Revert "clean up"
+
+# Rebase 7baeb80..7e60096 onto 7baeb80
+#
+# Commands:
+#  p, pick = use commit
+#  r, reword = use commit, but edit the commit message
+#  e, edit = use commit, but stop for amending
+#  s, squash = use commit, but meld into previous commit
+#  f, fixup = like "squash", but discard this commit's log message
+#  x, exec = run command (the rest of the line) using shell
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+# Note that empty commits are commented out
+
