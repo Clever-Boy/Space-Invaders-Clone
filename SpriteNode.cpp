@@ -24,5 +24,5 @@ SpriteNode::SpriteNode(const sf::FloatRect& bounds)
 void SpriteNode::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(mSprite, states);
-	target.draw(&mLine[0], 2, sf::Lines);
+	target.draw(mLine.data(), 2, sf::Lines);
 }
