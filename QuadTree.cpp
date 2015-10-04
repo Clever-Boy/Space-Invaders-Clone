@@ -1,6 +1,5 @@
 #include "QuadTree.hpp"
 
-#include <SFML\Graphics\RectangleShape.hpp>
 #include <SFML\Graphics\RenderTarget.hpp>
  
 
@@ -143,28 +142,4 @@ void QuadTree::getCloseObjects(const sf::FloatRect& Bounds, ObjectsContainer& re
 	}
 
 	std::copy(mObjects.begin(), mObjects.end(), std::back_inserter(returnObjects));
-}
-
-void QuadTree::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	sf::RectangleShape shape(sf::Vector2f(mBounds.width, mBounds.height));
-	shape.setPosition(mBounds.left, mBounds.top);
-
-	if (mObjects.empty())
-		shape.setFillColor(sf::Color(0, 0, 0, 0));
-	else
-		shape.setFillColor(sf::Color(255, 125, 125, 100));
-
-	shape.setOutlineThickness(1);
-	shape.setOutlineColor(sf::Color(255, 255, 255));
-
-	target.draw(shape);
-
-	if (mChildren[0] != nullptr)
-	{
-		for (const auto& child : mChildren)
-		{
-			child->draw(target, states);
-		}
-	}
 }

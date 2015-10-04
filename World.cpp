@@ -1,14 +1,8 @@
 #include "World.hpp"
-#include "Utility.hpp"
 #include "SoundNode.hpp"
-#include "DataTables.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/CircleShape.hpp>
 
-
-//#define DEBUG
 
 namespace
 {
@@ -63,17 +57,14 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mSpawnPosition(mWorldView.getSize().x / 2.f, mWorldView.getSize().y / 2.f)
 	, mPlayer(nullptr)
 	, mBoss(nullptr)
+	, mLife(nullptr)
+	, mScore(nullptr)
 	, mQuadTreePrimary(1, mWorldBounds)
 	, mQuadTreeSecondary(1, mWorldBounds)
 	, mEnemyNodes()
 	, mPlayerBulletNodes()
 	, mEnemyBulletNodes()
-	, mLives()
 	, mDeadLine(getBattlefieldBounds().height + getBattlefieldBounds().top)
-	, mScore()
-	, mStaticScoreText()
-	, mScoreText()
-	, mLivesText()
 	, mSounds(sounds)
 	, mBossTimer(sf::Time::Zero)
 	, mPlayerTimer(sf::Time::Zero)
@@ -86,28 +77,6 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mEndGame(false)
 	, mInvadersController()
 {
-	using namespace utility;
-
-	const auto TextPadding = 5.f;
-	mStaticScoreText.setString("Score: ");
-	mStaticScoreText.setFont(mFonts.get(Fonts::Main));
-	mStaticScoreText.setPosition(TextPadding, TextPadding);
-	mStaticScoreText.setCharacterSize(30u);
-
-	mScoreText.setString(std::to_string(mScore));
-	mScoreText.setFont(mFonts.get(Fonts::Main));
-	auto bounds(mStaticScoreText.getGlobalBounds());
-	mScoreText.setPosition(bounds.left + bounds.width + TextPadding, TextPadding * TextPadding);
-	mScoreText.setCharacterSize(25u);
-	mScoreText.setColor(sf::Color::Green);
-	centerOrigin(mScoreText);
-
-	mLivesText.setString("Lives: ");
-	mLivesText.setFont(mFonts.get(Fonts::Main));
-	const auto XPadding = mWorldView.getSize().x - mWorldView.getSize().x / 2 + mSpawnPosition.x / 2;
-	mLivesText.setPosition(XPadding, TextPadding);
-	mLivesText.setCharacterSize(30u);
-
 	loadTextures();
 	buildScene();
 
@@ -145,10 +114,26 @@ void World::buildScene()
 	auto& texture(mTextures.get(Textures::Background));
 
 	// Add the background sprite to the scene
-	auto backgroundSprite(std::make_unique<SpriteNode>(texture));
-	backgroundSprite->setPosition(mWorldBounds.left, mWorldBounds.top);
+	auto backgroundSprite(std::make_unique<SpriteNode>(SpriteNode::Background, texture));
 	backgroundSprite->setDirtyFlag(false);
 	mSceneLayers[Background]->attachChild(std::move(backgroundSprite));
+
+	// add Line
+	auto lineSprite(std::make_unique<SpriteNode>(SpriteNode::Line, getBattlefieldBounds()));
+	lineSprite->setDirtyFlag(false);
+	mSceneLayers[Background]->attachChild(std::move(lineSprite));
+
+	// add Score
+	auto score(std::make_unique<ScoreNode>(mFonts));
+	mScore = score.get();
+	mScore->setDirtyFlag(false);
+	mSceneLayers[Background]->attachChild(std::move(score));
+
+	// add lives
+	auto life(std::make_unique<LifeNode>(Player::PlayerShip, mTextures));
+	mLife = life.get();
+	mLife->setDirtyFlag(false);
+	mSceneLayers[Background]->attachChild(std::move(life));
 
 	// Add player's spaceship
 	auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
@@ -156,14 +141,10 @@ void World::buildScene()
 	auto bounds(getBattlefieldBounds());
 	auto YPadding = bounds.top + bounds.height - Padding / 2u - mSpawnPosition.y;
 	mPlayer->setPosition(mSpawnPosition + sf::Vector2f(0.f, YPadding));
-
 	mSceneLayers[Space]->attachChild(std::move(leader));
 
 	// Add enemy Spaceships
 	addEnemies();
-
-	// add lifes dummys
-	addLifes();
 
 	// add Shields
 	addShields();
@@ -186,19 +167,6 @@ void World::addShield(float relX, float relY)
 	auto shield(std::make_unique<Shield>(mImages, mTarget.getSize()));
 	shield->setPosition(mSpawnPosition.x + relX, mSpawnPosition.y + relY);
 	mSceneLayers[Space]->attachChild(std::move(shield));
-}
-
-void World::addLifes()
-{
-	addLife(300.f, -275.f);
-	addLife(350.f, -275.f);
-}
-
-void World::addLife(float relX, float relY)
-{
-	auto life(std::make_unique<Life>(Player::PlayerShip, mTextures));
-	life->setPosition(mSpawnPosition + sf::Vector2f(relX, relY));
-	mLives.push_back(std::move(life));
 }
 
 void World::addEnemies()
@@ -312,64 +280,7 @@ CommandQueue& World::getCommandQueue()
 void World::draw()
 {
 	mTarget.setView(mWorldView);
-
 	mTarget.draw(mSceneGraph);
-
-	for (const auto& i : mLives)
-		mTarget.draw(*i);
-
-	auto bounds(getBattlefieldBounds());
-
-	sf::Vertex line[] =
-	{
-		sf::Vertex(sf::Vector2f(bounds.left , bounds.top + bounds.height)),
-		sf::Vertex(sf::Vector2f(bounds.left + bounds.width, bounds.top + bounds.height))
-	};
-
-	line[0].color = line[1].color = sf::Color::Green;
-
-	mTarget.draw(line, 2, sf::Lines);
-	mTarget.draw(mStaticScoreText);
-	mTarget.draw(mScoreText);
-	mTarget.draw(mLivesText);
-
-#ifdef DEBUG
-	sf::CircleShape spawnPosition(2.f);
-	spawnPosition.setPosition(mSpawnPosition);
-	spawnPosition.setFillColor(sf::Color::Red);
-	centerOrigin(spawnPosition);
-	mTarget.draw(spawnPosition);
-
-	sf::RectangleShape shapeWorld;
-	auto boundWorld(mWorldBounds);
-	shapeWorld.setSize(sf::Vector2f(boundWorld.width, boundWorld.height));
-	shapeWorld.setFillColor(sf::Color::Transparent);
-	shapeWorld.setOutlineColor(sf::Color::Green);
-	shapeWorld.setOutlineThickness(-2.f);
-	shapeWorld.setPosition(boundWorld.left, boundWorld.top);
-	mTarget.draw(shapeWorld);
-
-	sf::RectangleShape shapeBattle;
-	auto boundBattle(getBattlefieldBounds());
-	shapeBattle.setSize(sf::Vector2f(boundBattle.width, boundBattle.height));
-	shapeBattle.setFillColor(sf::Color::Transparent);
-	shapeBattle.setOutlineColor(sf::Color::Red);
-	shapeBattle.setOutlineThickness(2.f);
-	shapeBattle.setPosition(boundBattle.left, boundBattle.top);
-	mTarget.draw(shapeBattle);
-
-	sf::RectangleShape shapeMovements;
-	auto boundMovements(getMovementsfieldBounds());
-	shapeMovements.setSize(sf::Vector2f(boundMovements.width, boundMovements.height));
-	shapeMovements.setFillColor(sf::Color::Transparent);
-	shapeMovements.setOutlineColor(sf::Color::Yellow);
-	shapeMovements.setOutlineThickness(2.f);
-	shapeMovements.setPosition(boundMovements.left, boundMovements.top);
-	mTarget.draw(shapeMovements);
-
-	mTarget.draw(mQuadTreePrimary);
-	mTarget.draw(mQuadTreeSecondary);
-#endif
 }
 
 void World::update(sf::Time dt)
@@ -414,8 +325,6 @@ void World::update(sf::Time dt)
 	// Adapt position (correct if outside view)
 	adaptPlayerPosition();
 
-	updateText();
-
 	updateSounds();
 }
 
@@ -450,11 +359,6 @@ void World::spawnPlayer()
 	mPlayer->setPosition(mPreviousPosition);
 	mSceneLayers[Space]->attachChild(std::move(leader));
 	mIsPlayerDead = false;
-}
-
-void World::updateText()
-{
-	mScoreText.setString(std::to_string(mScore));
 }
 
 void World::adaptPlayerPosition()
@@ -583,7 +487,7 @@ void World::playerProjectileCollision()
 				auto& enemy = static_cast<Boss&>(*node2);
 				auto& projectile = static_cast<Projectile&>(*node1);
 
-				mScore += 100;
+				mScore->increment(100);
 
 				enemy.damage(projectile.getDamage());
 				projectile.destroy();
@@ -599,13 +503,13 @@ void World::playerProjectileCollision()
 				switch (enemy.getType())
 				{
 				case Invaders::Enemy1:
-					mScore += 30;
+					mScore->increment(30);
 					break;
 				case Invaders::Enemy2:
-					mScore += 20;
+					mScore->increment(20);
 					break;
 				case Invaders::Enemy3:
-					mScore += 10;
+					mScore->increment(10);
 					break;
 				default:break;
 				}
@@ -658,8 +562,7 @@ void World::enemyProjectileCollision()
 
 				projectile.destroy();
 
-				if (!mLives.empty())
-					mLives.pop_back();
+				mLife->decrement();
 				mLivesCount--;
 			}
 		}
@@ -703,8 +606,7 @@ void World::enemyCollision()
 
 				enemy.destroy();
 
-				if (!mLives.empty())
-					mLives.pop_back();
+				mLife->decrement();
 				mLivesCount--;
 			}
 		}

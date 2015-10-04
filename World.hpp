@@ -7,13 +7,13 @@
 #include "Player.hpp"
 #include "CommandQueue.hpp"
 #include "QuadTree.hpp"
-#include "Life.hpp"
+#include "LifeNode.hpp"
 #include "Shield.hpp"
 #include "SoundPlayer.hpp"
 #include "InvadersController.hpp"
+#include "ScoreNode.hpp"
 
 #include <SFML\Graphics\View.hpp>
-#include <SFML\Graphics\Text.hpp>
 
 
 // Forward declaration
@@ -33,7 +33,6 @@ class World final : private sf::NonCopyable
 	};
 
 	using LayerContainer = std::array<SceneNode*, LayerCount>;
-	using LivesContainer = std::list<std::unique_ptr<Life>>;
 	using NodeContainer	 = std::vector<SceneNode*>;
 
 
@@ -64,13 +63,8 @@ private:
 
 	void					controlEnemyFire();
 
-	void					addLifes();
-	void					addLife(float relX, float relY);
-
 	void					addShields();
 	void					addShield(float relX, float relY);
-
-	void					updateText();
 
 	sf::FloatRect			getBattlefieldBounds() const;
 	sf::FloatRect			getMovementsfieldBounds() const;
@@ -102,6 +96,8 @@ private:
 
 	Player*					mPlayer;
 	Boss*					mBoss;
+	LifeNode*				mLife;
+	ScoreNode*				mScore;
 
 	QuadTree				mQuadTreePrimary;
 	QuadTree				mQuadTreeSecondary;
@@ -110,13 +106,8 @@ private:
 	NodeContainer			mPlayerBulletNodes;
 	NodeContainer			mEnemyBulletNodes;
 
-	LivesContainer			mLives;
-
 	float					mDeadLine;
-	std::size_t				mScore;
-	sf::Text				mScoreText;
-	sf::Text				mStaticScoreText;
-	sf::Text				mLivesText;
+
 	SoundPlayer&			mSounds;
 
 	sf::Time				mBossTimer;

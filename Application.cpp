@@ -6,7 +6,6 @@
 #include "SettingsState.hpp"
 #include "GameOverState.hpp"
 
-#define FIXED_TIME_STEP_ENABLE
 
 const sf::Time Application::TimePerFrame = sf::seconds(1.f / 60.f);
 
@@ -22,28 +21,19 @@ Application::Application()
 {
 	mWindow.setKeyRepeatEnabled(false);
 
-#ifdef FIXED_TIME_STEP_ENABLE
-	mWindow.setVerticalSyncEnabled(false);
-#else
-	mWindow.setVerticalSyncEnabled(true);
-#endif
-
 	mFonts.load(Fonts::Main, "Media/Sansation.ttf");
 
 	mTextures.load(Textures::TitleScreen, "Media/Textures/TitleScreen.png");
 	mTextures.load(Textures::Buttons, "Media/Textures/Buttons.png");
 
-
 	registerStates();
 	mStateStack.pushState(States::Title);
 
 	mMusic.setVolume(20.f);
-
 }
 
 void Application::run()
 {
-#ifdef FIXED_TIME_STEP_ENABLE
 	sf::Clock clock;
 	sf::Time timeSinceLastUpdate = sf::Time::Zero;
 
@@ -65,30 +55,6 @@ void Application::run()
 
 		render();
 	}
-#else
-	sf::Clock clock;
-	sf::Time deltaTime = sf::Time::Zero;
-
-	while (mWindow.isOpen())
-	{
-		sf::Time elapsed = clock.getElapsedTime();
-		clock.restart();
-
-		deltaTime += elapsed;
-
-		if (deltaTime > sf::Time::Zero)
-		{
-			processInput();
-			update(deltaTime);
-			render();
-
-			if (mStateStack.isEmpty())
-				mWindow.close();
-
-			deltaTime = sf::Time::Zero;
-		}
-	}
-#endif
 }
 
 void Application::processInput()

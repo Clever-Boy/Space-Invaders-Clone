@@ -6,7 +6,7 @@
 #include <array>
 
 
-class QuadTree final : public sf::Drawable, private sf::NonCopyable
+class QuadTree final : private sf::NonCopyable
 {
 	static constexpr auto DefaultNodes  = 4u;
 	using Ptr							= std::unique_ptr<QuadTree>;
@@ -24,7 +24,6 @@ public:
 
 
 private:
-	void					draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void					split();
 	int						getIndex(const sf::FloatRect& Rect);
 
