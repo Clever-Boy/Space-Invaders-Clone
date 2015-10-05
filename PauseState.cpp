@@ -30,10 +30,7 @@ PauseState::PauseState(StateStack& stack, Context context)
 	auto returnButton(std::make_shared<GUI::Button>(context));
 	returnButton->setPosition(0.5f * windowSize.x - Padding.x, 0.4f * windowSize.y + Padding.y);
 	returnButton->setText("Return");
-	returnButton->setCallback([this]()
-	{
-		requestStackPop();
-	});
+	returnButton->setCallback(std::bind(&PauseState::State::requestStackPop, this));
 
 	auto backToMenuButton(std::make_shared<GUI::Button>(context));
 	backToMenuButton->setPosition(0.5f * windowSize.x - Padding.x, 0.4f * windowSize.y + Padding.y + Height);
@@ -53,9 +50,8 @@ void PauseState::draw()
 	auto& window(getContext().window);
 	window.setView(window.getDefaultView());
 
-	sf::RectangleShape backgroundShape;
+	sf::RectangleShape backgroundShape(window.getView().getSize());
 	backgroundShape.setFillColor(sf::Color(0, 0, 0, 150));
-	backgroundShape.setSize(window.getView().getSize());
 
 	window.draw(backgroundShape);
 	window.draw(mPausedText);

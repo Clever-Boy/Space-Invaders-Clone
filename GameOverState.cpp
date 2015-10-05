@@ -35,9 +35,8 @@ void GameOverState::draw()
 	window.setView(window.getDefaultView());
 
 	// Create dark, semitransparent background
-	sf::RectangleShape backgroundShape;
+	sf::RectangleShape backgroundShape(window.getView().getSize());
 	backgroundShape.setFillColor(sf::Color(0, 0, 0, 150));
-	backgroundShape.setSize(window.getView().getSize());
 
 	window.draw(backgroundShape);
 	window.draw(mGameOverText);
@@ -53,6 +52,7 @@ bool GameOverState::update(sf::Time dt)
 		requestStateClear();
 		requestStackPush(States::Menu);
 	}
+
 	return false;
 }
 

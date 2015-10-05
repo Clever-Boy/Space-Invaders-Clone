@@ -31,18 +31,12 @@ MenuState::MenuState(StateStack& stack, Context context)
 	auto settingsButton(std::make_shared<GUI::Button>(context));
 	settingsButton->setPosition(PositionTopLeft.x, PositionTopLeft.y + Padding);
 	settingsButton->setText("Settings");
-	settingsButton->setCallback([this]()
-	{
-		requestStackPush(States::Settings);
-	});
+	settingsButton->setCallback(std::bind(&MenuState::State::requestStackPush, this, States::Settings));
 
 	auto exitButton(std::make_shared<GUI::Button>(context));
 	exitButton->setPosition(PositionTopLeft.x, PositionTopLeft.y + Padding * 2);
 	exitButton->setText("Exit");
-	exitButton->setCallback([this]()
-	{
-		requestStackPop();
-	});
+	exitButton->setCallback(std::bind(&MenuState::State::requestStackPop, this));
 
 	mGUIContainer.pack(playButton);
 	mGUIContainer.pack(settingsButton);

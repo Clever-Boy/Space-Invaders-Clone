@@ -39,7 +39,7 @@ Player::Player(Type type, const TextureHolder& textures)
 
 void Player::updateCurrent(sf::Time dt, CommandQueue& commands)
 {
-	if (mBullet)
+	if (mBullet != nullptr)
 	{
 		if (mBullet->isDestroyed())
 		{

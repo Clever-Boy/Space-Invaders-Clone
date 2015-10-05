@@ -1,7 +1,7 @@
 #include "QuadTree.hpp"
 
 #include <SFML\Graphics\RenderTarget.hpp>
- 
+
 
 namespace
 {
@@ -40,7 +40,7 @@ void QuadTree::clear()
 void QuadTree::split()
 {
 	auto width	= mBounds.width / 2.f;
-	auto height	= mBounds.height / 2.f;
+	auto height = mBounds.height / 2.f;
 	auto x		= mBounds.left;
 	auto y		= mBounds.top;
 
@@ -54,7 +54,7 @@ int QuadTree::getIndex(const sf::FloatRect& Rect)
 {
 	auto index = -1;
 
-	auto verticalMidpoint = mBounds.left + mBounds.width / 2.f;
+	auto verticalMidpoint	= mBounds.left + mBounds.width / 2.f;
 	auto horizontalMidpoint = mBounds.top + mBounds.height / 2.f;
 
 	// Object can completely fit within the top quadrants
