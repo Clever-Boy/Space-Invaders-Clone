@@ -1,4 +1,11 @@
 #include "World.hpp"
+#include "SpriteNode.hpp"
+#include "Boss.hpp"
+#include "Player.hpp"
+#include "LifeNode.hpp"
+#include "Shield.hpp"
+#include "ScoreNode.hpp"
+#include "SoundPlayer.hpp"
 #include "SoundNode.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -46,11 +53,13 @@ namespace
 }
 
 
-World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds)
-	: mTarget(outputTarget)
-	, mWorldView(outputTarget.getDefaultView())
-	, mTextures()
+World::World(sf::RenderTarget&	target,	TextureHolder& textures, FontHolder& fonts, SoundPlayer& sounds)
+	: mTarget(target)
+	, mTextures(textures)
 	, mFonts(fonts)
+	, mSounds(sounds)
+	, mWorldView(target.getDefaultView())
+	, mImages()
 	, mSceneGraph()
 	, mSceneLayers()
 	, mWorldBounds(mWorldView.getCenter() - mWorldView.getSize() / 2.f, mWorldView.getSize())
@@ -65,7 +74,6 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	, mPlayerBulletNodes()
 	, mEnemyBulletNodes()
 	, mDeadLine(getBattlefieldBounds().height + getBattlefieldBounds().top)
-	, mSounds(sounds)
 	, mBossTimer(sf::Time::Zero)
 	, mPlayerTimer(sf::Time::Zero)
 	, mBossSpawn(true)

@@ -29,7 +29,12 @@ public:
 
 	struct Context
 	{
-		explicit			Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, PlayerController& playerController, MusicPlayer& music, SoundPlayer& sounds);
+		explicit			Context(sf::RenderWindow&	window, 
+									TextureHolder&		textures, 
+									FontHolder&			fonts,
+									PlayerController&	playerController, 
+									MusicPlayer&		music, 
+									SoundPlayer&		sounds);
 
 		sf::RenderWindow&	window;
 		TextureHolder&		textures;

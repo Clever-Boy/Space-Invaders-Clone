@@ -1,25 +1,20 @@
 #pragma once
 
 
-#include "SpriteNode.hpp"
-#include "Boss.hpp"
 #include "Invaders.hpp"
-#include "Player.hpp"
 #include "CommandQueue.hpp"
 #include "QuadTree.hpp"
-#include "LifeNode.hpp"
-#include "Shield.hpp"
-#include "SoundPlayer.hpp"
 #include "InvadersController.hpp"
-#include "ScoreNode.hpp"
+#include "ResourceHolder.hpp"
 
-#include <SFML\Graphics\View.hpp>
+#include <SFML/Graphics/View.hpp>
 
 
-namespace sf
-{
-	class RenderWindow;
-}
+class Player;
+class Boss;
+class LifeNode;
+class ScoreNode;
+class SoundPlayer;
 
 
 class World final : private sf::NonCopyable
@@ -36,7 +31,7 @@ class World final : private sf::NonCopyable
 
 
 public:
-	explicit				World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds);
+	explicit				World(sf::RenderTarget&	target,	TextureHolder& textures, FontHolder& fonts,	SoundPlayer& sounds);
 
 	void					draw();
 	void					update(sf::Time dt);
@@ -80,9 +75,10 @@ private:
 private:
 	sf::RenderTarget&		mTarget;
 	FontHolder&				mFonts;
+	TextureHolder&			mTextures;
+	SoundPlayer&			mSounds;
 
 	sf::View				mWorldView;
-	TextureHolder			mTextures;
 	ImageHolder				mImages;
 
 	SceneNode				mSceneGraph;
@@ -105,8 +101,6 @@ private:
 	NodeContainer			mEnemyBulletNodes;
 
 	float					mDeadLine;
-
-	SoundPlayer&			mSounds;
 
 	sf::Time				mBossTimer;
 	bool					mBossSpawn;
