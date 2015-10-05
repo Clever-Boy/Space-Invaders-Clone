@@ -14,8 +14,8 @@ namespace
 	template<typename GameObject>
 	auto pixelcollidesPair(const Shield& shield, const GameObject& object) ->bool
 	{
-		auto shieldBounds = static_cast<sf::Rect<std::size_t>>(shield.getBoundingRect());
-		auto objectBounds = static_cast<sf::Rect<std::size_t>>(object.getBoundingRect());
+		auto shieldBounds(static_cast<sf::Rect<std::size_t>>(shield.getBoundingRect()));
+		auto objectBounds(static_cast<sf::Rect<std::size_t>>(object.getBoundingRect()));
 
 		auto width = objectBounds.left + objectBounds.width;
 		auto height = objectBounds.top + objectBounds.height;
