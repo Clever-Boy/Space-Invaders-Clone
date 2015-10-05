@@ -84,6 +84,78 @@ World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sou
 	mWorldView.setCenter(mSpawnPosition);
 }
 
+void World::draw()
+{
+	mTarget.setView(mWorldView);
+	mTarget.draw(mSceneGraph);
+}
+
+void World::update(sf::Time dt)
+{
+	// reset player velocity
+	mPlayer->setVelocity(0.f, 0.f);
+
+	// Remove useless entities
+	destroyEntitiesOutsideView();
+
+	// create Boss 
+	spawnBoss(dt);
+
+	// Update quadtree
+	checkForCollision();
+
+	// update Invaders controller: Adapt Movements 
+	mInvadersController.update(mCommandQueue);
+
+	// Forward commands to scene graph
+	while (!mCommandQueue.isEmpty())
+		mSceneGraph.onCommand(mCommandQueue.pop());
+
+	// control enemy fires
+	controlEnemyFire();
+
+	// Collision detection and response (may destroy entities)
+	handleCollisions();
+
+	// Check if Player Dead
+	if (checkPlayerDeath(dt))
+		return;
+
+	mSceneGraph.removeWrecks();
+
+	// Spawn Player
+	spawnPlayer();
+
+	// Regular update step
+	mSceneGraph.update(dt, mCommandQueue);
+
+	// Adapt position (correct if outside view)
+	adaptPlayerPosition();
+
+	updateSounds();
+}
+
+bool World::hasAlivePlayer() const
+{
+	if (mLivesCount == 0)
+		return (!mPlayer->isMarkedForRemoval());
+
+	return (!mEndGame);
+}
+
+bool World::hasPlayerWon() const
+{
+	if (mEnemyNodes.empty())
+		return (mBoss->isMarkedForRemoval());
+
+	return false;
+}
+
+CommandQueue& World::getCommandQueue()
+{
+	return mCommandQueue;
+}
+
 void World::loadTextures()
 {
 	mTextures.load(Textures::Boss, "Media/Textures/Boss.png");
@@ -102,7 +174,7 @@ void World::buildScene()
 	// Initialize the different layers
 	for (auto i = 0u; i < LayerCount; ++i)
 	{
-		Category::Type category = (i == Space) ? Category::SceneSpaceLayer : Category::None;
+		auto category = (i == Space) ? Category::SceneSpaceLayer : Category::None;
 
 		auto layer(std::make_unique<SceneNode>(category));
 		mSceneLayers[i] = layer.get();
@@ -171,7 +243,6 @@ void World::addShield(float relX, float relY)
 
 void World::addEnemies()
 {
-	// Add enemies
 	const auto numberOfEnemies = 66u;
 	const auto enemiesPerRow = 11;
 	const auto horizontalSpacing = 40.f;
@@ -197,6 +268,37 @@ void World::addEnemy(Invaders::Type type, float relX, float relY)
 	auto enemy(std::make_unique<Invaders>(type, mTextures, getMovementsfieldBounds(), mInvadersController));
 	enemy->setPosition(relX, relY);
 	mSceneLayers[Space]->attachChild(std::move(enemy));
+}
+
+void World::controlEnemyFire()
+{
+	std::sort(mEnemyNodes.begin(), mEnemyNodes.end(),
+		[this](const auto& lhs, const auto& rhs)
+	{
+		return lhs->getPosition().y > rhs->getPosition().y;
+	});
+
+	auto size = mEnemyNodes.size();
+
+	for (auto i = 0u; i < size; ++i)
+	{
+		auto& enemy = static_cast<Invaders&>(*mEnemyNodes[i]);
+
+		if (enemy.isDestroyed())
+			continue;
+
+		if (enemy.getWorldPosition().y >= mDeadLine - 20.f)
+		{
+			mPlayer->damage(enemy.getHitpoints());
+			mIsGameEnded = true;
+		}
+
+		if (mEnemyNodes.size() <= 3)
+			enemy.setMaxSpeed(enemy.getMaxSpeed() + 1.f);
+
+		if (i < 11)
+			enemy.fire();
+	}
 }
 
 void World::spawnBoss(sf::Time dt)
@@ -241,6 +343,50 @@ void World::spawnBoss(sf::Time dt)
 	mBossTimer = sf::Time::Zero;
 }
 
+bool World::checkPlayerDeath(sf::Time dt)
+{
+	if (!mPlayer->isDestroyed() || mIsPlayerDead)
+		return false;
+
+	mPlayer->applyHitEffect(dt, mCommandQueue);
+	mPlayerTimer += dt;
+
+	if (mPlayerTimer > sf::seconds(0.25f))
+	{
+		mPlayer->setMarkToRemove();
+		mPreviousPosition = mPlayer->getWorldPosition();
+		mIsPlayerDead = true;
+		if (mIsGameEnded)
+			mEndGame = true;
+		mPlayerTimer = sf::Time::Zero;
+	}
+
+	return true;
+}
+
+void World::spawnPlayer()
+{
+	if (!mIsPlayerDead)
+		return;
+
+	auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
+	mPlayer = leader.get();
+	mPlayer->setPosition(mPreviousPosition);
+	mSceneLayers[Space]->attachChild(std::move(leader));
+	mIsPlayerDead = false;
+}
+
+void World::adaptPlayerPosition()
+{
+	auto Bounds(getMovementsfieldBounds());
+	auto position(mPlayer->getPosition());
+
+	position.x = std::max(position.x, Bounds.left);
+	position.x = std::min(position.x, Bounds.left + Bounds.width);
+
+	mPlayer->setPosition(position);
+}
+
 sf::FloatRect World::getViewBounds() const
 {
 	return sf::FloatRect(mWorldView.getCenter() - mWorldView.getSize() / 2.f, mWorldView.getSize());
@@ -270,108 +416,6 @@ sf::FloatRect World::getMovementsfieldBounds() const
 	bounds.width -= MovementsPadding * 2;
 
 	return bounds;
-}
-
-CommandQueue& World::getCommandQueue()
-{
-	return mCommandQueue;
-}
-
-void World::draw()
-{
-	mTarget.setView(mWorldView);
-	mTarget.draw(mSceneGraph);
-}
-
-void World::update(sf::Time dt)
-{
-	// reset player velocity
-	mPlayer->setVelocity(0.f, 0.f);
-
-	// Remove useless entities
-	destroyEntitiesOutsideView();
-
-	// create Boss 
-	spawnBoss(dt);
-
-	// Update quadtree
-	checkForCollision();
-
-	// update Invaders controller: Adapt Movements 
-	mInvadersController.update(mCommandQueue);
-
-	// Forward commands to scene graph
-	while (!mCommandQueue.isEmpty())
-		mSceneGraph.onCommand(mCommandQueue.pop());
-
-	// control enemy fires
-	controlEnemyFire();
-
-	// Collision detection and response (may destroy entities)
-	handleCollisions();
-
-	// Check if Player Dead
-	if (checkPlayerDeath(dt))
-		return;
-
-	mSceneGraph.removeWrecks();
-
-	// Spawn Player
-	spawnPlayer();
-
-	// Regular update step
-	mSceneGraph.update(dt, mCommandQueue);
-
-	// Adapt position (correct if outside view)
-	adaptPlayerPosition();
-
-	updateSounds();
-}
-
-bool World::checkPlayerDeath(sf::Time dt)
-{
-	if (!mPlayer->isDestroyed() || mIsPlayerDead)
-		return false;
-
-	mPlayer->applyHitEffect(dt, mCommandQueue);
-	mPlayerTimer += dt;
-
-	if (mPlayerTimer > sf::seconds(0.25f))
-	{
-		mPlayer->setMarkToRemove();
-		mPreviousPosition = mPlayer->getWorldPosition();
-		mIsPlayerDead = true;
-		if(mIsGameEnded)
-			mEndGame = true;
-		mPlayerTimer = sf::Time::Zero;
-	}
-
-	return true;
-}
-
-void World::spawnPlayer()
-{
-	if (!mIsPlayerDead)
-		return;
-
-	auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
-	mPlayer = leader.get();
-	mPlayer->setPosition(mPreviousPosition);
-	mSceneLayers[Space]->attachChild(std::move(leader));
-	mIsPlayerDead = false;
-}
-
-void World::adaptPlayerPosition()
-{
-	// Keep player's position inside the screen bounds, at least borderDistance units from the border
-	auto Bounds(getMovementsfieldBounds());
-
-	sf::Vector2f position = mPlayer->getPosition();
-
-	position.x = std::max(position.x, Bounds.left);
-	position.x = std::min(position.x, Bounds.left + Bounds.width);
-
-	mPlayer->setPosition(position);
 }
 
 void World::destroyEntitiesOutsideView()
@@ -610,54 +654,6 @@ void World::enemyCollision()
 				mLivesCount--;
 			}
 		}
-	}
-}
-
-bool World::hasAlivePlayer() const
-{
-	if (mLivesCount == 0)
-		return (!mPlayer->isMarkedForRemoval());
-
-	return (!mEndGame);
-}
-
-bool World::hasPlayerWon() const
-{
-	if (mEnemyNodes.empty())
-		return (mBoss->isMarkedForRemoval());
-
-	return false;
-}
-
-void World::controlEnemyFire()
-{
-	// Sort all enemies according to their y value, such that lower enemies are ready to fire
-	std::sort(mEnemyNodes.begin(), mEnemyNodes.end(),
-		[this](const auto& lhs, const auto& rhs)
-	{
-		return lhs->getPosition().y > rhs->getPosition().y;
-	});
-
-	auto size = mEnemyNodes.size();
-
-	for (auto i = 0u; i < size; ++i)
-	{
-		auto& enemy = static_cast<Invaders&>(*mEnemyNodes[i]);
-
-		if (enemy.isDestroyed())
-			continue;
-
-		if (enemy.getWorldPosition().y >= mDeadLine - 20.f)
-		{
-			mPlayer->damage(enemy.getHitpoints());
-			mIsGameEnded = true;
-		}
-
-		if (mEnemyNodes.size() <= 3)
-			enemy.setMaxSpeed(enemy.getMaxSpeed() + 1.f);
-
-		if (i < 11)
-			enemy.fire();
 	}
 }
 

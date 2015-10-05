@@ -16,7 +16,6 @@
 #include <SFML\Graphics\View.hpp>
 
 
-// Forward declaration
 namespace sf
 {
 	class RenderWindow;
@@ -39,8 +38,8 @@ class World final : private sf::NonCopyable
 public:
 	explicit				World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds);
 
-	void					update(sf::Time dt);
 	void					draw();
+	void					update(sf::Time dt);
 	bool 					hasAlivePlayer() const;
 	bool					hasPlayerWon() const;
 	CommandQueue&			getCommandQueue();
@@ -49,34 +48,33 @@ public:
 private:
 	void					loadTextures();
 	void					buildScene();
-	void					adaptPlayerPosition();
-
-	void					addEnemies();
-	void					addEnemy(Invaders::Type type, float relX, float relY);
-	void					spawnBoss(sf::Time dt);
-
-	sf::FloatRect			getViewBounds() const;
-
-	void					destroyEntitiesOutsideView();
-	void					handleCollisions();
-	void					checkForCollision();
-
-	void					controlEnemyFire();
 
 	void					addShields();
 	void					addShield(float relX, float relY);
 
+	void					addEnemies();
+	void					addEnemy(Invaders::Type type, float relX, float relY);
+	void					controlEnemyFire();
+
+	void					spawnBoss(sf::Time dt);
+
+	void					adaptPlayerPosition();
+	bool					checkPlayerDeath(sf::Time dt);
+	void					spawnPlayer();
+
+	sf::FloatRect			getViewBounds() const;
 	sf::FloatRect			getBattlefieldBounds() const;
 	sf::FloatRect			getMovementsfieldBounds() const;
 
-	void					updateSounds();
+	void					destroyEntitiesOutsideView();
+	void					checkForCollision();
+	void					handleCollisions();
 
 	void					enemyProjectileCollision();
 	void					playerProjectileCollision();
 	void					enemyCollision();
 
-	bool					checkPlayerDeath(sf::Time dt);
-	void					spawnPlayer();
+	void					updateSounds();
 
 
 private:
