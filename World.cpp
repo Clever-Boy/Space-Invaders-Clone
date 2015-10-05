@@ -251,10 +251,10 @@ void World::addShield(float relX, float relY)
 
 void World::addEnemies()
 {
-	const auto numberOfEnemies = 66u;
-	const auto enemiesPerRow = 11;
-	const auto horizontalSpacing = 40.f;
-	const auto verticalSpacing = 35.f;
+	const auto numberOfEnemies		= 66u;
+	const auto enemiesPerRow		= 11u;
+	const auto horizontalSpacing	= 40.f;
+	const auto verticalSpacing		= 35.f;
 
 	const sf::Vector2f positionOfTopLeft(MovementsPadding, Padding * 2.5);
 
