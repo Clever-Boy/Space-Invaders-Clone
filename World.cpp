@@ -435,8 +435,8 @@ sf::FloatRect World::getMovementsfieldBounds() const
 void World::destroyEntitiesOutsideView()
 {
 	Command command;
-	command.category	= Category::Projectile;
-	command.action		= derivedAction<Entity>([this](auto& entity)
+	command.category = Category::Projectile;
+	command.action	 = derivedAction<Entity>([this](auto& entity)
 	{
 		if (!getBattlefieldBounds().intersects(entity.getBoundingRect()))
 			entity.remove();
@@ -455,8 +455,8 @@ void World::checkForCollision()
 	mEnemyBulletNodes.clear();
 
 	Command command;
-	command.category	= Category::All;
-	command.action		= [this](auto& node)
+	command.category = Category::All;
+	command.action	 = [this](auto& node)
 	{
 		if (node.getCategory() & Category::PlayerProjectile)
 		{
@@ -657,8 +657,8 @@ void World::enemyCollision()
 				if (!collision(*node1, *node2))
 					continue;
 
-				auto& player = static_cast<Player&>(*node2);
-				auto& enemy = static_cast<Invaders&>(*node1);
+				auto& player	= static_cast<Player&>(*node2);
+				auto& enemy		= static_cast<Invaders&>(*node1);
 
 				player.damage(enemy.getHitpoints());
 

@@ -46,8 +46,8 @@ Invaders::Invaders(Type type, const TextureHolder& textures, const sf::FloatRect
 	mSprite.setColor(Table[type].color);
 	centerOrigin(mSprite);
 
-	mFireCommand.category	= Category::SceneSpaceLayer;
-	mFireCommand.action		= std::bind(&Invaders::createBullets, this, std::placeholders::_1, std::cref(textures));
+	mFireCommand.category = Category::SceneSpaceLayer;
+	mFireCommand.action	  = std::bind(&Invaders::createBullets, this, std::placeholders::_1, std::cref(textures));
 }
 
 void Invaders::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
@@ -261,8 +261,8 @@ void Invaders::playLocalSound(CommandQueue& commands, SoundEffect::ID effect)
 	auto worldPosition(getWorldPosition());
 
 	Command command;
-	command.category	= Category::SoundEffect;
-	command.action		= derivedAction<SoundNode>(std::bind(&SoundNode::playSound, std::placeholders::_1, effect, worldPosition));
+	command.category = Category::SoundEffect;
+	command.action	 = derivedAction<SoundNode>(std::bind(&SoundNode::playSound, std::placeholders::_1, effect, worldPosition));
 
 	commands.push(command);
 }

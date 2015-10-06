@@ -112,8 +112,8 @@ void Boss::playLocalSound(CommandQueue& commands)
 	auto worldPosition(getWorldPosition());
 
 	Command command;
-	command.category	= Category::SoundEffect;
-	command.action		= derivedAction<SoundNode>(std::bind(&SoundNode::playRepeatedSound, std::placeholders::_1, worldPosition));
+	command.category = Category::SoundEffect;
+	command.action	 = derivedAction<SoundNode>(std::bind(&SoundNode::playRepeatedSound, std::placeholders::_1, worldPosition));
 
 	commands.push(command);
 }
@@ -121,8 +121,8 @@ void Boss::playLocalSound(CommandQueue& commands)
 void Boss::stopLocalSound(CommandQueue& commands)
 {
 	Command command;
-	command.category	= Category::SoundEffect;
-	command.action		= derivedAction<SoundNode>(std::bind(&SoundNode::stopRepeatedSound, std::placeholders::_1));
+	command.category = Category::SoundEffect;
+	command.action	 = derivedAction<SoundNode>(std::bind(&SoundNode::stopRepeatedSound, std::placeholders::_1));
 
 	commands.push(command);
 }
