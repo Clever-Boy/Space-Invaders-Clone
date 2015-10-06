@@ -71,10 +71,7 @@ void Invaders::updateCurrent(sf::Time dt, CommandQueue& commands)
 	// Check if bullets or missiles are fired
 	checkProjectileLaunch(dt, commands);
 
-	// Update enemy movement pattern;
-	adaptEnemyMovements();
-
-	// apply velocity
+	// Update enemy movement pattern; apply velocity
 	updateMovementPattern(dt);
 
 	applyAnimation(dt);
@@ -155,16 +152,16 @@ void Invaders::requstChangeDirction()
 	}
 }
 
-void Invaders::adaptEnemyMovements()
+void Invaders::updateMovementPattern(sf::Time dt)
 {
 	bool changeDirection = false;
 	const auto TravelledDistance = 30.f;
 
+	// Check if we need change dirtection
 	if (mCurrentDirction == Invaders::MovingDown)
 	{
 		if (mTravelledDistance > TravelledDistance)
 			changeDirection = true;
-
 	}
 
 	if (mCurrentDirction == Invaders::MovingRight || mCurrentDirction == Invaders::MovingLeft)
@@ -173,21 +170,22 @@ void Invaders::adaptEnemyMovements()
 			changeDirection = true;
 	}
 
+	// Update velocity
+	setVelocity(mMovement * getMaxSpeed());
+
+	// Update travel distance
+	mTravelledDistance += getMaxSpeed() * dt.asSeconds();
+
+	// Validate condition of changing dirction
 	if (!changeDirection)
 	{
 		mIsChangeDirection = false;
 		return;
 	}
 
+	// Chech if we can requst change dirction
 	if (!mIsChangeDirection)
 		mInvadersController.requstChangeDirectionCommands();
-}
-
-void Invaders::updateMovementPattern(sf::Time dt)
-{
-	setVelocity(mMovement * getMaxSpeed());
-
-	mTravelledDistance += getMaxSpeed() * dt.asSeconds();
 }
 
 void Invaders::applyAnimation(sf::Time dt)
