@@ -68,12 +68,13 @@ void Invaders::updateCurrent(sf::Time dt, CommandQueue& commands)
 		return;
 	}
 
-	adaptEnemyMovements();
-
 	// Check if bullets or missiles are fired
 	checkProjectileLaunch(dt, commands);
 
-	// Update enemy movement pattern; apply velocity
+	// Update enemy movement pattern;
+	adaptEnemyMovements();
+
+	// apply velocity
 	updateMovementPattern(dt);
 
 	applyAnimation(dt);
