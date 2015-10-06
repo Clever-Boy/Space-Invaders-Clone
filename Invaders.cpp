@@ -68,7 +68,7 @@ void Invaders::updateCurrent(sf::Time dt, CommandQueue& commands)
 		return;
 	}
 
-	adaptEnemyMovements(commands);
+	adaptEnemyMovements();
 
 	// Check if bullets or missiles are fired
 	checkProjectileLaunch(dt, commands);
@@ -154,7 +154,7 @@ void Invaders::requstChangeDirction()
 	}
 }
 
-void Invaders::adaptEnemyMovements(CommandQueue& commands)
+void Invaders::adaptEnemyMovements()
 {
 	bool changeDirection = false;
 	const auto TravelledDistance = 30.f;

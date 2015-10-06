@@ -57,7 +57,7 @@ private:
 
 	bool 					isMarkedForRemoval() const override;
 
-	void					adaptEnemyMovements(CommandQueue& commands);
+	void					adaptEnemyMovements();
 
 	void					playLocalSound(CommandQueue& commands, SoundEffect::ID effect);
 
