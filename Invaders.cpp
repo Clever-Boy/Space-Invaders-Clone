@@ -183,7 +183,7 @@ void Invaders::updateMovementPattern(sf::Time dt)
 		return;
 	}
 
-	// Chech if we can requst change dirction
+	// Check if we can requst change dirction
 	if (!mIsChangeDirection)
 		mInvadersController.requstChangeDirectionCommands();
 }
