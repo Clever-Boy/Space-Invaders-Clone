@@ -11,8 +11,6 @@ namespace GUI
 		, mSelectedChild(-1)
 		, mSounds(soundplayer)
 		, mHovered(nullptr)
-		, mDrity(true)
-		, mTransform()
 	{
 	}
 
@@ -77,14 +75,6 @@ namespace GUI
 
 	void Container::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
-		if (mDrity)
-		{
-			mTransform = getTransform();
-			mDrity = false;
-		}
-
-		states.transform.combine(mTransform);
-
 		for (const auto& child : mChildren)
 			target.draw(*child, states);
 	}

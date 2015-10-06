@@ -31,7 +31,5 @@ namespace GUI
 
 	private:
 		sf::Text				mText;
-		mutable bool			mDrity;
-		mutable sf::Transform	mTransform;
 	};
 }

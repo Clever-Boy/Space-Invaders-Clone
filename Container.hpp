@@ -38,7 +38,5 @@ namespace GUI
 		Component::Ptr			mHovered;
 		int						mSelectedChild;
 		SoundPlayer&			mSounds;
-		mutable bool			mDrity;
-		mutable sf::Transform	mTransform;
 	};
 }
