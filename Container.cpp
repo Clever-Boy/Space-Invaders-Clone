@@ -17,10 +17,9 @@ namespace GUI
 
 	void Container::pack(Component::Ptr component)
 	{
-		auto& temp(*component.get());
 		mChildren.push_back(std::move(component));
 
-		if (!hasSelection() && temp.isSelectable())
+		if (!hasSelection() && mChildren.back()->isSelectable())
 			select(mChildren.size() - 1);
 	}
 
