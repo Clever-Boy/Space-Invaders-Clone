@@ -68,7 +68,7 @@ namespace Music
 template <typename Resource, typename Identifier>
 class ResourceHolder;
 
-using TextureHolder		= ResourceHolder<sf::Texture, Textures::ID>;
-using ImageHolder		= ResourceHolder<sf::Image, Images::ID>;
-using FontHolder		= ResourceHolder<sf::Font, Fonts::ID>;
+using TextureHolder = ResourceHolder<sf::Texture, Textures::ID>;
+using ImageHolder = ResourceHolder<sf::Image, Images::ID>;
+using FontHolder = ResourceHolder<sf::Font, Fonts::ID>;
 using SoundBufferHolder = ResourceHolder<sf::SoundBuffer, SoundEffect::ID>;

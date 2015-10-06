@@ -22,7 +22,7 @@ void InvadersController::update(CommandQueue& commands)
 
 	Command command;
 	command.category = Category::EnemySpaceship;
-	command.action	 = derivedAction<Invaders>(std::bind(&Invaders::requstChangeDirction, std::placeholders::_1));
+	command.action = derivedAction<Invaders>(std::bind(&Invaders::requstChangeDirction, std::placeholders::_1));
 
 	commands.push(command);
 }

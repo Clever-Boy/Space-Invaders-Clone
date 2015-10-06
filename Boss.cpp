@@ -28,11 +28,11 @@ Boss::Boss(Type type, const TextureHolder& textures, const sf::FloatRect& bounds
 
 	const auto SpawnPadding = 60.f;
 
-	mBounds.left	-= SpawnPadding;
-	mBounds.width	+= bounds.width + SpawnPadding * 2;
+	mBounds.left -= SpawnPadding;
+	mBounds.width += bounds.width + SpawnPadding * 2;
 
-	mBounds.top		+= bounds.top;
-	mBounds.height	+= bounds.height;
+	mBounds.top += bounds.top;
+	mBounds.height += bounds.height;
 
 	mExplosion.setColor(Table[type].color);
 	centerOrigin(mExplosion);
@@ -113,7 +113,7 @@ void Boss::playLocalSound(CommandQueue& commands)
 
 	Command command;
 	command.category = Category::SoundEffect;
-	command.action	 = derivedAction<SoundNode>(std::bind(&SoundNode::playRepeatedSound, std::placeholders::_1, worldPosition));
+	command.action = derivedAction<SoundNode>(std::bind(&SoundNode::playRepeatedSound, std::placeholders::_1, worldPosition));
 
 	commands.push(command);
 }
@@ -122,7 +122,7 @@ void Boss::stopLocalSound(CommandQueue& commands)
 {
 	Command command;
 	command.category = Category::SoundEffect;
-	command.action	 = derivedAction<SoundNode>(std::bind(&SoundNode::stopRepeatedSound, std::placeholders::_1));
+	command.action = derivedAction<SoundNode>(std::bind(&SoundNode::stopRepeatedSound, std::placeholders::_1));
 
 	commands.push(command);
 }

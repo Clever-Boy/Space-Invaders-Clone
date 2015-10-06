@@ -34,7 +34,7 @@ Player::Player(Type type, const TextureHolder& textures)
 	centerOrigin(mSprite);
 
 	mFireCommand.category = Category::SceneSpaceLayer;
-	mFireCommand.action	  = std::bind(&Player::createBullets, this, std::placeholders::_1, std::cref(textures));
+	mFireCommand.action = std::bind(&Player::createBullets, this, std::placeholders::_1, std::cref(textures));
 }
 
 void Player::updateCurrent(sf::Time dt, CommandQueue& commands)
@@ -168,7 +168,7 @@ void Player::playLocalSound(CommandQueue& commands, SoundEffect::ID effect)
 
 	Command command;
 	command.category = Category::SoundEffect;
-	command.action	 = derivedAction<SoundNode>(std::bind(&SoundNode::playSound, std::placeholders::_1, effect, worldPosition));
+	command.action = derivedAction<SoundNode>(std::bind(&SoundNode::playSound, std::placeholders::_1, effect, worldPosition));
 
 	commands.push(command);
 }

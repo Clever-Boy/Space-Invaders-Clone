@@ -70,7 +70,7 @@ private:
 	Command 				mFireCommand;
 	sf::Time				mFireCountdown;
 	bool 					mIsFiring;
-	std::size_t				mFireRateLevel;
+	int						mFireRateLevel;
 
 	bool 					mIsMarkedForRemoval;
 
@@ -79,7 +79,7 @@ private:
 	Dirction				mPreviousDirction;
 	sf::Vector2f			mMovement;
 
-	std::size_t				mAnimateRate;
+	int						mAnimateRate;
 	sf::Time				mAnimateCountdown;
 
 	float					mMaxSpeed;

@@ -51,14 +51,12 @@ bool SettingsState::handleEvent(const sf::Event& event)
 		if (mBindingButtons[action]->isActive())
 		{
 			isKeyBinding = true;
-
 			if (event.type == sf::Event::KeyReleased)
 			{
 				auto& player(getContext().playerController);
 				player.assignKey(static_cast<PlayerController::Action>(action), event.key.code);
 				mBindingButtons[action]->deactivate();
 			}
-
 			break;
 		}
 	}

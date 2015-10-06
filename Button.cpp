@@ -102,8 +102,8 @@ namespace GUI
 	{
 		if (mDrity)
 		{
-			mTransform	= getTransform();
-			mDrity		= false;
+			mTransform = getTransform();
+			mDrity = false;
 		}
 
 		states.transform.combine(mTransform);
