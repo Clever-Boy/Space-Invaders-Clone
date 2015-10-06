@@ -62,7 +62,9 @@ namespace GUI
 			if (mChildren[mSelectedChild] != nullptr && mChildren[mSelectedChild] != mHovered)
 			{
 				mHovered = mChildren[mSelectedChild];
-				mSounds.play(SoundEffect::Button);
+
+				if (mChildren[mSelectedChild]->contains(position))
+					mSounds.play(SoundEffect::Button);
 			}
 			else if (mChildren[mSelectedChild] == nullptr && mHovered != nullptr)
 			{
