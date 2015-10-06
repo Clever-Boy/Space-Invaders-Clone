@@ -114,8 +114,6 @@ void Invaders::fire()
 
 void Invaders::requstChangeDirction()
 {
-	mIsChangeDirection = true;
-
 	if (mCurrentDirction == MovingRight)
 	{
 		mCurrentDirction = MovingDown;
@@ -178,14 +176,14 @@ void Invaders::updateMovementPattern(sf::Time dt)
 
 	// Validate condition of changing dirction
 	if (!changeDirection)
-	{
 		mIsChangeDirection = false;
-		return;
-	}
 
 	// Check if we can requst change dirction
-	if (!mIsChangeDirection)
+	if (changeDirection && !mIsChangeDirection)
+	{
 		mInvadersController.requstChangeDirectionCommands();
+		mIsChangeDirection = true;
+	}
 }
 
 void Invaders::applyAnimation(sf::Time dt)
