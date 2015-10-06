@@ -168,12 +168,6 @@ void Invaders::updateMovementPattern(sf::Time dt)
 			changeDirection = true;
 	}
 
-	// Update velocity
-	setVelocity(mMovement * getMaxSpeed());
-
-	// Update travel distance
-	mTravelledDistance += getMaxSpeed() * dt.asSeconds();
-
 	// Validate condition of changing dirction
 	if (!changeDirection)
 		mIsChangeDirection = false;
@@ -184,6 +178,12 @@ void Invaders::updateMovementPattern(sf::Time dt)
 		mInvadersController.requstChangeDirectionCommands();
 		mIsChangeDirection = true;
 	}
+
+	// Update velocity
+	setVelocity(mMovement * getMaxSpeed());
+
+	// Update travel distance
+	mTravelledDistance += getMaxSpeed() * dt.asSeconds();
 }
 
 void Invaders::applyAnimation(sf::Time dt)
