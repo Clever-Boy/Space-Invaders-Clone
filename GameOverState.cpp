@@ -24,7 +24,7 @@ GameOverState::GameOverState(StateStack& stack, Context context)
 	else
 		mGameOverText.setString("Mission successful!");
 
-	mGameOverText.setCharacterSize(70);
+	mGameOverText.setCharacterSize(70u);
 	centerOrigin(mGameOverText);
 	mGameOverText.setPosition(0.5f * windowSize.x, 0.4f * windowSize.y);
 }

@@ -2,9 +2,11 @@
 
 
 #include "Component.hpp"
-#include "SoundPlayer.hpp"
 
 #include <vector>
+
+
+class SoundPlayer;
 
 
 namespace GUI
@@ -38,5 +40,7 @@ namespace GUI
 		Component::Ptr			mHovered;
 		int						mSelectedChild;
 		SoundPlayer&			mSounds;
+		mutable bool			mDrity;
+		mutable sf::Transform	mTransform;
 	};
 }

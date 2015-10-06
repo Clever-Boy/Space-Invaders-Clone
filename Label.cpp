@@ -9,6 +9,8 @@ namespace GUI
 {
 	Label::Label(const std::string& text, const FontHolder& fonts)
 		: mText(text, fonts.get(Fonts::Main), 16)
+		, mDrity(true)
+		, mTransform()
 	{
 	}
 
@@ -23,6 +25,14 @@ namespace GUI
 
 	void Label::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
+		if (mDrity)
+		{
+			mTransform = getTransform();
+			mDrity = false;
+		}
+
+		states.transform.combine(mTransform);
+
 		target.draw(mText, states);
 	}
 
