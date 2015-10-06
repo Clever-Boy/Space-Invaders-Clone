@@ -37,10 +37,10 @@ unsigned int Shield::getCategory() const
 
 void Shield::onHit(sf::FloatRect rect, sf::Vector2f position, unsigned int category)
 {
-	mRectOnHit = rect;
-	mPositionOnHit = position;
-	mIsHit = true;
-	mSign = (category & Category::PlayerProjectile) ? 1 : -1;
+	mRectOnHit		= rect;
+	mPositionOnHit	= position;
+	mIsHit			= true;
+	mSign			= (category & Category::PlayerProjectile) ? 1 : -1;
 }
 
 void Shield::updateCurrent(sf::Time dt, CommandQueue& commands)

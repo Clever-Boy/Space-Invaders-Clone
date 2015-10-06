@@ -46,8 +46,8 @@ Invaders::Invaders(Type type, const TextureHolder& textures, const sf::FloatRect
 	mSprite.setColor(Table[type].color);
 	centerOrigin(mSprite);
 
-	mFireCommand.category = Category::SceneSpaceLayer;
-	mFireCommand.action = std::bind(&Invaders::createBullets, this, std::placeholders::_1, std::cref(textures));
+	mFireCommand.category	= Category::SceneSpaceLayer;
+	mFireCommand.action		= std::bind(&Invaders::createBullets, this, std::placeholders::_1, std::cref(textures));
 }
 
 void Invaders::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
@@ -120,19 +120,19 @@ void Invaders::requstChangeDirction()
 
 	if (mCurrentDirction == MovingRight)
 	{
-		mCurrentDirction = MovingDown;
-		mPreviousDirction = MovingRight;
-		mTravelledDistance = 0.f;
-		mMovement = sf::Vector2f(0.f, 1.f);
+		mCurrentDirction	= MovingDown;
+		mPreviousDirction	= MovingRight;
+		mTravelledDistance	= 0.f;
+		mMovement			= sf::Vector2f(0.f, 1.f);
 		return;
 	}
 
 	if (mCurrentDirction == MovingLeft)
 	{
-		mCurrentDirction = MovingDown;
-		mPreviousDirction = MovingLeft;
-		mTravelledDistance = 0.f;
-		mMovement = sf::Vector2f(0.f, 1.f);
+		mCurrentDirction	= MovingDown;
+		mPreviousDirction	= MovingLeft;
+		mTravelledDistance	= 0.f;
+		mMovement			= sf::Vector2f(0.f, 1.f);
 		return;
 	}
 
@@ -140,24 +140,24 @@ void Invaders::requstChangeDirction()
 	{
 		if (mPreviousDirction == MovingLeft)
 		{
-			mCurrentDirction = MovingRight;
-			mMovement = sf::Vector2f(1.f, 0.f);
+			mCurrentDirction	= MovingRight;
+			mMovement			= sf::Vector2f(1.f, 0.f);
 		}
 		else
 		{
-			mCurrentDirction = MovingLeft;
-			mMovement = sf::Vector2f(-1.f, 0.f);
+			mCurrentDirction	= MovingLeft;
+			mMovement			= sf::Vector2f(-1.f, 0.f);
 		}
 
-		mPreviousDirction = MovingDown;
-		mTravelledDistance = 0.f;
+		mPreviousDirction	= MovingDown;
+		mTravelledDistance	= 0.f;
 	}
 }
 
 void Invaders::adaptEnemyMovements(CommandQueue& commands)
 {
-	bool changeDirection = false;
-	const auto TravelledDistance = 30.f;
+	bool changeDirection			= false;
+	const auto TravelledDistance	= 30.f;
 
 	if (mCurrentDirction == Invaders::MovingDown)
 	{
@@ -221,13 +221,13 @@ void Invaders::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 		playLocalSound(commands, SoundEffect::EnemiesGunfire);
 
 		mFireCountdown += Table[mType].fireInterval / (mFireRateLevel + 1.f);
-		mIsFiring = false;
+		mIsFiring		= false;
 	}
 	else if (mFireCountdown > sf::Time::Zero)
 	{
 		// Interval not expired: Decrease it further
 		mFireCountdown -= dt;
-		mIsFiring = false;
+		mIsFiring		= false;
 	}
 }
 
@@ -261,8 +261,8 @@ void Invaders::playLocalSound(CommandQueue& commands, SoundEffect::ID effect)
 	auto worldPosition(getWorldPosition());
 
 	Command command;
-	command.category = Category::SoundEffect;
-	command.action = derivedAction<SoundNode>(std::bind(&SoundNode::playSound, std::placeholders::_1, effect, worldPosition));
+	command.category	= Category::SoundEffect;
+	command.action		= derivedAction<SoundNode>(std::bind(&SoundNode::playSound, std::placeholders::_1, effect, worldPosition));
 
 	commands.push(command);
 }

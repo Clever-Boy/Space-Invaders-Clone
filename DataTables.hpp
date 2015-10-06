@@ -30,7 +30,7 @@ struct InvadersData
 	sf::Time		fireInterval;
 	std::size_t		fireRate;
 	sf::Time		animationInterval;
-	int				animateRate;
+	std::size_t		animateRate;
 	sf::Vector2f	movement;
 };
 
@@ -42,7 +42,7 @@ struct PlayerData
 	sf::IntRect		textureRect;
 	sf::Vector2f	size;
 	sf::Time		animationInterval;
-	int				animateRate;
+	std::size_t		animateRate;
 };
 
 struct ProjectileData

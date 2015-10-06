@@ -21,8 +21,8 @@ void InvadersController::update(CommandQueue& commands)
 	mIsRequstCommand = false;
 
 	Command command;
-	command.category = Category::EnemySpaceship;
-	command.action = derivedAction<Invaders>(std::bind(&Invaders::requstChangeDirction, std::placeholders::_1));
+	command.category	= Category::EnemySpaceship;
+	command.action		= derivedAction<Invaders>(std::bind(&Invaders::requstChangeDirction, std::placeholders::_1));
 
 	commands.push(command);
 }

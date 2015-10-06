@@ -24,7 +24,7 @@ namespace
 		auto shieldBounds(static_cast<sf::Rect<std::size_t>>(shield.getBoundingRect()));
 		auto objectBounds(static_cast<sf::Rect<std::size_t>>(object.getBoundingRect()));
 
-		auto width = objectBounds.left + objectBounds.width;
+		auto width	= objectBounds.left + objectBounds.width;
 		auto height = objectBounds.top + objectBounds.height;
 
 		sf::Vector2u position(objectBounds.left, objectBounds.top);
@@ -38,7 +38,12 @@ namespace
 			{
 				auto relX = x - shieldBounds.left;
 
-				auto relY = (object.getCategory() & Category::EnemyProjectile) ? y - shieldBounds.top - objectBounds.height : y - shieldBounds.top;
+				auto relY = 0u;
+
+				if (object.getCategory() & Category::EnemyProjectile)
+					relY = y - shieldBounds.top - objectBounds.height;
+				else
+					relY = y - shieldBounds.top;
 
 				if (shield.getPixel(relX, relY))
 					return true;
@@ -311,8 +316,8 @@ void World::controlEnemyFire()
 
 void World::spawnBoss(sf::Time dt)
 {
-	Boss::Dirction dirction;
 	auto position = 0.f;
+	Boss::Dirction dirction;
 
 	mBossTimer += dt;
 
@@ -322,7 +327,7 @@ void World::spawnBoss(sf::Time dt)
 		mBoss = boss.get();
 		mBoss->setPosition(mWorldBounds.left + mWorldBounds.width + MovementsPadding, Padding * 1.5);
 		mSceneLayers[Space]->attachChild(std::move(boss));
-		mBossTimer = sf::Time::Zero;
+		mBossTimer	= sf::Time::Zero;
 		mFirstSpawn = false;
 		return;
 	}
@@ -362,11 +367,12 @@ bool World::checkPlayerDeath(sf::Time dt)
 	if (mPlayerTimer > sf::seconds(0.25f))
 	{
 		mPlayer->setMarkToRemove();
-		mPreviousPosition = mPlayer->getWorldPosition();
-		mIsPlayerDead = true;
+		mPreviousPosition	= mPlayer->getWorldPosition();
+		mIsPlayerDead		= true;
+		mPlayerTimer		= sf::Time::Zero;
+
 		if (mIsGameEnded)
 			mEndGame = true;
-		mPlayerTimer = sf::Time::Zero;
 	}
 
 	return true;
@@ -404,11 +410,11 @@ sf::FloatRect World::getBattlefieldBounds() const
 {
 	auto bounds(getViewBounds());
 
-	bounds.top += Padding;
-	bounds.height -= Padding * 2;
+	bounds.top		+= Padding;
+	bounds.height	-= Padding * 2;
 
-	bounds.left += Padding;
-	bounds.width -= Padding * 2;
+	bounds.left		+= Padding;
+	bounds.width	-= Padding * 2;
 
 	return bounds;
 }
@@ -417,11 +423,11 @@ sf::FloatRect World::getMovementsfieldBounds() const
 {
 	auto bounds(getViewBounds());
 
-	bounds.top += MovementsPadding;
-	bounds.height -= MovementsPadding * 2;
+	bounds.top		+= MovementsPadding;
+	bounds.height	-= MovementsPadding * 2;
 
-	bounds.left += MovementsPadding;
-	bounds.width -= MovementsPadding * 2;
+	bounds.left		+= MovementsPadding;
+	bounds.width	-= MovementsPadding * 2;
 
 	return bounds;
 }
@@ -429,8 +435,8 @@ sf::FloatRect World::getMovementsfieldBounds() const
 void World::destroyEntitiesOutsideView()
 {
 	Command command;
-	command.category = Category::Projectile;
-	command.action = derivedAction<Entity>([this](auto& entity)
+	command.category	= Category::Projectile;
+	command.action		= derivedAction<Entity>([this](auto& entity)
 	{
 		if (!getBattlefieldBounds().intersects(entity.getBoundingRect()))
 			entity.remove();
@@ -449,8 +455,8 @@ void World::checkForCollision()
 	mEnemyBulletNodes.clear();
 
 	Command command;
-	command.category = Category::All;
-	command.action = [this](auto& node)
+	command.category	= Category::All;
+	command.action		= [this](auto& node)
 	{
 		if (node.getCategory() & Category::PlayerProjectile)
 		{
@@ -510,8 +516,8 @@ void World::playerProjectileCollision()
 
 			if (node2->getCategory() & Category::Shield)
 			{
-				auto& shield = static_cast<Shield&>(*node2);
-				auto& projectile = static_cast<Projectile&>(*node1);
+				auto& shield		= static_cast<Shield&>(*node2);
+				auto& projectile	= static_cast<Projectile&>(*node1);
 
 				if (!pixelcollidesPair(shield, projectile))
 					continue;
@@ -525,8 +531,8 @@ void World::playerProjectileCollision()
 				if (!collision(*node1, *node2))
 					continue;
 
-				auto& playerProjectile = static_cast<Projectile&>(*node1);
-				auto& enemyProjectile = static_cast<Projectile&>(*node2);
+				auto& playerProjectile	= static_cast<Projectile&>(*node1);
+				auto& enemyProjectile	= static_cast<Projectile&>(*node2);
 
 				playerProjectile.destroy();
 				enemyProjectile.destroy();
@@ -536,8 +542,8 @@ void World::playerProjectileCollision()
 				if (!collision(*node1, *node2))
 					continue;
 
-				auto& enemy = static_cast<Boss&>(*node2);
-				auto& projectile = static_cast<Projectile&>(*node1);
+				auto& enemy			= static_cast<Boss&>(*node2);
+				auto& projectile	= static_cast<Projectile&>(*node1);
 
 				mScore->increment(100);
 
@@ -549,8 +555,8 @@ void World::playerProjectileCollision()
 				if (!collision(*node1, *node2))
 					continue;
 
-				auto& enemy = static_cast<Invaders&>(*node2);
-				auto& projectile = static_cast<Projectile&>(*node1);
+				auto& enemy			= static_cast<Invaders&>(*node2);
+				auto& projectile	= static_cast<Projectile&>(*node1);
 
 				switch (enemy.getType())
 				{
@@ -592,8 +598,8 @@ void World::enemyProjectileCollision()
 
 			if (node2->getCategory() & Category::Shield)
 			{
-				auto& shield = static_cast<Shield&>(*node2);
-				auto& projectile = static_cast<Projectile&>(*node1);
+				auto& shield		= static_cast<Shield&>(*node2);
+				auto& projectile	= static_cast<Projectile&>(*node1);
 
 				if (!pixelcollidesPair(shield, projectile))
 					continue;
@@ -607,8 +613,8 @@ void World::enemyProjectileCollision()
 				if (!collision(*node1, *node2))
 					continue;
 
-				auto& player = static_cast<Player&>(*node2);
-				auto& projectile = static_cast<Projectile&>(*node1);
+				auto& player		= static_cast<Player&>(*node2);
+				auto& projectile	= static_cast<Projectile&>(*node1);
 
 				player.damage(projectile.getDamage());
 
@@ -640,8 +646,8 @@ void World::enemyCollision()
 
 			if (node2->getCategory() & Category::Shield)
 			{
-				auto& shield = static_cast<Shield&>(*node2);
-				auto& enemy = static_cast<Invaders&>(*node1);
+				auto& shield	= static_cast<Shield&>(*node2);
+				auto& enemy		= static_cast<Invaders&>(*node1);
 
 				if (pixelcollidesPair(shield, enemy))
 					shield.onHit(enemy.getBoundingRect(), enemy.getPosition(), enemy.getCategory());

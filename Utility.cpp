@@ -43,7 +43,7 @@ namespace utility
 
 	sf::Vector2f unitVector(sf::Vector2f vector)
 	{
-		assert(vector != sf::Vector2f(0.f, 0.f));
+		assert(vector != sf::Vector2f());
 		return vector / length(vector);
 	}
 
@@ -51,8 +51,8 @@ namespace utility
 	{
 		//sf::Vector2f size(x, y);
 		auto worldScale = 16u;
-		auto scaleX = (1.0f / sprite.getTextureRect().width) * x * worldScale;
-		auto scaleY = (1.0f / sprite.getTextureRect().height) * y * worldScale;
+		auto scaleX		= (1.0f / sprite.getTextureRect().width) * x * worldScale;
+		auto scaleY		= (1.0f / sprite.getTextureRect().height) * y * worldScale;
 		sprite.setScale(scaleX, scaleY);
 	}
 

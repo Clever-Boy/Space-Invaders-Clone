@@ -36,13 +36,13 @@ void TitleState::draw()
 
 bool TitleState::update(sf::Time dt)
 {
-	const auto EffectInterval = 0.5f;
+	const auto EffectInterval	= 0.5f;
 
-	mTextEffectTime += dt;
+	mTextEffectTime				+= dt;
 
 	if (mTextEffectTime >= sf::seconds(EffectInterval))
 	{
-		mShowText = !mShowText;
+		mShowText		= !mShowText;
 		mTextEffectTime = sf::Time::Zero;
 	}
 
