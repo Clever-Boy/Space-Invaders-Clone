@@ -116,26 +116,21 @@ void Invaders::requstChangeDirction()
 {
 	const std::vector<sf::Vector2f>& movement = Table[mType].movement;
 
-	if (mCurrentDirction == MovingRight)
+	switch (mCurrentDirction)
 	{
+	case MovingRight:
 		mCurrentDirction = MovingDown;
 		mPreviousDirction = MovingRight;
 		mTravelledDistance = 0.f;
 		mMovement = movement[MovingDown];
-		return;
-	}
-
-	if (mCurrentDirction == MovingLeft)
-	{
+		break;
+	case MovingLeft:
 		mCurrentDirction = MovingDown;
 		mPreviousDirction = MovingLeft;
 		mTravelledDistance = 0.f;
 		mMovement = movement[MovingDown];
-		return;
-	}
-
-	if (mCurrentDirction == MovingDown)
-	{
+		break;
+	case MovingDown:
 		if (mPreviousDirction == MovingLeft)
 		{
 			mCurrentDirction = MovingRight;
