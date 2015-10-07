@@ -29,7 +29,7 @@ Invaders::Invaders(Type type, const TextureHolder& textures, const sf::FloatRect
 	, mTravelledDistance()
 	, mCurrentDirction(Dirction::MovingRight)
 	, mPreviousDirction(Dirction::MovingRight)
-	, mMovement(Table[type].movement)
+	, mMovement(Table[type].movement[MovingRight])
 	, mMaxSpeed(Table[mType].speed)
 	, mAnimateCountdown(sf::Time::Zero)
 	, mAnimateRate(Table[type].animateRate)
@@ -114,12 +114,14 @@ void Invaders::fire()
 
 void Invaders::requstChangeDirction()
 {
+	const std::vector<sf::Vector2f>& movement = Table[mType].movement;
+
 	if (mCurrentDirction == MovingRight)
 	{
 		mCurrentDirction = MovingDown;
 		mPreviousDirction = MovingRight;
 		mTravelledDistance = 0.f;
-		mMovement = sf::Vector2f(0.f, 1.f);
+		mMovement = movement[MovingDown];
 		return;
 	}
 
@@ -128,7 +130,7 @@ void Invaders::requstChangeDirction()
 		mCurrentDirction = MovingDown;
 		mPreviousDirction = MovingLeft;
 		mTravelledDistance = 0.f;
-		mMovement = sf::Vector2f(0.f, 1.f);
+		mMovement = movement[MovingDown];
 		return;
 	}
 
@@ -137,12 +139,12 @@ void Invaders::requstChangeDirction()
 		if (mPreviousDirction == MovingLeft)
 		{
 			mCurrentDirction = MovingRight;
-			mMovement = sf::Vector2f(1.f, 0.f);
+			mMovement = movement[MovingRight];
 		}
 		else
 		{
 			mCurrentDirction = MovingLeft;
-			mMovement = sf::Vector2f(-1.f, 0.f);
+			mMovement = movement[MovingLeft];
 		}
 
 		mPreviousDirction = MovingDown;

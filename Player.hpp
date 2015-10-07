@@ -53,7 +53,7 @@ private:
 
 	bool 					mIsMarkedForRemoval;
 
-	int						mAnimateRate;
+	std::size_t				mAnimateRate;
 	sf::Time				mAnimateCountdown;
 
 	bool					mPlayExplosionSound;
