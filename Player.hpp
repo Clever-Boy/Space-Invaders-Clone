@@ -48,7 +48,7 @@ private:
 
 	Command 				mFireCommand;
 	bool 					mIsFiring;
-	bool					mReadyToFire;
+	bool					mIsReadyToFire;
 	mutable Projectile*		mBullet;
 
 	bool 					mIsMarkedForRemoval;

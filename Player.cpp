@@ -21,7 +21,7 @@ Player::Player(Type type, const TextureHolder& textures)
 	, mSprite(textures.get(Table[type].texture), Table[type].textureRect)
 	, mFireCommand()
 	, mIsFiring(false)
-	, mReadyToFire(true)
+	, mIsReadyToFire(true)
 	, mBullet(nullptr)
 	, mIsMarkedForRemoval(false)
 	, mAnimateRate(Table[type].animateRate)
@@ -43,7 +43,7 @@ void Player::updateCurrent(sf::Time dt, CommandQueue& commands)
 	{
 		if (mBullet->isDestroyed())
 		{
-			mReadyToFire = true;
+			mIsReadyToFire = true;
 		}
 	}
 
@@ -132,12 +132,12 @@ void Player::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 
 	mIsFiring = false;
 
-	if (!mReadyToFire)
+	if (!mIsReadyToFire)
 		return;
 
 	commands.push(mFireCommand);
 	playLocalSound(commands, SoundEffect::PlayerGunfire);
-	mReadyToFire = false;
+	mIsReadyToFire = false;
 }
 
 void Player::createBullets(SceneNode& node, const TextureHolder& textures) const
