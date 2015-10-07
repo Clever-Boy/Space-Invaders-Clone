@@ -32,7 +32,6 @@ public:
 	void					update(sf::Time dt, CommandQueue& commands);
 
 	sf::Vector2f			getWorldPosition() const;
-	sf::Transform			getWorldTransform() const;
 
 	void					onCommand(const Command& command);
 	virtual unsigned int	getCategory() const;
@@ -41,8 +40,12 @@ public:
 	void					removeWrecks();
 	virtual sf::FloatRect	getBoundingRect() const;
 	virtual bool			isDestroyed() const;
-	virtual bool			isMarkedForRemoval() const;
+
 	void					setDirtyFlag(bool flag);
+
+
+protected:
+	sf::Transform			getWorldTransform() const;
 
 
 private:
@@ -52,6 +55,8 @@ private:
 	void					draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	virtual void			drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
 	void					drawChildren(sf::RenderTarget& target, sf::RenderStates states) const;
+
+	virtual bool			isMarkedForRemoval() const;
 
 
 private:

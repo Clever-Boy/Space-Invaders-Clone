@@ -19,7 +19,7 @@ namespace
 	}
 
 	template<typename GameObject>
-	auto pixelcollidesPair(const Shield& shield, const GameObject& object) ->bool
+	auto pixelCollidesPair(const Shield& shield, const GameObject& object) ->bool
 	{
 		auto shieldBounds(static_cast<sf::Rect<std::size_t>>(shield.getBoundingRect()));
 		auto objectBounds(static_cast<sf::Rect<std::size_t>>(object.getBoundingRect()));
@@ -513,7 +513,7 @@ void World::playerProjectileCollision()
 				auto& shield = static_cast<Shield&>(*node2);
 				auto& projectile = static_cast<Projectile&>(*node1);
 
-				if (!pixelcollidesPair(shield, projectile))
+				if (!pixelCollidesPair(shield, projectile))
 					continue;
 
 				shield.onHit(projectile.getBoundingRect(), projectile.getPosition(), projectile.getCategory());
@@ -595,7 +595,7 @@ void World::enemyProjectileCollision()
 				auto& shield = static_cast<Shield&>(*node2);
 				auto& projectile = static_cast<Projectile&>(*node1);
 
-				if (!pixelcollidesPair(shield, projectile))
+				if (!pixelCollidesPair(shield, projectile))
 					continue;
 
 				shield.onHit(projectile.getBoundingRect(), projectile.getPosition(), projectile.getCategory());
@@ -643,7 +643,7 @@ void World::enemyCollision()
 				auto& shield = static_cast<Shield&>(*node2);
 				auto& enemy = static_cast<Invaders&>(*node1);
 
-				if (pixelcollidesPair(shield, enemy))
+				if (pixelCollidesPair(shield, enemy))
 					shield.onHit(enemy.getBoundingRect(), enemy.getPosition(), enemy.getCategory());
 			}
 			else if (node2->getCategory() & Category::PlayerSpaceship)

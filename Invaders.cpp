@@ -237,7 +237,7 @@ void Invaders::createBullets(SceneNode& node, const TextureHolder& textures) con
 
 void Invaders::createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const
 {
-	auto  projectile(std::make_unique<Projectile>(type, textures));
+	auto projectile(std::make_unique<Projectile>(type, textures));
 
 	sf::Vector2f offset(xOffset * mSprite.getGlobalBounds().width, yOffset * mSprite.getGlobalBounds().height);
 	sf::Vector2f velocity(0.f, projectile->getMaxSpeed());
