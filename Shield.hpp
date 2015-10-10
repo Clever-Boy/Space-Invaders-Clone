@@ -31,9 +31,9 @@ private:
 private:
 	sf::Sprite				mSprite;
 	sf::Image				mImage;
+	sf::RenderTexture		mRenderTexture;
 	sf::Texture				mTexture;
 
-	sf::RenderTexture		mRenderTexture;
 	int						mSign;
 	sf::FloatRect			mRectOnHit;
 	sf::Vector2f			mPositionOnHit;

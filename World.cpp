@@ -73,6 +73,7 @@ World::World(sf::RenderTarget&	target,	TextureHolder& textures, FontHolder& font
 	, mEnemyNodes()
 	, mPlayerBulletNodes()
 	, mEnemyBulletNodes()
+	, mInvadersController()
 	, mDeadLine(getBattlefieldBounds().height + getBattlefieldBounds().top)
 	, mBossTimer(sf::Time::Zero)
 	, mPlayerTimer(sf::Time::Zero)
@@ -83,7 +84,6 @@ World::World(sf::RenderTarget&	target,	TextureHolder& textures, FontHolder& font
 	, mPreviousPosition()
 	, mIsGameEnded(false)
 	, mEndGame(false)
-	, mInvadersController()
 {
 	loadTextures();
 	buildScene();

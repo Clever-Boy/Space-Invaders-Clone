@@ -27,11 +27,6 @@ Projectile::Projectile(Type type, const TextureHolder& textures)
 	centerOrigin(mSprite);
 }
 
-void Projectile::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	target.draw(mSprite, states);
-}
-
 unsigned int Projectile::getCategory() const
 {
 	if (mType == EnemyBullet)
@@ -53,4 +48,9 @@ float Projectile::getMaxSpeed() const
 int Projectile::getDamage() const
 {
 	return Table[mType].damage;
+}
+
+void Projectile::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	target.draw(mSprite, states);
 }

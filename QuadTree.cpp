@@ -1,7 +1,5 @@
 #include "QuadTree.hpp"
 
-#include <SFML\Graphics\RenderTarget.hpp>
-
 
 namespace
 {
@@ -50,7 +48,7 @@ void QuadTree::split()
 	mChildren[3] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x + width, y + height, width, height)));
 }
 
-int QuadTree::getIndex(const sf::FloatRect& Rect)
+int QuadTree::getIndex(const sf::FloatRect& Rect) const
 {
 	auto index = -1;
 
@@ -119,6 +117,7 @@ void QuadTree::insert(SceneNode& object)
 	for (auto i = mObjects.cbegin(); i != mObjects.cend();)
 	{
 		int index = getIndex((*i)->getBoundingRect());
+
 		if (index != -1)
 		{
 			auto& temp(**i);
@@ -132,7 +131,7 @@ void QuadTree::insert(SceneNode& object)
 	}
 }
 
-void QuadTree::getCloseObjects(const sf::FloatRect& Bounds, ObjectsContainer& returnObjects)
+void QuadTree::getCloseObjects(const sf::FloatRect& Bounds, ObjectsContainer& returnObjects) const
 {
 	auto index = getIndex(Bounds);
 

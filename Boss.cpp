@@ -18,9 +18,9 @@ Boss::Boss(Type type, const TextureHolder& textures, const sf::FloatRect& bounds
 	: Entity(Table[type].hitpoints)
 	, mType(type)
 	, mSprite(textures.get(Table[type].texture))
+	, mExplosion(textures.get(Textures::EnemiesExplosion))
 	, mDirectionIndex((dirction == MovingRight) ? +1.f : -1.f )
 	, mIsMarkedForRemoval(false)
-	, mExplosion(textures.get(Textures::EnemiesExplosion))
 	, mShowExpolsion(true)
 	, mBounds()
 {
@@ -40,6 +40,21 @@ Boss::Boss(Type type, const TextureHolder& textures, const sf::FloatRect& bounds
 	setScaleSize(mSprite, Table[type].size.x, Table[type].size.y);
 	mSprite.setColor(Table[type].color);
 	centerOrigin(mSprite);
+}
+
+unsigned int Boss::getCategory() const
+{
+	return Category::BossSpaceship;
+}
+
+sf::FloatRect Boss::getBoundingRect() const
+{
+	return getWorldTransform().transformRect(mSprite.getGlobalBounds());
+}
+
+bool Boss::isMarkedForRemoval() const
+{
+	return mIsMarkedForRemoval;
 }
 
 void Boss::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
@@ -73,32 +88,17 @@ void Boss::updateCurrent(sf::Time dt, CommandQueue& commands)
 	Entity::updateCurrent(dt, commands);
 }
 
-unsigned int Boss::getCategory() const
-{
-	return Category::BossSpaceship;
-}
-
-sf::FloatRect Boss::getBoundingRect() const
-{
-	return getWorldTransform().transformRect(mSprite.getGlobalBounds());
-}
-
-bool Boss::isMarkedForRemoval() const
-{
-	return mIsMarkedForRemoval;
-}
-
-float Boss::getMaxSpeed() const
-{
-	return Table[mType].speed;
-}
-
 void Boss::updateMovementPattern(sf::Time dt)
 {
 	auto vx = getMaxSpeed() * mDirectionIndex;
 	auto vy = 0.f;
 
 	setVelocity(vx, vy);
+}
+
+float Boss::getMaxSpeed() const
+{
+	return Table[mType].speed;
 }
 
 void Boss::remove()

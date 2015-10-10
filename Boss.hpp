@@ -47,12 +47,12 @@ private:
 private:
 	Type					mType;
 	sf::Sprite				mSprite;
+	sf::Sprite				mExplosion;
 
 	float					mDirectionIndex;
 
 	bool 					mIsMarkedForRemoval;
 
-	sf::Sprite				mExplosion;
 	bool					mShowExpolsion;
 	sf::FloatRect			mBounds;
 };

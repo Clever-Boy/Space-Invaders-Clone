@@ -9,14 +9,14 @@
 
 Shield::Shield(const ImageHolder& images, sf::Vector2u windowsize)
 	: Entity(1)
+	, mSprite()
 	, mImage(images.get(Images::Shield))
-	, mIsHit(false)
+	, mRenderTexture()
+	, mTexture()
+	, mSign()
 	, mRectOnHit()
 	, mPositionOnHit()
-	, mSign()
-	, mRenderTexture()
-	, mSprite()
-	, mTexture()
+	, mIsHit(false)
 {
 	mRenderTexture.create(windowsize.x, windowsize.y);
 	mRenderTexture.clear();
@@ -25,14 +25,14 @@ Shield::Shield(const ImageHolder& images, sf::Vector2u windowsize)
 	updateSprite();
 }
 
-void Shield::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	target.draw(mSprite, states);
-}
-
 unsigned int Shield::getCategory() const
 {
 	return Category::Shield;
+}
+
+sf::FloatRect Shield::getBoundingRect() const
+{
+	return getWorldTransform().transformRect(mSprite.getGlobalBounds());
 }
 
 void Shield::onHit(sf::FloatRect rect, sf::Vector2f position, unsigned int category)
@@ -41,6 +41,19 @@ void Shield::onHit(sf::FloatRect rect, sf::Vector2f position, unsigned int categ
 	mPositionOnHit = position;
 	mIsHit = true;
 	mSign = (category & Category::PlayerProjectile) ? 1 : -1;
+}
+
+bool Shield::getPixel(std::size_t x, std::size_t y) const
+{
+	if (x < mImage.getSize().x && y < mImage.getSize().y)
+		return mImage.getPixel(x, y) != sf::Color::Transparent;
+
+	return false;
+}
+
+void Shield::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	target.draw(mSprite, states);
 }
 
 void Shield::updateCurrent(sf::Time dt, CommandQueue& commands)
@@ -72,19 +85,6 @@ void Shield::updateCurrent(sf::Time dt, CommandQueue& commands)
 	mImage.createMaskFromColor(sf::Color::Transparent);
 
 	updateSprite();
-}
-
-sf::FloatRect Shield::getBoundingRect() const
-{
-	return getWorldTransform().transformRect(mSprite.getGlobalBounds());
-}
-
-bool Shield::getPixel(std::size_t x, std::size_t y) const
-{
-	if (x < mImage.getSize().x && y < mImage.getSize().y)
-		return mImage.getPixel(x, y) != sf::Color::Transparent;
-
-	return false;
 }
 
 void Shield::updateSprite()

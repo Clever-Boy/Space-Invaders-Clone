@@ -100,6 +100,8 @@ private:
 	NodeContainer			mPlayerBulletNodes;
 	NodeContainer			mEnemyBulletNodes;
 
+	InvadersController		mInvadersController;
+
 	float					mDeadLine;
 
 	sf::Time				mBossTimer;
@@ -113,6 +115,4 @@ private:
 
 	bool					mIsGameEnded;
 	bool					mEndGame;
-
-	InvadersController		mInvadersController;
 };

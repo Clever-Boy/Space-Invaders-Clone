@@ -20,12 +20,12 @@ public:
 
 	void					clear();
 	void					insert(SceneNode& object);
-	void					getCloseObjects(const sf::FloatRect& Bounds, ObjectsContainer& returnObjects);
+	void					getCloseObjects(const sf::FloatRect& Bounds, ObjectsContainer& returnObjects) const;
 
 
 private:
 	void					split();
-	int						getIndex(const sf::FloatRect& Rect);
+	int						getIndex(const sf::FloatRect& Rect) const;
 
 
 private:
