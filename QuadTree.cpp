@@ -1,5 +1,8 @@
 #include "QuadTree.hpp"
 
+#include <SFML\Graphics\RectangleShape.hpp>
+#include <SFML\Graphics\RenderTarget.hpp>
+
 #include <functional>
 #include <cassert>
 
@@ -15,7 +18,7 @@ QuadTree::QuadTree(std::size_t Level, const sf::FloatRect& Bounds)
 	: mObjects()
 	, mChildren()
 	, mBounds(Bounds)
-	, mlevel(Level)
+	, mLevel(Level)
 {
 }
 
@@ -39,7 +42,7 @@ void QuadTree::insert(SceneNode* object)
 		return;
 
 	// Can't split this node, so no point checking number of objects.
-	if (mlevel == MaxLevels)
+	if (mLevel == MaxLevels)
 		return;
 
 	// Don't need to split this node yet.
@@ -67,6 +70,30 @@ void QuadTree::getCloseObjects(const sf::FloatRect& Bounds, ObjectsContainer& re
 	std::copy(mObjects.begin(), mObjects.end(), std::back_inserter(returnObjects));
 }
 
+void QuadTree::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	sf::RectangleShape shape(sf::Vector2f(mBounds.width, mBounds.height));
+	shape.setPosition(mBounds.left, mBounds.top);
+
+	if (mObjects.empty())
+		shape.setFillColor(sf::Color(0, 0, 0, 0));
+	else
+		shape.setFillColor(sf::Color(255, 125, 125, 100));
+
+	shape.setOutlineThickness(1);
+	shape.setOutlineColor(sf::Color(255, 255, 255));
+
+	target.draw(shape);
+
+	if (hasChildren())
+	{
+		for (const auto& child : mChildren)
+		{
+			child->draw(target, states);
+		}
+	}
+}
+
 void QuadTree::split()
 {
 	auto width	= mBounds.width / 2.f;
@@ -74,10 +101,10 @@ void QuadTree::split()
 	auto x		= mBounds.left;
 	auto y		= mBounds.top;
 
-	mChildren[TopLeft]		= std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x + width, y, width, height));
-	mChildren[TopRight]		= std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x, y, width, height));
-	mChildren[BottomLeft]	= std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x, y + height, width, height));
-	mChildren[BottomRight]	= std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x + width, y + height, width, height));
+	mChildren[TopLeft]		= std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x + width, y, width, height));
+	mChildren[TopRight]		= std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x, y, width, height));
+	mChildren[BottomLeft]	= std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x, y + height, width, height));
+	mChildren[BottomRight]	= std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x + width, y + height, width, height));
 }
 
 QuadTree::Quadrant QuadTree::getIndex(const sf::FloatRect& Rect) const

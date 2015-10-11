@@ -6,7 +6,7 @@
 #include <array>
 
 
-class QuadTree final : private sf::NonCopyable
+class QuadTree final : public sf::Drawable, private sf::NonCopyable
 {
 	enum Quadrant
 	{
@@ -32,6 +32,7 @@ public:
 
 
 private:
+	void					draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void					split();
 	Quadrant				getIndex(const sf::FloatRect& Rect) const;
 	bool					insertInChild(SceneNode* object) const;
@@ -43,5 +44,5 @@ private:
 	ChildrenContainer		mChildren;
 
 	sf::FloatRect			mBounds;
-	std::size_t				mlevel;
+	std::size_t				mLevel;
 };
