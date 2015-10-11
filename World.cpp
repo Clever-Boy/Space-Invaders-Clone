@@ -55,11 +55,11 @@ namespace
 
 World::World(sf::RenderTarget&	target, FontHolder& fonts, SoundPlayer& sounds)
 	: mTarget(target)
-	, mTextures()
 	, mFonts(fonts)
 	, mSounds(sounds)
 	, mWorldView(target.getDefaultView())
 	, mImages()
+	, mTextures()
 	, mSceneGraph()
 	, mSceneLayers()
 	, mWorldBounds(mWorldView.getCenter() - mWorldView.getSize() / 2.f, mWorldView.getSize())

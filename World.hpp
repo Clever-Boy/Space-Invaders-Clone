@@ -76,11 +76,11 @@ private:
 private:
 	sf::RenderTarget&		mTarget;
 	FontHolder&				mFonts;
-	TextureHolder			mTextures;
 	SoundPlayer&			mSounds;
 
 	sf::View				mWorldView;
 	ImageHolder				mImages;
+	TextureHolder			mTextures;
 
 	SceneNode				mSceneGraph;
 	LayerContainer			mSceneLayers;
