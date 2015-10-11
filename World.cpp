@@ -459,25 +459,25 @@ void World::checkForCollision()
 		else if (node.getCategory() & Category::EnemyProjectile)
 		{
 			mEnemyBulletNodes.push_back(&node);
-			mQuadTreePrimary.insert(node);
+			mQuadTreePrimary.insert(&node);
 		}
 		else if (node.getCategory() & Category::EnemySpaceship)
 		{
 			mEnemyNodes.push_back(&node);
-			mQuadTreePrimary.insert(node);
+			mQuadTreePrimary.insert(&node);
 		}
 		else if (node.getCategory() & Category::Shield)
 		{
-			mQuadTreeSecondary.insert(node);
-			mQuadTreePrimary.insert(node);
+			mQuadTreeSecondary.insert(&node);
+			mQuadTreePrimary.insert(&node);
 		}
 		else if (node.getCategory() & Category::PlayerSpaceship)
 		{
-			mQuadTreeSecondary.insert(node);
+			mQuadTreeSecondary.insert(&node);
 		}
 		else if (node.getCategory() & Category::BossSpaceship)
 		{
-			mQuadTreePrimary.insert(node);
+			mQuadTreePrimary.insert(&node);
 		}
 	};
 
