@@ -8,6 +8,7 @@
 #include "ResourceHolder.hpp"
 
 #include <SFML/Graphics/View.hpp>
+#include <SFML/Graphics/Texture.hpp>
 
 
 class Player;
@@ -31,7 +32,7 @@ class World final : private sf::NonCopyable
 
 
 public:
-	explicit				World(sf::RenderTarget&	target,	TextureHolder& textures, FontHolder& fonts,	SoundPlayer& sounds);
+	explicit				World(sf::RenderTarget&	target, FontHolder& fonts, SoundPlayer& sounds);
 
 	void					draw();
 	void					update(sf::Time dt);
@@ -75,7 +76,7 @@ private:
 private:
 	sf::RenderTarget&		mTarget;
 	FontHolder&				mFonts;
-	TextureHolder&			mTextures;
+	TextureHolder			mTextures;
 	SoundPlayer&			mSounds;
 
 	sf::View				mWorldView;

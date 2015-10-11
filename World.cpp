@@ -53,9 +53,9 @@ namespace
 }
 
 
-World::World(sf::RenderTarget&	target,	TextureHolder& textures, FontHolder& fonts, SoundPlayer& sounds)
+World::World(sf::RenderTarget&	target, FontHolder& fonts, SoundPlayer& sounds)
 	: mTarget(target)
-	, mTextures(textures)
+	, mTextures()
 	, mFonts(fonts)
 	, mSounds(sounds)
 	, mWorldView(target.getDefaultView())
