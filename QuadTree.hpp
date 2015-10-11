@@ -8,6 +8,15 @@
 
 class QuadTree final : private sf::NonCopyable
 {
+	enum Quadrant
+	{
+		NotFound = -1,
+		TopLeft, 
+		TopRight,
+		BottomLeft, 
+		BottomRight,
+	};
+
 	static const auto DefaultNodes	= 4u;
 	using Ptr						= std::unique_ptr<QuadTree>;
 	using ChildrenContainer			= std::array<Ptr, DefaultNodes>;
@@ -16,16 +25,17 @@ class QuadTree final : private sf::NonCopyable
 
 public:
 	explicit				QuadTree(std::size_t Level, const sf::FloatRect& Bounds);
-							~QuadTree();
 
 	void					clear();
-	void					insert(SceneNode& object);
+	void					insert(SceneNode* object);
 	void					getCloseObjects(const sf::FloatRect& Bounds, ObjectsContainer& returnObjects) const;
 
 
 private:
 	void					split();
-	int						getIndex(const sf::FloatRect& Rect) const;
+	Quadrant				getIndex(const sf::FloatRect& Rect) const;
+	bool					insertInChild(SceneNode* object) const;
+	bool					hasChildren() const;
 
 
 private:

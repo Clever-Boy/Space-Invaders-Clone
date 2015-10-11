@@ -1,5 +1,8 @@
 #include "QuadTree.hpp"
 
+#include <functional>
+#include <cassert>
+
 
 namespace
 {
@@ -16,23 +19,52 @@ QuadTree::QuadTree(std::size_t Level, const sf::FloatRect& Bounds)
 {
 }
 
-QuadTree::~QuadTree()
-{
-	clear();
-}
-
 void QuadTree::clear()
 {
 	mObjects.clear();
 
-	for (auto&& child : mChildren)
+	for (auto& child : mChildren)
+		child.reset();
+}
+
+void QuadTree::insert(SceneNode* object)
+{
+	if (hasChildren() && insertInChild(object))
+		return;
+
+	mObjects.push_back(object);
+
+	// This node is already split, and we can't move any objects down.
+	if (hasChildren())
+		return;
+
+	// Can't split this node, so no point checking number of objects.
+	if (mlevel == MaxLevels)
+		return;
+
+	// Don't need to split this node yet.
+	if (mObjects.size() < MaxObjects)
+		return;
+
+	split();
+
+	mObjects.erase(
+		std::remove_if(mObjects.begin(), mObjects.end(),
+			std::bind(&QuadTree::insertInChild, this, std::placeholders::_1)),
+		mObjects.end());
+}
+
+void QuadTree::getCloseObjects(const sf::FloatRect& Bounds, ObjectsContainer& returnObjects) const
+{
+	if (hasChildren())
 	{
-		if (child != nullptr)
-		{
-			child->clear();
-			child.reset(nullptr);
-		}
+		auto index = getIndex(Bounds);
+
+		if (index != NotFound)
+			mChildren[index]->getCloseObjects(Bounds, returnObjects);
 	}
+
+	std::copy(mObjects.begin(), mObjects.end(), std::back_inserter(returnObjects));
 }
 
 void QuadTree::split()
@@ -42,15 +74,18 @@ void QuadTree::split()
 	auto x		= mBounds.left;
 	auto y		= mBounds.top;
 
-	mChildren[0] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x + width, y, width, height)));
-	mChildren[1] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x, y, width, height)));
-	mChildren[2] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x, y + height, width, height)));
-	mChildren[3] = std::move(std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x + width, y + height, width, height)));
+	mChildren[TopLeft]		= std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x + width, y, width, height));
+	mChildren[TopRight]		= std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x, y, width, height));
+	mChildren[BottomLeft]	= std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x, y + height, width, height));
+	mChildren[BottomRight]	= std::make_unique<QuadTree>(mlevel + 1, sf::FloatRect(x + width, y + height, width, height));
 }
 
-int QuadTree::getIndex(const sf::FloatRect& Rect) const
+QuadTree::Quadrant QuadTree::getIndex(const sf::FloatRect& Rect) const
 {
-	auto index = -1;
+	assert(Rect.height >= 0.f);
+	assert(Rect.width >= 0.f);
+
+	auto index = NotFound;
 
 	auto verticalMidpoint	= mBounds.left + mBounds.width / 2.f;
 	auto horizontalMidpoint = mBounds.top + mBounds.height / 2.f;
@@ -66,11 +101,11 @@ int QuadTree::getIndex(const sf::FloatRect& Rect) const
 	{
 		if (topQuadrant)
 		{
-			index = 1;
+			index = TopRight;
 		}
 		else if (bottomQuadrant)
 		{
-			index = 2;
+			index = BottomLeft;
 		}
 	}
 
@@ -79,66 +114,32 @@ int QuadTree::getIndex(const sf::FloatRect& Rect) const
 	{
 		if (topQuadrant)
 		{
-			index = 0;
+			index = TopLeft;
 		}
 		else if (bottomQuadrant)
 		{
-			index = 3;
+			index = BottomRight;
 		}
 	}
 
 	return index;
 }
 
-void QuadTree::insert(SceneNode& object)
+bool QuadTree::insertInChild(SceneNode* object) const
 {
-	if (mChildren[0] != nullptr)
-	{
-		auto index = getIndex(object.getBoundingRect());
+	assert(hasChildren());
 
-		if (index != -1)
-		{
-			mChildren[index]->insert(object);
+	auto index = getIndex(object->getBoundingRect());
 
-			return;
-		}
-	}
+	if (index == NotFound)
+		return false;
 
-	mObjects.push_back(&object);
+	mChildren[index]->insert(object);
 
-	if (mObjects.size() < MaxObjects && mlevel > MaxLevels)
-		return;
-
-	if (mChildren[0] == nullptr)
-	{
-		split();
-	}
-
-	for (auto i = mObjects.cbegin(); i != mObjects.cend();)
-	{
-		int index = getIndex((*i)->getBoundingRect());
-
-		if (index != -1)
-		{
-			auto& temp(**i);
-			i = mObjects.erase(i);
-			mChildren[index]->insert(temp);
-		}
-		else
-		{
-			++i;
-		}
-	}
+	return true;
 }
 
-void QuadTree::getCloseObjects(const sf::FloatRect& Bounds, ObjectsContainer& returnObjects) const
+bool QuadTree::hasChildren() const
 {
-	auto index = getIndex(Bounds);
-
-	if (index != -1 && mChildren[0] != nullptr)
-	{
-		mChildren[index]->getCloseObjects(Bounds, returnObjects);
-	}
-
-	std::copy(mObjects.begin(), mObjects.end(), std::back_inserter(returnObjects));
+	return mChildren[0] != nullptr;
 }
