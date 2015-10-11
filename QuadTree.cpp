@@ -27,7 +27,11 @@ void QuadTree::clear()
 	mObjects.clear();
 
 	for (auto& child : mChildren)
+	{
+		if(child != nullptr)
+			child->clear();
 		child.reset();
+	}
 }
 
 void QuadTree::insert(SceneNode* object)
@@ -85,12 +89,11 @@ void QuadTree::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 	target.draw(shape);
 
-	if (hasChildren())
+
+	for (const auto& child : mChildren)
 	{
-		for (const auto& child : mChildren)
-		{
+		if (child != nullptr)
 			child->draw(target, states);
-		}
 	}
 }
 
@@ -168,5 +171,9 @@ bool QuadTree::insertInChild(SceneNode* object) const
 
 bool QuadTree::hasChildren() const
 {
-	return mChildren[0] != nullptr;
+	for (const auto& child : mChildren)
+		if (child != nullptr)
+			return true;
+
+	return false;
 }
