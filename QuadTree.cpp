@@ -129,11 +129,11 @@ QuadTree::Quadrant QuadTree::getIndex(const sf::FloatRect& Rect) const
 	if (top && left)
 		return TopLeft;
 
-	if (bottom && left)
-		return BottomLeft;
-
 	if (top && right)
 		return TopRight;
+
+	if (bottom && left)
+		return BottomLeft;
 
 	if (bottom && right)
 		return BottomRight;
