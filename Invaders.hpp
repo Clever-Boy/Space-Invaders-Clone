@@ -22,7 +22,7 @@ public:
 
 
 private:
-	enum Dirction
+	enum Direction
 	{
 		MovingRight,
 		MovingLeft,
@@ -41,7 +41,7 @@ public:
 
 	void 					fire();
 	Type					getType() const;
-	void					requstChangeDirction();
+	void					requstChangeDirection();
 
 
 private:
@@ -73,8 +73,8 @@ private:
 	bool 					mIsMarkedForRemoval;
 
 	float					mTravelledDistance;
-	Dirction				mCurrentDirction;
-	Dirction				mPreviousDirction;
+	Direction				mCurrentDirection;
+	Direction				mPreviousDirection;
 	sf::Vector2f			mMovement;
 
 	std::size_t				mAnimateRate;

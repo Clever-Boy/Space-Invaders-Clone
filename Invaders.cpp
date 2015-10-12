@@ -27,8 +27,8 @@ Invaders::Invaders(Type type, const TextureHolder& textures, const sf::FloatRect
 	, mIsFiring(false)
 	, mIsMarkedForRemoval(false)
 	, mTravelledDistance()
-	, mCurrentDirction(Dirction::MovingRight)
-	, mPreviousDirction(Dirction::MovingRight)
+	, mCurrentDirection(Direction::MovingRight)
+	, mPreviousDirection(Direction::MovingRight)
 	, mMovement(Table[type].movement[MovingRight])
 	, mMaxSpeed(Table[mType].speed)
 	, mAnimateCountdown(sf::Time::Zero)
@@ -112,37 +112,37 @@ void Invaders::fire()
 		mIsFiring = true;
 }
 
-void Invaders::requstChangeDirction()
+void Invaders::requstChangeDirection()
 {
 	const std::vector<sf::Vector2f>& movement = Table[mType].movement;
 
-	switch (mCurrentDirction)
+	switch (mCurrentDirection)
 	{
 	case MovingRight:
-		mCurrentDirction = MovingDown;
-		mPreviousDirction = MovingRight;
+		mCurrentDirection = MovingDown;
+		mPreviousDirection = MovingRight;
 		mTravelledDistance = 0.f;
 		mMovement = movement[MovingDown];
 		break;
 	case MovingLeft:
-		mCurrentDirction = MovingDown;
-		mPreviousDirction = MovingLeft;
+		mCurrentDirection = MovingDown;
+		mPreviousDirection = MovingLeft;
 		mTravelledDistance = 0.f;
 		mMovement = movement[MovingDown];
 		break;
 	case MovingDown:
-		if (mPreviousDirction == MovingLeft)
+		if (mPreviousDirection == MovingLeft)
 		{
-			mCurrentDirction = MovingRight;
+			mCurrentDirection = MovingRight;
 			mMovement = movement[MovingRight];
 		}
 		else
 		{
-			mCurrentDirction = MovingLeft;
+			mCurrentDirection = MovingLeft;
 			mMovement = movement[MovingLeft];
 		}
 
-		mPreviousDirction = MovingDown;
+		mPreviousDirection = MovingDown;
 		mTravelledDistance = 0.f;
 	}
 }
@@ -153,23 +153,23 @@ void Invaders::updateMovementPattern(sf::Time dt)
 	const auto TravelledDistance = 30.f;
 
 	// Check if we need change dirtection
-	if (mCurrentDirction == Invaders::MovingDown)
+	if (mCurrentDirection == Invaders::MovingDown)
 	{
 		if (mTravelledDistance > TravelledDistance)
 			changeDirection = true;
 	}
 
-	if (mCurrentDirction == Invaders::MovingRight || mCurrentDirction == Invaders::MovingLeft)
+	if (mCurrentDirection == Invaders::MovingRight || mCurrentDirection == Invaders::MovingLeft)
 	{
 		if (!mBounds.contains(getWorldPosition()))
 			changeDirection = true;
 	}
 
-	// Validate condition of changing dirction
+	// Validate condition of changing direction
 	if (!changeDirection)
 		mIsChangeDirection = false;
 
-	// Check if we can requst change dirction
+	// Check if we can requst change direction
 	if (changeDirection && !mIsChangeDirection)
 	{
 		mInvadersController.requstChangeDirectionCommands();

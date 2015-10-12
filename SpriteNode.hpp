@@ -2,6 +2,7 @@
 
 
 #include "SceneNode.hpp"
+#include "ResourceIdentifiers.hpp"
 
 #include <SFML/Graphics/Sprite.hpp>
 
@@ -24,7 +25,7 @@ private:
 
 
 public:
-	explicit				SpriteNode(Type type, const sf::Texture& texture);
+	explicit				SpriteNode(Type type, const TextureHolder& textures);
 							SpriteNode(Type type, const sf::FloatRect& bounds);
 
 

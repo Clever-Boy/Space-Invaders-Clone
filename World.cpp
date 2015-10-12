@@ -190,11 +190,8 @@ void World::buildScene()
 		mSceneGraph.attachChild(std::move(layer));
 	}
 
-	//Prepare the tiled background
-	auto& texture(mTextures.get(Textures::Background));
-
 	// Add the background sprite to the scene
-	auto backgroundSprite(std::make_unique<SpriteNode>(SpriteNode::Background, texture));
+	auto backgroundSprite(std::make_unique<SpriteNode>(SpriteNode::Background, mTextures));
 	backgroundSprite->setDirtyFlag(false);
 	mSceneLayers[Background]->attachChild(std::move(backgroundSprite));
 
@@ -311,7 +308,7 @@ void World::controlEnemyFire()
 
 void World::spawnBoss(sf::Time dt)
 {
-	Boss::Dirction dirction;
+	Boss::Direction direction;
 	auto position = 0.f;
 
 	mBossTimer += dt;
@@ -332,19 +329,19 @@ void World::spawnBoss(sf::Time dt)
 
 	if (mBossSpawn)
 	{
-		dirction = Boss::MovingRight;
+		direction = Boss::MovingRight;
 		position = -MovementsPadding;
 	}
 	else
 	{
-		dirction = Boss::MovingLeft;
+		direction = Boss::MovingLeft;
 		position = mWorldBounds.left + mWorldBounds.width + MovementsPadding;
 	}
 
 	mBossSpawn = !mBossSpawn;
 
 	// Receate Boss
-	auto boss(std::make_unique<Boss>(Boss::BossShip, mTextures, mWorldBounds, dirction));
+	auto boss(std::make_unique<Boss>(Boss::BossShip, mTextures, mWorldBounds, direction));
 	mBoss = boss.get();
 	mBoss->setPosition(position, Padding * 1.5);
 	mSceneLayers[Space]->attachChild(std::move(boss));

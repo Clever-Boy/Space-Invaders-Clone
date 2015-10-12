@@ -14,12 +14,12 @@ namespace
 }
 
 
-Boss::Boss(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, Dirction dirction)
+Boss::Boss(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, Direction direction)
 	: Entity(Table[type].hitpoints)
 	, mType(type)
 	, mSprite(textures.get(Table[type].texture))
 	, mExplosion(textures.get(Textures::EnemiesExplosion))
-	, mDirectionIndex((dirction == MovingRight) ? +1.f : -1.f )
+	, mDirectionIndex((direction == MovingRight) ? +1.f : -1.f )
 	, mIsMarkedForRemoval(false)
 	, mShowExpolsion(true)
 	, mBounds()

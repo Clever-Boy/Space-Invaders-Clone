@@ -17,7 +17,7 @@ public:
 		TypeCount
 	};
 
-	enum Dirction
+	enum Direction
 	{
 		MovingRight,
 		MovingLeft
@@ -25,7 +25,7 @@ public:
 
 
 public:
-	explicit				Boss(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, Dirction dirction);
+	explicit				Boss(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, Direction direction);
 
 	unsigned int			getCategory() const override;
 	sf::FloatRect			getBoundingRect() const override;

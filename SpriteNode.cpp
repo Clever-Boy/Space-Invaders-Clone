@@ -1,11 +1,12 @@
 #include "SpriteNode.hpp"
+#include "ResourceHolder.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
 
-SpriteNode::SpriteNode(Type type, const sf::Texture& texture)
+SpriteNode::SpriteNode(Type type, const TextureHolder& textures)
 	: mType(type)
-	, mSprite(texture)
+	, mSprite(textures.get(Textures::Background))
 	, mLine()
 {
 	mSprite.setScale(3.f, 4.f);
