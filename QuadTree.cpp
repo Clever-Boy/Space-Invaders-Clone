@@ -26,10 +26,12 @@ void QuadTree::clear()
 {
 	mObjects.clear();
 
+	if (!hasChildren())
+		return;
+
 	for (auto& child : mChildren)
 	{
-		if(child != nullptr)
-			child->clear();
+		child->clear();
 		child.reset();
 	}
 }
@@ -90,12 +92,11 @@ void QuadTree::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 	target.draw(shape);
 
+	if (!hasChildren())
+		return;
 
 	for (const auto& child : mChildren)
-	{
-		if (child != nullptr)
-			child->draw(target, states);
-	}
+		child->draw(target, states);
 }
 
 void QuadTree::split()
@@ -156,9 +157,5 @@ bool QuadTree::insertInChild(SceneNode* object) const
 
 bool QuadTree::hasChildren() const
 {
-	for (const auto& child : mChildren)
-		if (child != nullptr)
-			return true;
-
-	return false;
+	return(mChildren[0] != nullptr);
 }
