@@ -113,47 +113,31 @@ void QuadTree::split()
 
 QuadTree::Quadrant QuadTree::getIndex(const sf::FloatRect& Rect) const
 {
-	assert(Rect.height >= 0.f);
-	assert(Rect.width >= 0.f);
-
-	auto index = NotFound;
+	assert(Rect.height > 0.f);
+	assert(Rect.width > 0.f);
 
 	auto verticalMidpoint	= mBounds.left + mBounds.width / 2.f;
 	auto horizontalMidpoint = mBounds.top + mBounds.height / 2.f;
 
-	// Object can completely fit within the top quadrants
-	bool topQuadrant = (Rect.top < horizontalMidpoint && Rect.top + Rect.height < horizontalMidpoint);
+	// Can the object "completely" fit within this quadrant?
+	bool top	= (Rect.top + Rect.height < horizontalMidpoint);
+	bool bottom = (Rect.top > horizontalMidpoint);
+	bool left	= (Rect.left + Rect.width < verticalMidpoint);
+	bool right	= (Rect.left > verticalMidpoint);
 
-	// Object can completely fit within the bottom quadrants
-	bool bottomQuadrant = (Rect.top > horizontalMidpoint);
+	if (top && left)
+		return TopLeft;
 
-	// Object can completely fit within the left quadrants
-	if (Rect.left < verticalMidpoint && Rect.left + Rect.width < verticalMidpoint)
-	{
-		if (topQuadrant)
-		{
-			index = TopLeft;
-		}
-		else if (bottomQuadrant)
-		{
-			index = BottomLeft;
-		}
-	}
+	if (bottom && left)
+		return BottomLeft;
 
-	// Object can completely fit within the right quadrants
-	else if (Rect.left > verticalMidpoint)
-	{
-		if (topQuadrant)
-		{
-			index = TopRight;
-		}
-		else if (bottomQuadrant)
-		{
-			index = BottomRight;
-		}
-	}
+	if (top && right)
+		return TopRight;
 
-	return index;
+	if (bottom && right)
+		return BottomRight;
+	
+	return NotFound;
 }
 
 bool QuadTree::insertInChild(SceneNode* object) const
