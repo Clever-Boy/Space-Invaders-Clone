@@ -77,6 +77,7 @@ void QuadTree::getCloseObjects(const sf::FloatRect& Bounds, ObjectsContainer& re
 void QuadTree::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	sf::RectangleShape shape(sf::Vector2f(mBounds.width, mBounds.height));
+
 	shape.setPosition(mBounds.left, mBounds.top);
 
 	if (mObjects.empty())
@@ -104,8 +105,8 @@ void QuadTree::split()
 	auto x		= mBounds.left;
 	auto y		= mBounds.top;
 
-	mChildren[TopLeft]		= std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x + width, y, width, height));
-	mChildren[TopRight]		= std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x, y, width, height));
+	mChildren[TopLeft]		= std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x, y, width, height));
+	mChildren[TopRight]		= std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x + width, y, width, height));
 	mChildren[BottomLeft]	= std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x, y + height, width, height));
 	mChildren[BottomRight]	= std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x + width, y + height, width, height));
 }
@@ -131,7 +132,7 @@ QuadTree::Quadrant QuadTree::getIndex(const sf::FloatRect& Rect) const
 	{
 		if (topQuadrant)
 		{
-			index = TopRight;
+			index = TopLeft;
 		}
 		else if (bottomQuadrant)
 		{
@@ -144,7 +145,7 @@ QuadTree::Quadrant QuadTree::getIndex(const sf::FloatRect& Rect) const
 	{
 		if (topQuadrant)
 		{
-			index = TopLeft;
+			index = TopRight;
 		}
 		else if (bottomQuadrant)
 		{
