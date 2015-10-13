@@ -1,4 +1,5 @@
 #include "Command.hpp"
+#include "Category.hpp"
 
 
 Command::Command()
