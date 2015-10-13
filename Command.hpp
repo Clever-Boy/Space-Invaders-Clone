@@ -3,7 +3,6 @@
 
 #include "Category.hpp"
 
-
 #include <functional>
 #include <cassert>
 

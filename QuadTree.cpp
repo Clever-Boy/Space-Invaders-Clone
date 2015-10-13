@@ -1,8 +1,5 @@
 #include "QuadTree.hpp"
 
-#include <SFML\Graphics\RectangleShape.hpp>
-#include <SFML\Graphics\RenderTarget.hpp>
-
 #include <functional>
 #include <cassert>
 
@@ -14,11 +11,11 @@ namespace
 }
 
 
-QuadTree::QuadTree(std::size_t Level, const sf::FloatRect& Bounds)
+QuadTree::QuadTree(std::size_t level, const sf::FloatRect& bounds)
 	: mObjects()
 	, mChildren()
-	, mBounds(Bounds)
-	, mLevel(Level)
+	, mBounds(bounds)
+	, mLevel(level)
 {
 }
 
@@ -63,40 +60,17 @@ void QuadTree::insert(SceneNode* object)
 		mObjects.end());
 }
 
-void QuadTree::getCloseObjects(const sf::FloatRect& Bounds, ObjectsContainer& returnObjects) const
+void QuadTree::getCloseObjects(const sf::FloatRect& bounds, ObjectsContainer& returnObjects) const
 {
 	if (hasChildren())
 	{
-		auto index = getIndex(Bounds);
+		auto index = getIndex(bounds);
 
 		if (index != NotFound)
-			mChildren[index]->getCloseObjects(Bounds, returnObjects);
+			mChildren[index]->getCloseObjects(bounds, returnObjects);
 	}
 
 	std::copy(mObjects.begin(), mObjects.end(), std::back_inserter(returnObjects));
-}
-
-void QuadTree::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	sf::RectangleShape shape(sf::Vector2f(mBounds.width, mBounds.height));
-
-	shape.setPosition(mBounds.left, mBounds.top);
-
-	if (mObjects.empty())
-		shape.setFillColor(sf::Color(0, 0, 0, 0));
-	else
-		shape.setFillColor(sf::Color(255, 125, 125, 100));
-
-	shape.setOutlineThickness(1);
-	shape.setOutlineColor(sf::Color(255, 255, 255));
-
-	target.draw(shape);
-
-	if (!hasChildren())
-		return;
-
-	for (const auto& child : mChildren)
-		child->draw(target, states);
 }
 
 void QuadTree::split()
@@ -112,19 +86,19 @@ void QuadTree::split()
 	mChildren[BottomRight]	= std::make_unique<QuadTree>(mLevel + 1, sf::FloatRect(x + width, y + height, width, height));
 }
 
-QuadTree::Quadrant QuadTree::getIndex(const sf::FloatRect& Rect) const
+QuadTree::Quadrant QuadTree::getIndex(const sf::FloatRect& bounds) const
 {
-	assert(Rect.height > 0.f);
-	assert(Rect.width > 0.f);
+	assert(bounds.height > 0.f);
+	assert(bounds.width > 0.f);
 
 	auto verticalMidpoint	= mBounds.left + mBounds.width / 2.f;
 	auto horizontalMidpoint = mBounds.top + mBounds.height / 2.f;
 
 	// Can the object "completely" fit within this quadrant?
-	bool top	= (Rect.top + Rect.height < horizontalMidpoint);
-	bool bottom = (Rect.top > horizontalMidpoint);
-	bool left	= (Rect.left + Rect.width < verticalMidpoint);
-	bool right	= (Rect.left > verticalMidpoint);
+	bool top	= (bounds.top + bounds.height < horizontalMidpoint);
+	bool bottom = (bounds.top > horizontalMidpoint);
+	bool left	= (bounds.left + bounds.width < verticalMidpoint);
+	bool right	= (bounds.left > verticalMidpoint);
 
 	if (top && left)
 		return TopLeft;
