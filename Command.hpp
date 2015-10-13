@@ -18,7 +18,8 @@ struct Command
 
 template 
 <
-	typename GameObject, class Function, 
+	typename GameObject, 
+	typename Function,
 	typename = std::enable_if_t<std::is_base_of<SceneNode, GameObject>::value>
 >
 auto derivedAction(Function fn) 
