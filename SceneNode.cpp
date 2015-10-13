@@ -2,6 +2,7 @@
 #include "Command.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <cassert>
 
 
 SceneNode::SceneNode(Category::Type category)
