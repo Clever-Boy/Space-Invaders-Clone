@@ -20,7 +20,7 @@ struct Command
 };
 
 template <typename GameObject, typename Function>
-Command::Action derivedAction(Function fn)
+auto derivedAction(Function fn)
 {
 	return [=](SceneNode& node)
 	{
