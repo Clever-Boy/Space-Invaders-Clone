@@ -16,6 +16,7 @@ struct Command
 	unsigned int	category;
 };
 
+
 template 
 <
 	typename GameObject, 
