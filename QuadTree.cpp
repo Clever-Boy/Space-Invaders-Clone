@@ -1,4 +1,5 @@
 #include "QuadTree.hpp"
+#include "SceneNode.hpp"
 
 #include <functional>
 #include <cassert>

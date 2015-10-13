@@ -1,9 +1,15 @@
 #pragma once
 
 
-#include "SceneNode.hpp"
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/System/NonCopyable.hpp>
 
 #include <array>
+#include <vector>
+#include <memory>
+
+
+class SceneNode;
 
 
 class QuadTree final : private sf::NonCopyable
