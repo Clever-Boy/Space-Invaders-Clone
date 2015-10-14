@@ -17,8 +17,8 @@ public:
 	explicit				BossFactory(const TextureHolder& textures, const sf::FloatRect& bounds);
 
 	void					setSceneNode(SceneNode* node);
-	Boss*					createBoss(Boss::Direction direction, float xPosition) const;
-	Boss*					spawnBoss(sf::Time dt) const;
+	Boss*					create(Boss::Direction direction, float xPosition) const;
+	Boss*					spawn(sf::Time dt) const;
 
 
 private:

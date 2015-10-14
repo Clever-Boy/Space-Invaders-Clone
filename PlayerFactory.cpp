@@ -17,7 +17,7 @@ void PlayerFactory::setSceneNode(SceneNode* node)
 	mSceneNode = node;
 }
 
-Player*	PlayerFactory::createPlayer(sf::Vector2f position) const
+Player*	PlayerFactory::create(sf::Vector2f position) const
 {
 	auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
 	mPlayer = leader.get();
@@ -26,14 +26,14 @@ Player*	PlayerFactory::createPlayer(sf::Vector2f position) const
 	return mPlayer;
 }
 
-Player* PlayerFactory::spawnPlayer() const
+Player* PlayerFactory::spawn() const
 {
 	if (mIsAlive)
 		return mPlayer;
 
 	mIsAlive = true;
 
-	return createPlayer(mPosition);
+	return create(mPosition);
 }
 
 bool PlayerFactory::update(sf::Time dt, CommandQueue& commands) const

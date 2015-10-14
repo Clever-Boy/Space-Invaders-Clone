@@ -99,7 +99,7 @@ void World::update(sf::Time dt)
 	destroyEntitiesOutsideView();
 
 	// Create Boss 
-	mBoss = mBossFactory.spawnBoss(dt);
+	mBoss = mBossFactory.spawn(dt);
 
 	// Update quadtree
 	checkForCollision();
@@ -124,7 +124,7 @@ void World::update(sf::Time dt)
 	mSceneGraph.removeWrecks();
 
 	// Spawn Player
-	mPlayer = mPlayerFactory.spawnPlayer();
+	mPlayer = mPlayerFactory.spawn();
 
 	// Regular update step
 	mSceneGraph.update(dt, mCommandQueue);
@@ -208,7 +208,7 @@ void World::buildScene()
 	auto bounds(getBattlefieldBounds());
 	auto YPadding = bounds.top + bounds.height - Padding / 2u - mSpawnPosition.y;
 	mPlayerFactory.setSceneNode(mSceneLayers[Space]);
-	mPlayer = mPlayerFactory.createPlayer(mSpawnPosition + sf::Vector2f(0.f, YPadding));
+	mPlayer = mPlayerFactory.create(mSpawnPosition + sf::Vector2f(0.f, YPadding));
 
 	// Prepare for adding Boss
 	mBossFactory.setSceneNode(mSceneLayers[Space]);
