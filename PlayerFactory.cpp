@@ -10,8 +10,8 @@ PlayerFactory::PlayerFactory(const TextureHolder& textures)
 	, mPlayer(nullptr)
 	, mTextures(textures)
 	, mTimer(sf::Time::Zero)
+	, mPosition()
 	, mIsAlive(true)
-	, mPreviousPosition()
 {
 }
 
@@ -40,7 +40,7 @@ bool PlayerFactory::update(sf::Time dt, CommandQueue& commands)
 	if (mTimer > sf::seconds(0.25f))
 	{
 		mPlayer->setMarkToRemove();
-		mPreviousPosition = mPlayer->getWorldPosition();
+		mPosition = mPlayer->getWorldPosition();
 		mIsAlive = false;
 		mTimer = sf::Time::Zero;
 	}
@@ -55,7 +55,7 @@ Player* PlayerFactory::spawnPlayer()
 
 	auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
 	mPlayer = leader.get();
-	mPlayer->setPosition(mPreviousPosition);
+	mPlayer->setPosition(mPosition);
 
 	mSceneNode->attachChild(std::move(leader));
 	mIsAlive = true;

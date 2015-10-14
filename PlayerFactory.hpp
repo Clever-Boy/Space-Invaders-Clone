@@ -30,6 +30,6 @@ private:
 	const TextureHolder&	mTextures;
 
 	sf::Time				mTimer;
+	sf::Vector2f			mPosition;
 	bool					mIsAlive;
-	sf::Vector2f			mPreviousPosition;
 };
