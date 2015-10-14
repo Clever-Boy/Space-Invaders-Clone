@@ -8,9 +8,6 @@
 #include <SFML/System/NonCopyable.hpp>
 
 
-class SceneNode;
-
-
 class BossFactory final : private sf::NonCopyable
 {
 public:
