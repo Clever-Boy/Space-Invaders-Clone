@@ -1,8 +1,5 @@
 #include "PlayerFactory.hpp"
 #include "Player.hpp"
-#include "SceneNode.hpp"
-#include "CommandQueue.hpp"
-#include "ResourceHolder.hpp"
 
 
 PlayerFactory::PlayerFactory(const TextureHolder& textures)

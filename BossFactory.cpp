@@ -1,7 +1,5 @@
 #include "BossFactory.hpp"
 #include "Boss.hpp"
-#include "SceneNode.hpp"
-#include "ResourceHolder.hpp"
 #include "GameConstants.hpp"
 
 
