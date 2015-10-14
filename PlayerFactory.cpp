@@ -31,13 +31,9 @@ Player* PlayerFactory::spawnPlayer() const
 	if (mIsAlive)
 		return mPlayer;
 
-	auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
-	mPlayer = leader.get();
-	mPlayer->setPosition(mPosition);
-
-	mSceneNode->attachChild(std::move(leader));
 	mIsAlive = true;
-	return mPlayer;
+
+	return createPlayer(mPosition);
 }
 
 bool PlayerFactory::update(sf::Time dt, CommandQueue& commands) const
