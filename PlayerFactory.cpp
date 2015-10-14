@@ -20,7 +20,7 @@ void PlayerFactory::setSceneNode(SceneNode* node)
 	mSceneNode = node;
 }
 
-Player*	PlayerFactory::createPlayer(const sf::Vector2f position)
+Player*	PlayerFactory::createPlayer(sf::Vector2f position)
 {
 	auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
 	mPlayer = leader.get();

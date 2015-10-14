@@ -92,13 +92,13 @@ void World::draw()
 
 void World::update(sf::Time dt)
 {
-	// reset player velocity
+	// Reset player velocity
 	mPlayer->setVelocity(0.f, 0.f);
 
 	// Remove useless entities
 	destroyEntitiesOutsideView();
 
-	// create Boss 
+	// Create Boss 
 	mBoss = mBossFactory.spawnBoss(dt);
 
 	// Update quadtree
@@ -111,7 +111,7 @@ void World::update(sf::Time dt)
 	while (!mCommandQueue.isEmpty())
 		mSceneGraph.onCommand(mCommandQueue.pop());
 
-	// control enemy fires
+	// Control enemy fires
 	controlEnemyFire();
 
 	// Collision detection and response (may destroy entities)
@@ -285,7 +285,7 @@ void World::controlEnemyFire()
 		if (enemy.isDestroyed())
 			continue;
 
-		if (enemy.getWorldPosition().y >= mDeadLine - 20.f)
+		if (enemy.getWorldPosition().y >= mDeadLine - Padding / 2.f)
 			mPlayer->damage(enemy.getHitpoints());
 
 		if (mEnemyNodes.size() <= 3)

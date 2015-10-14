@@ -19,7 +19,7 @@ public:
 	explicit				PlayerFactory(const TextureHolder& textures);
 
 	void					setSceneNode(SceneNode* node);
-	Player*					createPlayer(const sf::Vector2f position);
+	Player*					createPlayer(sf::Vector2f position);
 	Player*					spawnPlayer();
 	bool					update(sf::Time dt, CommandQueue& commands);
 

@@ -15,7 +15,7 @@ class SceneNode;
 class BossFactory final : private sf::NonCopyable
 {
 public:
-	explicit				BossFactory(const TextureHolder& teatures, const sf::FloatRect& bounds);
+	explicit				BossFactory(const TextureHolder& textures, const sf::FloatRect& bounds);
 
 	void					setSceneNode(SceneNode* node);
 	Boss*					spawnBoss(sf::Time dt);
