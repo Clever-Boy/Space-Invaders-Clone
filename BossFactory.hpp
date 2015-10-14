@@ -1,14 +1,13 @@
 #pragma once
 
 
-#include "ResourceIdentifiers.hpp"
+#include "Boss.hpp"
 
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Time.hpp>
 #include <SFML/System/NonCopyable.hpp>
 
 
-class Boss;
 class SceneNode;
 
 
@@ -18,6 +17,7 @@ public:
 	explicit				BossFactory(const TextureHolder& textures, const sf::FloatRect& bounds);
 
 	void					setSceneNode(SceneNode* node);
+	Boss*					createBoss(Boss::Direction direction, float xPosition) const;
 	Boss*					spawnBoss(sf::Time dt) const;
 
 
@@ -29,5 +29,4 @@ private:
 
 	mutable sf::Time		mTimer;
 	mutable bool			mSpawn;
-	mutable bool			mFirstSpawn;
 };
