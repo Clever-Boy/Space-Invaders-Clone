@@ -6,6 +6,8 @@
 #include "QuadTree.hpp"
 #include "InvadersController.hpp"
 #include "ResourceHolder.hpp"
+#include "PlayerFactory.hpp"
+#include "BossFactory.hpp"
 
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Graphics/Texture.hpp>
@@ -52,11 +54,7 @@ private:
 	void					addEnemy(Invaders::Type type, float relX, float relY);
 	void					controlEnemyFire();
 
-	void					spawnBoss(sf::Time dt);
-
 	void					adaptPlayerPosition();
-	bool					checkPlayerDeath(sf::Time dt);
-	void					spawnPlayer();
 
 	sf::FloatRect			getViewBounds() const;
 	sf::FloatRect			getBattlefieldBounds() const;
@@ -89,6 +87,9 @@ private:
 	sf::FloatRect			mWorldBounds;
 	sf::Vector2f			mSpawnPosition;
 
+	BossFactory				mBossFactory;
+	PlayerFactory			mPlayerFactory;
+
 	Player*					mPlayer;
 	Boss*					mBoss;
 	LifeNode*				mLife;
@@ -105,15 +106,5 @@ private:
 
 	float					mDeadLine;
 
-	sf::Time				mBossTimer;
-	bool					mBossSpawn;
-	bool					mFirstSpawn;
-
-	sf::Time				mPlayerTimer;
-	bool					mIsPlayerDead;
 	std::size_t				mLivesCount;
-	sf::Vector2f			mPreviousPosition;
-
-	bool					mIsGameEnded;
-	bool					mEndGame;
 };

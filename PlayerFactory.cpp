@@ -1,0 +1,63 @@
+#include "PlayerFactory.hpp"
+#include "Player.hpp"
+#include "SceneNode.hpp"
+#include "CommandQueue.hpp"
+#include "ResourceHolder.hpp"
+
+
+PlayerFactory::PlayerFactory(const TextureHolder& textures)
+	: mSceneNode(nullptr)
+	, mPlayer(nullptr)
+	, mTextures(textures)
+	, mTimer(sf::Time::Zero)
+	, mIsAlive(true)
+	, mPreviousPosition()
+{
+}
+
+void PlayerFactory::setSceneNode(SceneNode* node)
+{
+	mSceneNode = node;
+}
+
+Player*	PlayerFactory::createPlayer(const sf::Vector2f position)
+{
+	auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
+	mPlayer = leader.get();
+	mPlayer->setPosition(position);
+	mSceneNode->attachChild(std::move(leader));
+	return mPlayer;
+}
+
+bool PlayerFactory::update(sf::Time dt, CommandQueue& commands)
+{
+	if (!mPlayer->isDestroyed() || !mIsAlive)
+		return false;
+
+	mPlayer->applyHitEffect(dt, commands);
+	mTimer += dt;
+
+	if (mTimer > sf::seconds(0.25f))
+	{
+		mPlayer->setMarkToRemove();
+		mPreviousPosition = mPlayer->getWorldPosition();
+		mIsAlive = false;
+		mTimer = sf::Time::Zero;
+	}
+
+	return true;
+}
+
+Player* PlayerFactory::spawnPlayer()
+{
+	if (mIsAlive)
+		return mPlayer;
+
+	auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
+	mPlayer = leader.get();
+	mPlayer->setPosition(mPreviousPosition);
+
+	mSceneNode->attachChild(std::move(leader));
+	mIsAlive = true;
+	return mPlayer;
+}

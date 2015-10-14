@@ -7,6 +7,7 @@
 #include "ScoreNode.hpp"
 #include "SoundPlayer.hpp"
 #include "SoundNode.hpp"
+#include "GameConstants.hpp"
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
@@ -18,8 +19,8 @@ namespace
 		return lhs.getBoundingRect().intersects(rhs.getBoundingRect());
 	}
 
-	template<typename GameObject>
-	auto collision(const Shield& shield, const GameObject& object) ->bool
+	template <typename GameObject>
+	auto collision(const Shield& shield, const GameObject& object) -> bool
 	{
 		auto shieldBounds(static_cast<sf::Rect<std::size_t>>(shield.getBoundingRect()));
 		auto objectBounds(static_cast<sf::Rect<std::size_t>>(object.getBoundingRect()));
@@ -47,9 +48,6 @@ namespace
 
 		return false;
 	}
-
-	constexpr auto Padding			= 40.f;
-	constexpr auto MovementsPadding = 55.f;
 }
 
 
@@ -64,6 +62,8 @@ World::World(sf::RenderTarget&	target, FontHolder& fonts, SoundPlayer& sounds)
 	, mSceneLayers()
 	, mWorldBounds(mWorldView.getCenter() - mWorldView.getSize() / 2.f, mWorldView.getSize())
 	, mSpawnPosition(mWorldView.getSize().x / 2.f, mWorldView.getSize().y / 2.f)
+	, mBossFactory(mTextures, mWorldBounds)
+	, mPlayerFactory(mTextures)
 	, mPlayer(nullptr)
 	, mBoss(nullptr)
 	, mLife(nullptr)
@@ -75,15 +75,7 @@ World::World(sf::RenderTarget&	target, FontHolder& fonts, SoundPlayer& sounds)
 	, mEnemyBulletNodes()
 	, mInvadersController()
 	, mDeadLine(getBattlefieldBounds().height + getBattlefieldBounds().top)
-	, mBossTimer(sf::Time::Zero)
-	, mPlayerTimer(sf::Time::Zero)
-	, mBossSpawn(true)
-	, mFirstSpawn(true)
-	, mIsPlayerDead(false)
 	, mLivesCount(3)
-	, mPreviousPosition()
-	, mIsGameEnded(false)
-	, mEndGame(false)
 {
 	loadTextures();
 	buildScene();
@@ -107,7 +99,7 @@ void World::update(sf::Time dt)
 	destroyEntitiesOutsideView();
 
 	// create Boss 
-	spawnBoss(dt);
+	mBoss = mBossFactory.spawnBoss(dt);
 
 	// Update quadtree
 	checkForCollision();
@@ -126,13 +118,13 @@ void World::update(sf::Time dt)
 	handleCollisions();
 
 	// Check if Player Dead
-	if (checkPlayerDeath(dt))
+	if (mPlayerFactory.update(dt, mCommandQueue))
 		return;
 
 	mSceneGraph.removeWrecks();
 
 	// Spawn Player
-	spawnPlayer();
+	mPlayer = mPlayerFactory.spawnPlayer();
 
 	// Regular update step
 	mSceneGraph.update(dt, mCommandQueue);
@@ -145,10 +137,10 @@ void World::update(sf::Time dt)
 
 bool World::hasAlivePlayer() const
 {
-	if (mLivesCount == 0)
+	if (mLivesCount <= 0)
 		return (!mPlayer->isMarkedForRemoval());
 
-	return (!mEndGame);
+	return true;
 }
 
 bool World::hasPlayerWon() const
@@ -213,12 +205,13 @@ void World::buildScene()
 	mSceneLayers[Background]->attachChild(std::move(life));
 
 	// Add player's spaceship
-	auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
-	mPlayer = leader.get();
 	auto bounds(getBattlefieldBounds());
 	auto YPadding = bounds.top + bounds.height - Padding / 2u - mSpawnPosition.y;
-	mPlayer->setPosition(mSpawnPosition + sf::Vector2f(0.f, YPadding));
-	mSceneLayers[Space]->attachChild(std::move(leader));
+	mPlayerFactory.setSceneNode(mSceneLayers[Space]);
+	mPlayer = mPlayerFactory.createPlayer(mSpawnPosition + sf::Vector2f(0.f, YPadding));
+
+	// Prepare for adding Boss
+	mBossFactory.setSceneNode(mSceneLayers[Space]);
 
 	// Add enemy Spaceships
 	addEnemies();
@@ -293,10 +286,7 @@ void World::controlEnemyFire()
 			continue;
 
 		if (enemy.getWorldPosition().y >= mDeadLine - 20.f)
-		{
 			mPlayer->damage(enemy.getHitpoints());
-			mIsGameEnded = true;
-		}
 
 		if (mEnemyNodes.size() <= 3)
 			enemy.setMaxSpeed(enemy.getMaxSpeed() + 1.f);
@@ -304,81 +294,6 @@ void World::controlEnemyFire()
 		if (i < 11)
 			enemy.fire();
 	}
-}
-
-void World::spawnBoss(sf::Time dt)
-{
-	Boss::Direction direction;
-	auto position = 0.f;
-
-	mBossTimer += dt;
-
-	if (mFirstSpawn && mBossTimer > sf::seconds(5.f))
-	{
-		auto boss(std::make_unique<Boss>(Boss::BossShip, mTextures, mWorldBounds, Boss::MovingLeft));
-		mBoss = boss.get();
-		mBoss->setPosition(mWorldBounds.left + mWorldBounds.width + MovementsPadding, Padding * 1.5);
-		mSceneLayers[Space]->attachChild(std::move(boss));
-		mBossTimer = sf::Time::Zero;
-		mFirstSpawn = false;
-		return;
-	}
-
-	if (mBossTimer < sf::seconds(20.f))
-		return;
-
-	if (mBossSpawn)
-	{
-		direction = Boss::MovingRight;
-		position = -MovementsPadding;
-	}
-	else
-	{
-		direction = Boss::MovingLeft;
-		position = mWorldBounds.left + mWorldBounds.width + MovementsPadding;
-	}
-
-	mBossSpawn = !mBossSpawn;
-
-	// Receate Boss
-	auto boss(std::make_unique<Boss>(Boss::BossShip, mTextures, mWorldBounds, direction));
-	mBoss = boss.get();
-	mBoss->setPosition(position, Padding * 1.5);
-	mSceneLayers[Space]->attachChild(std::move(boss));
-	mBossTimer = sf::Time::Zero;
-}
-
-bool World::checkPlayerDeath(sf::Time dt)
-{
-	if (!mPlayer->isDestroyed() || mIsPlayerDead)
-		return false;
-
-	mPlayer->applyHitEffect(dt, mCommandQueue);
-	mPlayerTimer += dt;
-
-	if (mPlayerTimer > sf::seconds(0.25f))
-	{
-		mPlayer->setMarkToRemove();
-		mPreviousPosition = mPlayer->getWorldPosition();
-		mIsPlayerDead = true;
-		if (mIsGameEnded)
-			mEndGame = true;
-		mPlayerTimer = sf::Time::Zero;
-	}
-
-	return true;
-}
-
-void World::spawnPlayer()
-{
-	if (!mIsPlayerDead)
-		return;
-
-	auto leader(std::make_unique<Player>(Player::PlayerShip, mTextures));
-	mPlayer = leader.get();
-	mPlayer->setPosition(mPreviousPosition);
-	mSceneLayers[Space]->attachChild(std::move(leader));
-	mIsPlayerDead = false;
 }
 
 void World::adaptPlayerPosition()
