@@ -19,17 +19,17 @@ public:
 	explicit				PlayerFactory(const TextureHolder& textures);
 
 	void					setSceneNode(SceneNode* node);
-	Player*					createPlayer(sf::Vector2f position);
-	Player*					spawnPlayer();
-	bool					update(sf::Time dt, CommandQueue& commands);
+	Player*					createPlayer(sf::Vector2f position) const;
+	Player*					spawnPlayer() const;
+	bool					update(sf::Time dt, CommandQueue& commands) const;
 
 
 private:
-	Player*					mPlayer;
+	mutable Player*			mPlayer;
 	SceneNode*				mSceneNode;
 	const TextureHolder&	mTextures;
 
-	sf::Time				mTimer;
-	sf::Vector2f			mPosition;
-	bool					mIsAlive;
+	mutable sf::Time		mTimer;
+	mutable sf::Vector2f	mPosition;
+	mutable bool			mIsAlive;
 };

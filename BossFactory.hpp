@@ -18,16 +18,16 @@ public:
 	explicit				BossFactory(const TextureHolder& textures, const sf::FloatRect& bounds);
 
 	void					setSceneNode(SceneNode* node);
-	Boss*					spawnBoss(sf::Time dt);
+	Boss*					spawnBoss(sf::Time dt) const;
 
 
 private:
-	Boss*					mBoss;
+	mutable Boss*			mBoss;
 	SceneNode*				mSceneNode;
 	const TextureHolder&	mTextures;
 	sf::FloatRect			mBounds;
 
-	sf::Time				mTimer;
-	bool					mSpawn;
-	bool					mFirstSpawn;
+	mutable sf::Time		mTimer;
+	mutable bool			mSpawn;
+	mutable bool			mFirstSpawn;
 };

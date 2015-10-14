@@ -19,7 +19,7 @@ void BossFactory::setSceneNode(SceneNode* node)
 	mSceneNode = node;
 }
 
-Boss* BossFactory::spawnBoss(sf::Time dt)
+Boss* BossFactory::spawnBoss(sf::Time dt) const
 {
 	Boss::Direction direction;
 	auto position = 0.f;
