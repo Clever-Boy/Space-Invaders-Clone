@@ -13,8 +13,6 @@
 #include <SFML/Graphics/Texture.hpp>
 
 
-class Player;
-class Boss;
 class LifeNode;
 class ScoreNode;
 class SoundPlayer;

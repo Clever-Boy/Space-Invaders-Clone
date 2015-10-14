@@ -1,7 +1,5 @@
 #include "World.hpp"
 #include "SpriteNode.hpp"
-#include "Boss.hpp"
-#include "Player.hpp"
 #include "LifeNode.hpp"
 #include "Shield.hpp"
 #include "ScoreNode.hpp"
