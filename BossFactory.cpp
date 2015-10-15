@@ -29,7 +29,7 @@ Boss* BossFactory::create(Boss::Direction direction, float xPosition) const
 
 Boss* BossFactory::spawn(sf::Time dt) const
 {
-	Boss::Direction direction;
+	auto direction = Boss::MovingLeft;
 	auto position = 0.f;
 
 	mTimer += dt;
