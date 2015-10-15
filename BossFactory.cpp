@@ -17,11 +17,11 @@ void BossFactory::setSceneNode(SceneNode* node)
 	mSceneNode = node;
 }
 
-Boss* BossFactory::create(Boss::Direction direction, float xPosition) const
+Boss* BossFactory::create(Boss::Direction direction, float relX) const
 {
 	auto boss(std::make_unique<Boss>(Boss::BossShip, mTextures, mBounds, direction));
 	mBoss = boss.get();
-	mBoss->setPosition(xPosition, Padding * 1.5f);
+	mBoss->setPosition(relX, Padding * 1.5f);
 	mSceneNode->attachChild(std::move(boss));
 	mTimer = sf::Time::Zero;
 	return mBoss;
@@ -30,7 +30,7 @@ Boss* BossFactory::create(Boss::Direction direction, float xPosition) const
 Boss* BossFactory::spawn(sf::Time dt) const
 {
 	auto direction = Boss::MovingLeft;
-	auto position = 0.f;
+	auto relX = 0.f;
 
 	mTimer += dt;
 
@@ -40,15 +40,15 @@ Boss* BossFactory::spawn(sf::Time dt) const
 	if (mSpawn)
 	{
 		direction = Boss::MovingRight;
-		position = -MovementsPadding;
+		relX = -MovementsPadding;
 	}
 	else
 	{
 		direction = Boss::MovingLeft;
-		position = mBounds.left + mBounds.width + MovementsPadding;
+		relX = mBounds.left + mBounds.width + MovementsPadding;
 	}
 
 	mSpawn = !mSpawn;
 
-	return create(direction, position);
+	return create(direction, relX);
 }
