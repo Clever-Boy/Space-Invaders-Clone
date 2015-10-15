@@ -72,8 +72,9 @@ World::World(sf::RenderTarget&	target, FontHolder& fonts, SoundPlayer& sounds)
 	, mPlayerBulletNodes()
 	, mEnemyBulletNodes()
 	, mInvadersController()
-	, mDeadLine(getBattlefieldBounds().height + getBattlefieldBounds().top)
 	, mLivesCount(3)
+	, mDeadLine(getBattlefieldBounds().height + getBattlefieldBounds().top)
+	, mIsGameEnded(false)
 {
 	loadTextures();
 	buildScene();
@@ -135,7 +136,7 @@ void World::update(sf::Time dt)
 
 bool World::hasAlivePlayer() const
 {
-	if (mLivesCount <= 0)
+	if (mIsGameEnded || mLivesCount == 0)
 		return (!mPlayer->isMarkedForRemoval());
 
 	return true;
@@ -284,7 +285,10 @@ void World::controlEnemyFire()
 			continue;
 
 		if (enemy.getWorldPosition().y >= mDeadLine - Padding / 2.f)
+		{
 			mPlayer->damage(enemy.getHitpoints());
+			mIsGameEnded = true;
+		}
 
 		if (mEnemyNodes.size() <= 3)
 			enemy.setMaxSpeed(enemy.getMaxSpeed() + 1.f);

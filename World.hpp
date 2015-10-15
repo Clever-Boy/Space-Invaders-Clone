@@ -102,7 +102,8 @@ private:
 
 	InvadersController		mInvadersController;
 
-	float					mDeadLine;
-
 	std::size_t				mLivesCount;
+
+	float					mDeadLine;
+	bool					mIsGameEnded;
 };
