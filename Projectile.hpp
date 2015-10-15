@@ -23,6 +23,7 @@ public:
 
 	unsigned int			getCategory() const override;
 	sf::FloatRect			getBoundingRect() const override;
+
 	float					getMaxSpeed() const;
 	int						getDamage() const;
 

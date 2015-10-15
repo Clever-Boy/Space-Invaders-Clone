@@ -1,7 +1,6 @@
 #pragma once
 
 
-#include "Entity.hpp"
 #include "Command.hpp"
 #include "Projectile.hpp"
 
