@@ -8,7 +8,10 @@ BossFactory::BossFactory(const TextureHolder& textures, const sf::FloatRect& bou
 	, mTextures(textures)
 	, mBounds(bounds)
 	, mTimer(sf::Time::Zero)
+	, mPosition(0.f, Padding * 1.5f)
+	, mDirection(Boss::MovingLeft)
 	, mSpawn(true)
+	, mIsAlive(true)
 {
 }
 
@@ -17,38 +20,49 @@ void BossFactory::setSceneNode(SceneNode* node)
 	mSceneNode = node;
 }
 
-Boss* BossFactory::create(Boss::Direction direction, float relX) const
+Boss* BossFactory::create(Boss::Direction direction, sf::Vector2f poisition) const
 {
 	auto boss(std::make_unique<Boss>(Boss::BossShip, mTextures, mBounds, direction));
 	mBoss = boss.get();
-	mBoss->setPosition(relX, Padding * 1.5f);
+	mBoss->setPosition(poisition);
 	mSceneNode->attachChild(std::move(boss));
-	mTimer = sf::Time::Zero;
+
 	return mBoss;
 }
 
-Boss* BossFactory::spawn(sf::Time dt) const
+Boss* BossFactory::spawn() const
 {
-	auto direction = Boss::MovingLeft;
-	auto relX = 0.f;
+	if (mIsAlive)
+		return mBoss;
+
+	mIsAlive = true;
+
+	return create(mDirection, mPosition);
+}
+
+void BossFactory::update(sf::Time dt)
+{
+	if (mBoss != nullptr && (!mBoss->isDestroyed() || !mIsAlive))
+		return;
 
 	mTimer += dt;
 
-	if (mTimer < sf::seconds(20.f))
-		return mBoss;
-
-	if (mSpawn)
+	if (mTimer > sf::seconds(10.f))
 	{
-		direction = Boss::MovingRight;
-		relX = -MovementsPadding;
-	}
-	else
-	{
-		direction = Boss::MovingLeft;
-		relX = mBounds.left + mBounds.width + MovementsPadding;
-	}
 
-	mSpawn = !mSpawn;
+		if (mSpawn)
+		{
+			mDirection = Boss::MovingRight;
+			mPosition.x = -MovementsPadding;
+		}
+		else
+		{
+			mDirection = Boss::MovingLeft;
+			mPosition.x = mBounds.left + mBounds.width + MovementsPadding;
+		}
 
-	return create(direction, relX);
+		mSpawn = !mSpawn;
+		mTimer = sf::Time::Zero;
+		mIsAlive = false;
+	}
 }

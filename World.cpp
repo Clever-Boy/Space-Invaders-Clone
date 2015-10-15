@@ -97,9 +97,6 @@ void World::update(sf::Time dt)
 	// Remove useless entities
 	destroyEntitiesOutsideView();
 
-	// Create Boss 
-	mBoss = mBossFactory.spawn(dt);
-
 	// Update quadtree
 	checkForCollision();
 
@@ -120,10 +117,15 @@ void World::update(sf::Time dt)
 	if (mPlayerFactory.update(dt, mCommandQueue))
 		return;
 
+	mBossFactory.update(dt);
+
 	mSceneGraph.removeWrecks();
 
 	// Spawn Player
 	mPlayer = mPlayerFactory.spawn();
+
+	// Spawn Boss 
+	mBoss = mBossFactory.spawn();
 
 	// Regular update step
 	mSceneGraph.update(dt, mCommandQueue);
