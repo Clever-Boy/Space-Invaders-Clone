@@ -409,7 +409,7 @@ void World::handleCollisions()
 
 void World::playerProjectileCollision()
 {
-	std::vector<SceneNode*> mCollidableNodes;
+	NodeContainer mCollidableNodes;
 
 	for (const auto& node1 : mPlayerBulletNodes)
 	{
@@ -491,7 +491,7 @@ void World::playerProjectileCollision()
 
 void World::enemyProjectileCollision()
 {
-	std::vector<SceneNode*> mCollidableNodes;
+	NodeContainer mCollidableNodes;
 
 	for (const auto& node1 : mEnemyBulletNodes)
 	{
@@ -527,7 +527,6 @@ void World::enemyProjectileCollision()
 				auto& projectile = static_cast<Projectile&>(*node1);
 
 				player.destroy();
-
 				projectile.destroy();
 
 				mLife->decrement();
@@ -539,7 +538,7 @@ void World::enemyProjectileCollision()
 
 void World::enemyCollision()
 {
-	std::vector<SceneNode*> mCollidableNodes;
+	NodeContainer mCollidableNodes;
 
 	for (const auto& node1 : mEnemyNodes)
 	{
@@ -571,7 +570,6 @@ void World::enemyCollision()
 				auto& enemy = static_cast<Invaders&>(*node1);
 
 				player.destroy();
-
 				enemy.destroy();
 
 				mLife->decrement();
