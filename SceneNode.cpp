@@ -73,7 +73,7 @@ void SceneNode::setDirtyFlag(bool flag)
 
 sf::Transform SceneNode::getWorldTransform() const
 {
-	sf::Transform transform = sf::Transform::Identity;
+	auto transform(sf::Transform::Identity);
 
 	for (const auto* node = this; node != nullptr; node = node->mParent)
 		transform.combine(node->getTransform());
