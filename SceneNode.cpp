@@ -23,56 +23,9 @@ void SceneNode::update(sf::Time dt, CommandQueue& commands)
 	updateChildren(dt, commands);
 }
 
-void SceneNode::updateCurrent(sf::Time dt, CommandQueue& commands)
-{
-	// do nothing
-}
-
-void SceneNode::updateChildren(sf::Time dt, CommandQueue& commands)
-{
-	for (const auto& child : mChildren)
-		child->update(dt, commands);
-}
-
-void SceneNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	if (mDrity)
-	{
-		mTransform = getTransform();
-		if (getCategory() & Category::Shield)
-			mDrity = false;
-	}
-
-	states.transform.combine(mTransform);
-
-	drawCurrent(target, states);
-	drawChildren(target, states);
-}
-
-void SceneNode::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	// do nothing
-}
-
-void SceneNode::drawChildren(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	for (const auto& child : mChildren)
-		child->draw(target, states);
-}
-
 sf::Vector2f SceneNode::getWorldPosition() const
 {
 	return getWorldTransform() * sf::Vector2f();
-}
-
-sf::Transform SceneNode::getWorldTransform() const
-{
-	sf::Transform transform = sf::Transform::Identity;
-
-	for (const auto* node = this; node != nullptr; node = node->mParent)
-		transform *= node->getTransform();
-
-	return transform;
 }
 
 void SceneNode::onCommand(const Command& command)
@@ -114,13 +67,65 @@ bool SceneNode::isDestroyed() const
 	return false;
 }
 
+void SceneNode::setDirtyFlag(bool flag)
+{
+	mDrity = flag;
+}
+
+sf::Transform SceneNode::getWorldTransform() const
+{
+	sf::Transform transform = sf::Transform::Identity;
+
+	for (const auto* node = this; node != nullptr; node = node->mParent)
+		transform.combine(node->getTransform());
+
+	return transform;
+}
+
+void SceneNode::updateCurrent(sf::Time dt, CommandQueue& commands)
+{
+	// do nothing
+}
+
+void SceneNode::updateChildren(sf::Time dt, CommandQueue& commands)
+{
+	for (const auto& child : mChildren)
+		child->update(dt, commands);
+}
+
+void SceneNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	if (mDrity)
+	{
+		mTransform = getTransform();
+		states.transform.combine(mTransform);
+
+		if (getCategory() & Category::Shield)
+			mDrity = false;
+	}
+	else
+	{
+		if (getCategory() & Category::Shield)
+			states.transform.combine(mTransform);
+	}
+
+	drawCurrent(target, states);
+	drawChildren(target, states);
+}
+
+void SceneNode::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	// do nothing
+}
+
+void SceneNode::drawChildren(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	for (const auto& child : mChildren)
+		child->draw(target, states);
+}
+
 bool SceneNode::isMarkedForRemoval() const
 {
 	// By default, remove node if entity is destroyed
 	return isDestroyed();
-}
-
-void SceneNode::setDirtyFlag(bool flag)
-{
-	mDrity = flag;
 }
