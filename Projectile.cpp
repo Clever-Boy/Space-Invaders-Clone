@@ -13,8 +13,7 @@ namespace
 
 
 Projectile::Projectile(Type type, const TextureHolder& textures)
-	: Entity(Table[type].hitpoints)
-	, mType(type)
+	: mType(type)
 	, mSprite(textures.get(Table[type].texture))
 {
 	using namespace utility;
@@ -43,11 +42,6 @@ sf::FloatRect Projectile::getBoundingRect() const
 float Projectile::getMaxSpeed() const
 {
 	return Table[mType].speed;
-}
-
-int Projectile::getDamage() const
-{
-	return Table[mType].damage;
 }
 
 void Projectile::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const

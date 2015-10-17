@@ -25,18 +25,6 @@ void Entity::accelerate(sf::Vector2f velocity)
 	mVelocity += velocity;
 }
 
-int Entity::getHitpoints() const
-{
-	return mHitpoints;
-}
-
-void Entity::damage(int points)
-{
-	assert(points > 0);
-
-	mHitpoints -= points;
-}
-
 void Entity::destroy()
 {
 	mHitpoints = 0;

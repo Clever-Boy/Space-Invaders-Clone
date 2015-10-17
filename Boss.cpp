@@ -15,8 +15,7 @@ namespace
 
 
 Boss::Boss(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, Direction direction)
-	: Entity(Table[type].hitpoints)
-	, mType(type)
+	: mType(type)
 	, mSprite(textures.get(Table[type].texture))
 	, mExplosion(textures.get(Textures::EnemiesExplosion))
 	, mDirectionIndex((direction == MovingRight) ? +1.f : -1.f )

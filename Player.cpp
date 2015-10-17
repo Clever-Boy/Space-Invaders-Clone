@@ -16,8 +16,7 @@ namespace
 
 
 Player::Player(Type type, const TextureHolder& textures)
-	: Entity(Table[type].hitpoints)
-	, mType(type)
+	: mType(type)
 	, mSprite(textures.get(Table[type].texture), Table[type].textureRect)
 	, mFireCommand()
 	, mIsFiring(false)

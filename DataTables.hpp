@@ -12,7 +12,6 @@
 
 struct BossData
 {
-	int					hitpoints;
 	float				speed;
 	Textures::ID		texture;
 	sf::Color			color;
@@ -23,7 +22,6 @@ struct InvadersData
 {
 	using MovementContainer = std::vector<sf::Vector2f>;
 
-	int					hitpoints;
 	float				speed;
 	Textures::ID		texture;
 	sf::IntRect			textureRect;
@@ -38,7 +36,6 @@ struct InvadersData
 
 struct PlayerData
 {
-	int					hitpoints;
 	float				speed;
 	Textures::ID		texture;
 	sf::IntRect			textureRect;
@@ -49,8 +46,6 @@ struct PlayerData
 
 struct ProjectileData
 {
-	int					hitpoints;
-	int					damage;
 	float				speed;
 	sf::Vector2f		size;
 	Textures::ID		texture;

@@ -9,7 +9,6 @@ std::vector<BossData> data::initializeBossData()
 {
 	std::vector<BossData> data(Boss::TypeCount);
 
-	data[Boss::BossShip].hitpoints = 1;
 	data[Boss::BossShip].color = sf::Color(255, 0, 0);
 	data[Boss::BossShip].size = sf::Vector2f(3.f, 1.f);
 	data[Boss::BossShip].speed = 80.f;
@@ -22,7 +21,6 @@ std::vector<InvadersData> data::initializeInvadersData()
 {
 	std::vector<InvadersData> data(Invaders::TypeCount);
 
-	data[Invaders::Enemy1].hitpoints = 1;
 	data[Invaders::Enemy1].color = sf::Color(255, 255, 255);
 	data[Invaders::Enemy1].fireRate = 1u;
 	data[Invaders::Enemy1].size = sf::Vector2f(1.5f, 1.5f);
@@ -36,7 +34,6 @@ std::vector<InvadersData> data::initializeInvadersData()
 	data[Invaders::Enemy1].movement.push_back(sf::Vector2f(-1.f, 0.f));
 	data[Invaders::Enemy1].movement.push_back(sf::Vector2f(0.f, 1.f));
 
-	data[Invaders::Enemy2].hitpoints = 1;
 	data[Invaders::Enemy2].color = sf::Color(255, 255, 255);
 	data[Invaders::Enemy2].size = sf::Vector2f(1.5f, 1.5f);
 	data[Invaders::Enemy2].fireRate = 1u;
@@ -50,7 +47,6 @@ std::vector<InvadersData> data::initializeInvadersData()
 	data[Invaders::Enemy2].movement.push_back(sf::Vector2f(-1.f, 0.f));
 	data[Invaders::Enemy2].movement.push_back(sf::Vector2f(0.f, 1.f));
 
-	data[Invaders::Enemy3].hitpoints = 1;
 	data[Invaders::Enemy3].color = sf::Color(255, 255, 255);
 	data[Invaders::Enemy3].size = sf::Vector2f(1.5f, 1.5f);
 	data[Invaders::Enemy3].fireRate = 1u;
@@ -71,7 +67,6 @@ std::vector<PlayerData> data::initializePlayerData()
 {
 	std::vector<PlayerData> data(Player::TypeCount);
 
-	data[Player::PlayerShip].hitpoints = 1;
 	data[Player::PlayerShip].size = sf::Vector2f(2.f, 2.f);
 	data[Player::PlayerShip].speed = 200.f;
 
@@ -88,14 +83,10 @@ std::vector<ProjectileData> data::initializeProjectileData()
 {
 	std::vector<ProjectileData> data(Projectile::TypeCount);
 
-	data[Projectile::PlayerBullet].hitpoints = 1;
-	data[Projectile::PlayerBullet].damage = 1;
 	data[Projectile::PlayerBullet].speed = 600.f;
 	data[Projectile::PlayerBullet].size = sf::Vector2f(0.4f, 0.5f);
 	data[Projectile::PlayerBullet].texture = Textures::Bullet;
 
-	data[Projectile::EnemyBullet].hitpoints = 1;
-	data[Projectile::EnemyBullet].damage = 1;
 	data[Projectile::EnemyBullet].speed = 150.f;
 	data[Projectile::EnemyBullet].size = sf::Vector2f(0.3f, 0.6f);
 	data[Projectile::EnemyBullet].texture = Textures::Bullet;

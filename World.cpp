@@ -288,7 +288,7 @@ void World::controlEnemyFire()
 
 		if (enemy.getWorldPosition().y >= mDeadLine - Padding / 2.f)
 		{
-			mPlayer->damage(enemy.getHitpoints());
+			mPlayer->destroy();
 			mIsGameEnded = true;
 		}
 
@@ -457,7 +457,7 @@ void World::playerProjectileCollision()
 
 				mScore->increment(100);
 
-				enemy.damage(projectile.getDamage());
+				enemy.destroy();
 				projectile.destroy();
 			}
 			else if (node2->getCategory() & Category::EnemySpaceship)
@@ -482,7 +482,7 @@ void World::playerProjectileCollision()
 				default:break;
 				}
 
-				enemy.damage(projectile.getDamage());
+				enemy.destroy();
 				projectile.destroy();
 			}
 		}
@@ -526,7 +526,7 @@ void World::enemyProjectileCollision()
 				auto& player = static_cast<Player&>(*node2);
 				auto& projectile = static_cast<Projectile&>(*node1);
 
-				player.damage(projectile.getDamage());
+				player.destroy();
 
 				projectile.destroy();
 
@@ -570,7 +570,7 @@ void World::enemyCollision()
 				auto& player = static_cast<Player&>(*node2);
 				auto& enemy = static_cast<Invaders&>(*node1);
 
-				player.damage(enemy.getHitpoints());
+				player.destroy();
 
 				enemy.destroy();
 

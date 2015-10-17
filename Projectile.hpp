@@ -25,7 +25,6 @@ public:
 	sf::FloatRect			getBoundingRect() const override;
 
 	float					getMaxSpeed() const;
-	int						getDamage() const;
 
 
 private:

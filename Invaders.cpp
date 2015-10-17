@@ -17,8 +17,7 @@ namespace
 
 
 Invaders::Invaders(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, InvadersController& InvadersController)
-	: Entity(Table[type].hitpoints)
-	, mType(type)
+	: mType(type)
 	, mSprite(textures.get(Table[type].texture), Table[type].textureRect)
 	, mExplosion(textures.get(Textures::EnemiesExplosion))
 	, mFireCommand()
@@ -30,7 +29,7 @@ Invaders::Invaders(Type type, const TextureHolder& textures, const sf::FloatRect
 	, mCurrentDirection(Direction::MovingRight)
 	, mPreviousDirection(Direction::MovingRight)
 	, mMovement(Table[type].movement[MovingRight])
-	, mMaxSpeed(Table[mType].speed)
+	, mMaxSpeed(Table[type].speed)
 	, mAnimateCountdown(sf::Time::Zero)
 	, mAnimateRate(Table[type].animateRate)
 	, mBounds(bounds)
