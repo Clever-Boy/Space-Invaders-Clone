@@ -8,8 +8,7 @@
 
 
 Shield::Shield(const ImageHolder& images, sf::Vector2u windowsize)
-	: Entity(1)
-	, mSprite()
+	: mSprite()
 	, mImage(images.get(Images::Shield))
 	, mRenderTexture()
 	, mTexture()

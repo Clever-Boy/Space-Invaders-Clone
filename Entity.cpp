@@ -1,7 +1,5 @@
 #include "Entity.hpp"
 
-#include <cassert>
-
 
 Entity::Entity(int hitpoints)
 	: mVelocity()
@@ -18,11 +16,6 @@ void Entity::setVelocity(float vx, float vy)
 {
 	mVelocity.x = vx;
 	mVelocity.y = vy;
-}
-
-void Entity::accelerate(sf::Vector2f velocity)
-{
-	mVelocity += velocity;
 }
 
 void Entity::destroy()
@@ -43,4 +36,9 @@ bool Entity::isDestroyed() const
 void Entity::updateCurrent(sf::Time dt, CommandQueue&)
 {
 	move(mVelocity * dt.asSeconds());
+}
+
+void Entity::accelerate(sf::Vector2f velocity)
+{
+	mVelocity += velocity;
 }
