@@ -16,8 +16,6 @@ namespace GUI
 		, mIsToggle(false)
 		, mSounds(context.sounds)
 		, mWindow(context.window)
-		, mDrity(true)
-		, mTransform()
 	{
 		changeTexture(Normal);
 
@@ -100,13 +98,7 @@ namespace GUI
 
 	void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
-		if (mDrity)
-		{
-			mTransform = getTransform();
-			mDrity = false;
-		}
-
-		states.transform.combine(mTransform);
+		states.transform.combine(getTransform());
 
 		target.draw(mSprite, states);
 		target.draw(mText, states);

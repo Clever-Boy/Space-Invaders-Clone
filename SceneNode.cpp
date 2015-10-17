@@ -6,7 +6,6 @@ SceneNode::SceneNode(Category::Type category)
 	: mChildren()
 	, mParent(nullptr)
 	, mDrity(true)
-	, mTransform()
 	, mDefaultCategory(category)
 {
 }
@@ -96,18 +95,7 @@ void SceneNode::updateChildren(sf::Time dt, CommandQueue& commands)
 void SceneNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	if (mDrity)
-	{
-		mTransform = getTransform();
-		states.transform.combine(mTransform);
-
-		if (getCategory() & Category::Shield)
-			mDrity = false;
-	}
-	else
-	{
-		if (getCategory() & Category::Shield)
-			states.transform.combine(mTransform);
-	}
+		states.transform.combine(getTransform());
 
 	drawCurrent(target, states);
 	drawChildren(target, states);
