@@ -1,8 +1,6 @@
 #include "SceneNode.hpp"
 #include "Command.hpp"
 
-#include <SFML/Graphics/RenderTarget.hpp>
-
 
 SceneNode::SceneNode(Category::Type category)
 	: mChildren()
