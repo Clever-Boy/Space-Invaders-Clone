@@ -62,6 +62,5 @@ private:
 	std::vector<Ptr>		mChildren;
 	SceneNode*				mParent;
 	mutable bool			mDrity;
-	mutable sf::Transform	mTransform;
 	Category::Type			mDefaultCategory;
 };
