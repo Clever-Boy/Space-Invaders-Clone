@@ -37,7 +37,9 @@ namespace
 			{
 				auto relX = x - shieldBounds.left;
 
-				auto relY = (object.getCategory() & Category::EnemyProjectile) ? y - shieldBounds.top - objectBounds.height : y - shieldBounds.top;
+				auto relY = (object.getCategory() & Category::EnemyProjectile) 
+							? y - shieldBounds.top - objectBounds.height 
+							: y - shieldBounds.top;
 
 				if (shield.getPixel(relX, relY))
 					return true;
