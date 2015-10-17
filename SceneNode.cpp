@@ -39,7 +39,7 @@ void SceneNode::updateChildren(sf::Time dt, CommandQueue& commands)
 
 void SceneNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	if (mDrity )
+	if (mDrity)
 	{
 		mTransform = getTransform();
 		if (getCategory() & Category::Shield)
@@ -73,7 +73,7 @@ sf::Transform SceneNode::getWorldTransform() const
 	sf::Transform transform = sf::Transform::Identity;
 
 	for (const auto* node = this; node != nullptr; node = node->mParent)
-		transform = node->getTransform() * transform;
+		transform *= node->getTransform();
 
 	return transform;
 }
