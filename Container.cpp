@@ -132,9 +132,7 @@ namespace GUI
 
 	void Container::validateChild(sf::Vector2f position)
 	{
-		auto size = mChildren.size();
-
-		for (auto i = 0u; i < size; ++i)
+		for (auto i = 0u, size = mChildren.size(); i < size; ++i)
 		{
 			if (mChildren[i]->isSelectable() && mChildren[i]->contains(position))
 				select(i);

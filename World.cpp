@@ -277,9 +277,7 @@ void World::controlEnemyFire()
 		return lhs->getPosition().y > rhs->getPosition().y;
 	});
 
-	auto size = mEnemyNodes.size();
-
-	for (auto i = 0u; i < size; ++i)
+	for (auto i = 0u, size = mEnemyNodes.size(); i < size; ++i)
 	{
 		auto& enemy = static_cast<Invaders&>(*mEnemyNodes[i]);
 
