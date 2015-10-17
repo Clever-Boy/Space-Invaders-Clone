@@ -20,22 +20,6 @@ void SceneNode::attachChild(Ptr child)
 	mChildren.push_back(std::move(child));
 }
 
-SceneNode::Ptr SceneNode::detachChild(const SceneNode& node)
-{
-	auto found(std::find_if(mChildren.begin(), mChildren.end(), 
-		[&](const auto& p) 
-	{
-		return(p.get() == &node);
-	}));
-
-	assert(found != mChildren.end());
-
-	auto result = std::move(*found);
-	result->mParent = nullptr;
-	mChildren.erase(found);
-	return result;
-}
-
 void SceneNode::update(sf::Time dt, CommandQueue& commands)
 {
 	updateCurrent(dt, commands);
