@@ -75,7 +75,7 @@ World::World(sf::RenderTarget&	target, FontHolder& fonts, SoundPlayer& sounds)
 	, mEnemyBulletNodes()
 	, mInvadersController()
 	, mLivesCount(3)
-	, mDeadLine(getBattlefieldBounds().height + getBattlefieldBounds().top)
+	, mDeadLine(getBattlefieldBounds().height + getBattlefieldBounds().top - Padding / 2.f)
 	, mIsGameEnded(false)
 {
 	loadTextures();
@@ -281,12 +281,12 @@ void World::controlEnemyFire()
 
 	for (auto i = 0u, size = mEnemyNodes.size(); i < size; ++i)
 	{
-		auto& enemy = static_cast<Invaders&>(*mEnemyNodes[i]);
+		auto& enemy(static_cast<Invaders&>(*mEnemyNodes[i]));
 
 		if (enemy.isDestroyed())
 			continue;
 
-		if (enemy.getWorldPosition().y >= mDeadLine - Padding / 2.f)
+		if (enemy.getWorldPosition().y >= mDeadLine)
 		{
 			mPlayer->destroy();
 			mIsGameEnded = true;
@@ -426,8 +426,8 @@ void World::playerProjectileCollision()
 
 			if (node2->getCategory() & Category::Shield)
 			{
-				auto& shield = static_cast<Shield&>(*node2);
-				auto& projectile = static_cast<Projectile&>(*node1);
+				auto& shield(static_cast<Shield&>(*node2));
+				auto& projectile(static_cast<Projectile&>(*node1));
 
 				if (!collision(shield, projectile))
 					continue;
@@ -441,8 +441,8 @@ void World::playerProjectileCollision()
 				if (!collision(*node1, *node2))
 					continue;
 
-				auto& playerProjectile = static_cast<Projectile&>(*node1);
-				auto& enemyProjectile = static_cast<Projectile&>(*node2);
+				auto& playerProjectile(static_cast<Projectile&>(*node1));
+				auto& enemyProjectile(static_cast<Projectile&>(*node2));
 
 				playerProjectile.destroy();
 				enemyProjectile.destroy();
@@ -452,8 +452,8 @@ void World::playerProjectileCollision()
 				if (!collision(*node1, *node2))
 					continue;
 
-				auto& enemy = static_cast<Boss&>(*node2);
-				auto& projectile = static_cast<Projectile&>(*node1);
+				auto& enemy(static_cast<Boss&>(*node2));
+				auto& projectile(static_cast<Projectile&>(*node1));
 
 				mScore->increment(100);
 
@@ -465,8 +465,8 @@ void World::playerProjectileCollision()
 				if (!collision(*node1, *node2))
 					continue;
 
-				auto& enemy = static_cast<Invaders&>(*node2);
-				auto& projectile = static_cast<Projectile&>(*node1);
+				auto& enemy(static_cast<Invaders&>(*node2));
+				auto& projectile(static_cast<Projectile&>(*node1));
 
 				switch (enemy.getType())
 				{
@@ -478,8 +478,6 @@ void World::playerProjectileCollision()
 					break;
 				case Invaders::Enemy3:
 					mScore->increment(10);
-					break;
-				default:break;
 				}
 
 				enemy.destroy();
@@ -508,8 +506,8 @@ void World::enemyProjectileCollision()
 
 			if (node2->getCategory() & Category::Shield)
 			{
-				auto& shield = static_cast<Shield&>(*node2);
-				auto& projectile = static_cast<Projectile&>(*node1);
+				auto& shield(static_cast<Shield&>(*node2));
+				auto& projectile(static_cast<Projectile&>(*node1));
 
 				if (!collision(shield, projectile))
 					continue;
@@ -523,8 +521,8 @@ void World::enemyProjectileCollision()
 				if (!collision(*node1, *node2))
 					continue;
 
-				auto& player = static_cast<Player&>(*node2);
-				auto& projectile = static_cast<Projectile&>(*node1);
+				auto& player(static_cast<Player&>(*node2));
+				auto& projectile(static_cast<Projectile&>(*node1));
 
 				player.destroy();
 				projectile.destroy();
@@ -555,8 +553,8 @@ void World::enemyCollision()
 
 			if (node2->getCategory() & Category::Shield)
 			{
-				auto& shield = static_cast<Shield&>(*node2);
-				auto& enemy = static_cast<Invaders&>(*node1);
+				auto& shield(static_cast<Shield&>(*node2));
+				auto& enemy(static_cast<Invaders&>(*node1));
 
 				if (collision(shield, enemy))
 					shield.onHit(enemy.getBoundingRect(), enemy.getPosition(), enemy.getCategory());
@@ -566,8 +564,8 @@ void World::enemyCollision()
 				if (!collision(*node1, *node2))
 					continue;
 
-				auto& player = static_cast<Player&>(*node2);
-				auto& enemy = static_cast<Invaders&>(*node1);
+				auto& player(static_cast<Player&>(*node2));
+				auto& enemy(static_cast<Invaders&>(*node1));
 
 				player.destroy();
 				enemy.destroy();
