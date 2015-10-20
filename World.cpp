@@ -229,10 +229,12 @@ void World::buildScene()
 
 void World::addShields()
 {
-	addShield(85.f, 150.f);
-	addShield(-85.f, 150.f);
-	addShield(250.f, 150.f);
-	addShield(-250.f, 150.f);
+	sf::Vector2f position(85.f, 150.f);
+
+	addShield(position.x, position.y);
+	addShield(-position.x, position.y);
+	addShield(position.x * 3 - 5.f, position.y);
+	addShield(-position.x * 3 + 5.f, position.y );
 }
 
 void World::addShield(float relX, float relY)
