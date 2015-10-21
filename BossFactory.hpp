@@ -3,10 +3,6 @@
 
 #include "Boss.hpp"
 
-#include <SFML/Graphics/Rect.hpp>
-#include <SFML/System/Time.hpp>
-#include <SFML/System/NonCopyable.hpp>
-
 
 class BossFactory final : private sf::NonCopyable
 {
