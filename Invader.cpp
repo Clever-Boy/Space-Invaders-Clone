@@ -1,10 +1,10 @@
-#include "Invaders.hpp"
+#include "Invader.hpp"
 #include "DataTables.hpp"
 #include "Utility.hpp"
 #include "CommandQueue.hpp"
 #include "ResourceHolder.hpp"
 #include "SoundNode.hpp"
-#include "InvadersController.hpp"
+#include "InvaderController.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Texture.hpp>
@@ -12,11 +12,11 @@
 
 namespace
 {
-	const std::vector<InvadersData>& Table = data::initializeInvadersData();
+	const std::vector<InvaderData>& Table = data::initializeInvaderData();
 }
 
 
-Invaders::Invaders(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, InvadersController& InvadersController)
+Invader::Invader(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, InvaderController& InvaderController)
 	: mType(type)
 	, mSprite(textures.get(Table[type].texture), Table[type].textureRect)
 	, mExplosion(textures.get(Textures::EnemiesExplosion))
@@ -33,7 +33,7 @@ Invaders::Invaders(Type type, const TextureHolder& textures, const sf::FloatRect
 	, mAnimateCountdown(sf::Time::Zero)
 	, mAnimateRate(Table[type].animateRate)
 	, mBounds(bounds)
-	, mInvadersController(InvadersController)
+	, mInvaderController(InvaderController)
 	, mIsChangeDirection(false)
 {
 	using namespace utility;
@@ -46,10 +46,10 @@ Invaders::Invaders(Type type, const TextureHolder& textures, const sf::FloatRect
 	centerOrigin(mSprite);
 
 	mFireCommand.category = Category::SceneSpaceLayer;
-	mFireCommand.action = std::bind(&Invaders::createBullets, this, std::placeholders::_1, std::cref(textures));
+	mFireCommand.action = std::bind(&Invader::createBullets, this, std::placeholders::_1, std::cref(textures));
 }
 
-void Invaders::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
+void Invader::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	if (isDestroyed())
 		target.draw(mExplosion, states);
@@ -57,7 +57,7 @@ void Invaders::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) co
 		target.draw(mSprite, states);
 }
 
-void Invaders::updateCurrent(sf::Time dt, CommandQueue& commands)
+void Invader::updateCurrent(sf::Time dt, CommandQueue& commands)
 {
 	// Entity has been destroyed: mark for removal
 	if (isDestroyed())
@@ -78,32 +78,32 @@ void Invaders::updateCurrent(sf::Time dt, CommandQueue& commands)
 	Entity::updateCurrent(dt, commands);
 }
 
-unsigned int Invaders::getCategory() const
+unsigned int Invader::getCategory() const
 {
 	return Category::EnemySpaceship;
 }
 
-Invaders::Type Invaders::getType() const
+Invader::Type Invader::getType() const
 {
 	return mType;
 }
 
-sf::FloatRect Invaders::getBoundingRect() const
+sf::FloatRect Invader::getBoundingRect() const
 {
 	return getWorldTransform().transformRect(mSprite.getGlobalBounds());
 }
 
-float Invaders::getMaxSpeed() const
+float Invader::getMaxSpeed() const
 {
 	return mMaxSpeed;
 }
 
-void Invaders::setMaxSpeed(float point)
+void Invader::setMaxSpeed(float point)
 {
 	mMaxSpeed = point;
 }
 
-void Invaders::fire()
+void Invader::fire()
 {
 	using namespace utility;
 
@@ -111,7 +111,7 @@ void Invaders::fire()
 		mIsFiring = true;
 }
 
-void Invaders::requstChangeDirection()
+void Invader::requstChangeDirection()
 {
 	const std::vector<sf::Vector2f>& movement = Table[mType].movement;
 
@@ -146,19 +146,19 @@ void Invaders::requstChangeDirection()
 	}
 }
 
-void Invaders::updateMovementPattern(sf::Time dt)
+void Invader::updateMovementPattern(sf::Time dt)
 {
 	bool changeDirection = false;
 	const auto TravelledDistance = 30.f;
 
 	// Check if we need change dirtection
-	if (mCurrentDirection == Invaders::MovingDown)
+	if (mCurrentDirection == Invader::MovingDown)
 	{
 		if (mTravelledDistance > TravelledDistance)
 			changeDirection = true;
 	}
 
-	if (mCurrentDirection == Invaders::MovingRight || mCurrentDirection == Invaders::MovingLeft)
+	if (mCurrentDirection == Invader::MovingRight || mCurrentDirection == Invader::MovingLeft)
 	{
 		if (!mBounds.contains(getWorldPosition()))
 			changeDirection = true;
@@ -171,7 +171,7 @@ void Invaders::updateMovementPattern(sf::Time dt)
 	// Check if we can requst change direction
 	if (changeDirection && !mIsChangeDirection)
 	{
-		mInvadersController.requstChangeDirectionCommands();
+		mInvaderController.requstChangeDirectionCommands();
 		mIsChangeDirection = true;
 	}
 
@@ -182,7 +182,7 @@ void Invaders::updateMovementPattern(sf::Time dt)
 	mTravelledDistance += getMaxSpeed() * dt.asSeconds();
 }
 
-void Invaders::applyAnimation(sf::Time dt)
+void Invader::applyAnimation(sf::Time dt)
 {
 	sf::Vector2i textureBounds(mSprite.getTexture()->getSize());
 	auto textureRect(mSprite.getTextureRect());
@@ -204,7 +204,7 @@ void Invaders::applyAnimation(sf::Time dt)
 	mSprite.setTextureRect(textureRect);
 }
 
-void Invaders::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
+void Invader::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 {
 	// Check for automatic gunfire, allow only in intervals
 	if (mIsFiring && mFireCountdown <= sf::Time::Zero)
@@ -224,14 +224,14 @@ void Invaders::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 	}
 }
 
-void Invaders::createBullets(SceneNode& node, const TextureHolder& textures) const
+void Invader::createBullets(SceneNode& node, const TextureHolder& textures) const
 {
 	auto type = Projectile::EnemyBullet;
 
 	createProjectile(node, type, 0.f, 0.5f, textures);
 }
 
-void Invaders::createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const
+void Invader::createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const
 {
 	auto projectile(std::make_unique<Projectile>(type, textures));
 
@@ -244,12 +244,12 @@ void Invaders::createProjectile(SceneNode& node, Projectile::Type type, float xO
 	node.attachChild(std::move(projectile));
 }
 
-bool Invaders::isMarkedForRemoval() const
+bool Invader::isMarkedForRemoval() const
 {
 	return mIsMarkedForRemoval;
 }
 
-void Invaders::playLocalSound(CommandQueue& commands, SoundEffect::ID effect)
+void Invader::playLocalSound(CommandQueue& commands, SoundEffect::ID effect)
 {
 	auto worldPosition(getWorldPosition());
 

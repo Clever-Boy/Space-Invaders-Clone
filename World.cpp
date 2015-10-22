@@ -73,7 +73,7 @@ World::World(sf::RenderTarget&	target, FontHolder& fonts, SoundPlayer& sounds)
 	, mEnemyNodes()
 	, mPlayerBulletNodes()
 	, mEnemyBulletNodes()
-	, mInvadersController()
+	, mInvaderController()
 	, mLivesCount(3)
 	, mDeadLine(getBattlefieldBounds().height + getBattlefieldBounds().top - Padding / 2.f)
 	, mIsGameEnded(false)
@@ -102,8 +102,8 @@ void World::update(sf::Time dt)
 	// Update quadtree
 	checkForCollision();
 
-	// update Invaders controller: Adapt Movements 
-	mInvadersController.update(mCommandQueue);
+	// update Invader controller: Adapt Movements 
+	mInvaderController.update(mCommandQueue);
 
 	// Forward commands to scene graph
 	while (!mCommandQueue.isEmpty())
@@ -258,17 +258,17 @@ void World::addEnemies()
 		sf::Vector2f position(horizontalSpacing * (i % enemiesPerRow), verticalSpacing * (i / enemiesPerRow));
 
 		if (i < 22)
-			addEnemy(Invaders::Enemy1, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
+			addEnemy(Invader::Enemy1, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
 		else if (i >= 22 && i < 44)
-			addEnemy(Invaders::Enemy2, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
+			addEnemy(Invader::Enemy2, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
 		else if (i >= 44)
-			addEnemy(Invaders::Enemy3, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
+			addEnemy(Invader::Enemy3, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
 	}
 }
 
-void World::addEnemy(Invaders::Type type, float relX, float relY)
+void World::addEnemy(Invader::Type type, float relX, float relY)
 {
-	auto enemy(std::make_unique<Invaders>(type, mTextures, getMovementsfieldBounds(), mInvadersController));
+	auto enemy(std::make_unique<Invader>(type, mTextures, getMovementsfieldBounds(), mInvaderController));
 	enemy->setPosition(relX, relY);
 	mSceneLayers[Space]->attachChild(std::move(enemy));
 }
@@ -283,7 +283,7 @@ void World::controlEnemyFire()
 
 	for (auto i = 0u, size = mEnemyNodes.size(); i < size; ++i)
 	{
-		auto& enemy(static_cast<Invaders&>(*mEnemyNodes[i]));
+		auto& enemy(static_cast<Invader&>(*mEnemyNodes[i]));
 
 		if (enemy.isDestroyed())
 			continue;
@@ -467,18 +467,18 @@ void World::playerProjectileCollision()
 				if (!collision(*node1, *node2))
 					continue;
 
-				auto& enemy(static_cast<Invaders&>(*node2));
+				auto& enemy(static_cast<Invader&>(*node2));
 				auto& projectile(static_cast<Projectile&>(*node1));
 
 				switch (enemy.getType())
 				{
-				case Invaders::Enemy1:
+				case Invader::Enemy1:
 					mScore->increment(30);
 					break;
-				case Invaders::Enemy2:
+				case Invader::Enemy2:
 					mScore->increment(20);
 					break;
-				case Invaders::Enemy3:
+				case Invader::Enemy3:
 					mScore->increment(10);
 				}
 
@@ -556,7 +556,7 @@ void World::enemyCollision()
 			if (node2->getCategory() & Category::Shield)
 			{
 				auto& shield(static_cast<Shield&>(*node2));
-				auto& enemy(static_cast<Invaders&>(*node1));
+				auto& enemy(static_cast<Invader&>(*node1));
 
 				if (collision(shield, enemy))
 					shield.onHit(enemy.getBoundingRect(), enemy.getPosition(), enemy.getCategory());
@@ -567,7 +567,7 @@ void World::enemyCollision()
 					continue;
 
 				auto& player(static_cast<Player&>(*node2));
-				auto& enemy(static_cast<Invaders&>(*node1));
+				auto& enemy(static_cast<Invader&>(*node1));
 
 				player.destroy();
 				enemy.destroy();

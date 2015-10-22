@@ -1,6 +1,6 @@
 #include "DataTables.hpp"
 #include "Boss.hpp"
-#include "Invaders.hpp"
+#include "Invader.hpp"
 #include "Player.hpp"
 #include "Projectile.hpp"
 
@@ -17,48 +17,48 @@ std::vector<BossData> data::initializeBossData()
 	return data;
 }
 
-std::vector<InvadersData> data::initializeInvadersData()
+std::vector<InvaderData> data::initializeInvaderData()
 {
-	std::vector<InvadersData> data(Invaders::TypeCount);
+	std::vector<InvaderData> data(Invader::TypeCount);
 
-	data[Invaders::Enemy1].color = sf::Color(255, 255, 255);
-	data[Invaders::Enemy1].fireRate = 1u;
-	data[Invaders::Enemy1].size = sf::Vector2f(1.5f, 1.5f);
-	data[Invaders::Enemy1].speed = 50.f;
-	data[Invaders::Enemy1].texture = Textures::Enemies;
-	data[Invaders::Enemy1].textureRect = sf::IntRect(0, 0, 25, 20);
-	data[Invaders::Enemy1].fireInterval = sf::seconds(6.f);
-	data[Invaders::Enemy1].animationInterval = sf::seconds(2.f);
-	data[Invaders::Enemy1].animateRate = 1u;
-	data[Invaders::Enemy1].movement.push_back(sf::Vector2f(1.f, 0.f));
-	data[Invaders::Enemy1].movement.push_back(sf::Vector2f(-1.f, 0.f));
-	data[Invaders::Enemy1].movement.push_back(sf::Vector2f(0.f, 1.f));
+	data[Invader::Enemy1].color = sf::Color(255, 255, 255);
+	data[Invader::Enemy1].fireRate = 1u;
+	data[Invader::Enemy1].size = sf::Vector2f(1.5f, 1.5f);
+	data[Invader::Enemy1].speed = 50.f;
+	data[Invader::Enemy1].texture = Textures::Enemies;
+	data[Invader::Enemy1].textureRect = sf::IntRect(0, 0, 25, 20);
+	data[Invader::Enemy1].fireInterval = sf::seconds(6.f);
+	data[Invader::Enemy1].animationInterval = sf::seconds(2.f);
+	data[Invader::Enemy1].animateRate = 1u;
+	data[Invader::Enemy1].movement.push_back(sf::Vector2f(1.f, 0.f));
+	data[Invader::Enemy1].movement.push_back(sf::Vector2f(-1.f, 0.f));
+	data[Invader::Enemy1].movement.push_back(sf::Vector2f(0.f, 1.f));
 
-	data[Invaders::Enemy2].color = sf::Color(255, 255, 255);
-	data[Invaders::Enemy2].size = sf::Vector2f(1.5f, 1.5f);
-	data[Invaders::Enemy2].fireRate = 1u;
-	data[Invaders::Enemy2].speed = 50.f;
-	data[Invaders::Enemy2].texture = Textures::Enemies;
-	data[Invaders::Enemy2].textureRect = sf::IntRect(0, 20, 25, 20);
-	data[Invaders::Enemy2].fireInterval = sf::seconds(6.f);
-	data[Invaders::Enemy2].animationInterval = sf::seconds(2.f);
-	data[Invaders::Enemy2].animateRate = 1u;
-	data[Invaders::Enemy2].movement.push_back(sf::Vector2f(1.f, 0.f));
-	data[Invaders::Enemy2].movement.push_back(sf::Vector2f(-1.f, 0.f));
-	data[Invaders::Enemy2].movement.push_back(sf::Vector2f(0.f, 1.f));
+	data[Invader::Enemy2].color = sf::Color(255, 255, 255);
+	data[Invader::Enemy2].size = sf::Vector2f(1.5f, 1.5f);
+	data[Invader::Enemy2].fireRate = 1u;
+	data[Invader::Enemy2].speed = 50.f;
+	data[Invader::Enemy2].texture = Textures::Enemies;
+	data[Invader::Enemy2].textureRect = sf::IntRect(0, 20, 25, 20);
+	data[Invader::Enemy2].fireInterval = sf::seconds(6.f);
+	data[Invader::Enemy2].animationInterval = sf::seconds(2.f);
+	data[Invader::Enemy2].animateRate = 1u;
+	data[Invader::Enemy2].movement.push_back(sf::Vector2f(1.f, 0.f));
+	data[Invader::Enemy2].movement.push_back(sf::Vector2f(-1.f, 0.f));
+	data[Invader::Enemy2].movement.push_back(sf::Vector2f(0.f, 1.f));
 
-	data[Invaders::Enemy3].color = sf::Color(255, 255, 255);
-	data[Invaders::Enemy3].size = sf::Vector2f(1.5f, 1.5f);
-	data[Invaders::Enemy3].fireRate = 1u;
-	data[Invaders::Enemy3].speed = 50.f;
-	data[Invaders::Enemy3].texture = Textures::Enemies;
-	data[Invaders::Enemy3].textureRect = sf::IntRect(0, 40, 25, 20);
-	data[Invaders::Enemy3].fireInterval = sf::seconds(6.f);
-	data[Invaders::Enemy3].animationInterval = sf::seconds(2.f);
-	data[Invaders::Enemy3].animateRate = 1u;
-	data[Invaders::Enemy3].movement.push_back(sf::Vector2f(1.f, 0.f));
-	data[Invaders::Enemy3].movement.push_back(sf::Vector2f(-1.f, 0.f));
-	data[Invaders::Enemy3].movement.push_back(sf::Vector2f(0.f, 1.f));
+	data[Invader::Enemy3].color = sf::Color(255, 255, 255);
+	data[Invader::Enemy3].size = sf::Vector2f(1.5f, 1.5f);
+	data[Invader::Enemy3].fireRate = 1u;
+	data[Invader::Enemy3].speed = 50.f;
+	data[Invader::Enemy3].texture = Textures::Enemies;
+	data[Invader::Enemy3].textureRect = sf::IntRect(0, 40, 25, 20);
+	data[Invader::Enemy3].fireInterval = sf::seconds(6.f);
+	data[Invader::Enemy3].animationInterval = sf::seconds(2.f);
+	data[Invader::Enemy3].animateRate = 1u;
+	data[Invader::Enemy3].movement.push_back(sf::Vector2f(1.f, 0.f));
+	data[Invader::Enemy3].movement.push_back(sf::Vector2f(-1.f, 0.f));
+	data[Invader::Enemy3].movement.push_back(sf::Vector2f(0.f, 1.f));
 
 	return data;
 }

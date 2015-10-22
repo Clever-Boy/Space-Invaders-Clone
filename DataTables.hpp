@@ -18,7 +18,7 @@ struct BossData
 	sf::Vector2f		size;
 };
 
-struct InvadersData
+struct InvaderData
 {
 	using MovementContainer = std::vector<sf::Vector2f>;
 
@@ -54,7 +54,7 @@ struct ProjectileData
 namespace data
 {
 	std::vector<BossData>		initializeBossData();
-	std::vector<InvadersData>	initializeInvadersData();
+	std::vector<InvaderData>	initializeInvaderData();
 	std::vector<PlayerData>		initializePlayerData();
 	std::vector<ProjectileData>	initializeProjectileData();
 }

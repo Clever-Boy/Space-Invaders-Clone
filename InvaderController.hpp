@@ -7,10 +7,10 @@
 class CommandQueue;
 
 
-class InvadersController final : private sf::NonCopyable
+class InvaderController final : private sf::NonCopyable
 {
 public:
-							InvadersController();
+							InvaderController();
 
 	void					requstChangeDirectionCommands();
 	void					update(CommandQueue& commands);

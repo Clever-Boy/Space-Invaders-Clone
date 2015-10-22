@@ -1,10 +1,10 @@
 #pragma once
 
 
-#include "Invaders.hpp"
+#include "Invader.hpp"
 #include "CommandQueue.hpp"
 #include "QuadTree.hpp"
-#include "InvadersController.hpp"
+#include "InvaderController.hpp"
 #include "ResourceHolder.hpp"
 #include "PlayerFactory.hpp"
 #include "BossFactory.hpp"
@@ -49,7 +49,7 @@ private:
 	void					addShield(float relX, float relY);
 
 	void					addEnemies();
-	void					addEnemy(Invaders::Type type, float relX, float relY);
+	void					addEnemy(Invader::Type type, float relX, float relY);
 	void					controlEnemyFire();
 
 	void					adaptPlayerPosition();
@@ -100,7 +100,7 @@ private:
 	NodeContainer			mPlayerBulletNodes;
 	NodeContainer			mEnemyBulletNodes;
 
-	InvadersController		mInvadersController;
+	InvaderController		mInvaderController;
 
 	std::size_t				mLivesCount;
 
