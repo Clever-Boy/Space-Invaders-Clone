@@ -23,6 +23,7 @@ Player*	PlayerFactory::create(sf::Vector2f position) const
 	mPlayer = leader.get();
 	mPlayer->setPosition(position);
 	mSceneNode->attachChild(std::move(leader));
+
 	return mPlayer;
 }
 

@@ -64,5 +64,4 @@ void BossFactory::update(sf::Time dt)
 	mSpawn = !mSpawn;
 	mTimer = sf::Time::Zero;
 	mIsAlive = false;
-
 }
