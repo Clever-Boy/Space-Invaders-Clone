@@ -47,22 +47,22 @@ void BossFactory::update(sf::Time dt)
 
 	mTimer += dt;
 
-	if (mTimer > sf::seconds(10.f))
+	if (mTimer < sf::seconds(10.f))
+		return;
+
+	if (mSpawn)
 	{
-
-		if (mSpawn)
-		{
-			mDirection = Boss::MovingRight;
-			mPosition.x = -MovementsPadding;
-		}
-		else
-		{
-			mDirection = Boss::MovingLeft;
-			mPosition.x = mBounds.left + mBounds.width + MovementsPadding;
-		}
-
-		mSpawn = !mSpawn;
-		mTimer = sf::Time::Zero;
-		mIsAlive = false;
+		mDirection = Boss::MovingRight;
+		mPosition.x = -MovementsPadding;
 	}
+	else
+	{
+		mDirection = Boss::MovingLeft;
+		mPosition.x = mBounds.left + mBounds.width + MovementsPadding;
+	}
+
+	mSpawn = !mSpawn;
+	mTimer = sf::Time::Zero;
+	mIsAlive = false;
+
 }
