@@ -1,19 +1,19 @@
-#include "InvaderController.hpp"
+#include "InvadersController.hpp"
 #include "CommandQueue.hpp"
 #include "Invader.hpp"
 
 
-InvaderController::InvaderController()
+InvadersController::InvadersController()
 	: mIsRequstCommand(false)
 {
 }
 
-void InvaderController::requstChangeDirectionCommands()
+void InvadersController::requstChangeDirectionCommands()
 {
 	mIsRequstCommand = true;
 }
 
-void InvaderController::update(CommandQueue& commands)
+void InvadersController::update(CommandQueue& commands)
 {
 	if (!mIsRequstCommand)
 		return;

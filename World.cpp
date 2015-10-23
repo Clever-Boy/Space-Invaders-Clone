@@ -73,7 +73,7 @@ World::World(sf::RenderTarget&	target, FontHolder& fonts, SoundPlayer& sounds)
 	, mEnemyNodes()
 	, mPlayerBulletNodes()
 	, mEnemyBulletNodes()
-	, mInvaderController()
+	, mInvadersController()
 	, mLivesCount(3)
 	, mDeadLine(getBattlefieldBounds().height + getBattlefieldBounds().top - Padding / 2.f)
 	, mIsGameEnded(false)
@@ -103,7 +103,7 @@ void World::update(sf::Time dt)
 	checkForCollision();
 
 	// update Invader controller: Adapt Movements 
-	mInvaderController.update(mCommandQueue);
+	mInvadersController.update(mCommandQueue);
 
 	// Forward commands to scene graph
 	while (!mCommandQueue.isEmpty())
@@ -268,7 +268,7 @@ void World::addEnemies()
 
 void World::addEnemy(Invader::Type type, float relX, float relY)
 {
-	auto enemy(std::make_unique<Invader>(type, mTextures, getMovementsfieldBounds(), mInvaderController));
+	auto enemy(std::make_unique<Invader>(type, mTextures, getMovementsfieldBounds(), mInvadersController));
 	enemy->setPosition(relX, relY);
 	mSceneLayers[Space]->attachChild(std::move(enemy));
 }

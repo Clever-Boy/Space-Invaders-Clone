@@ -4,7 +4,7 @@
 #include "Invader.hpp"
 #include "CommandQueue.hpp"
 #include "QuadTree.hpp"
-#include "InvaderController.hpp"
+#include "InvadersController.hpp"
 #include "ResourceHolder.hpp"
 #include "PlayerFactory.hpp"
 #include "BossFactory.hpp"
@@ -100,7 +100,7 @@ private:
 	NodeContainer			mPlayerBulletNodes;
 	NodeContainer			mEnemyBulletNodes;
 
-	InvaderController		mInvaderController;
+	InvadersController		mInvadersController;
 
 	std::size_t				mLivesCount;
 

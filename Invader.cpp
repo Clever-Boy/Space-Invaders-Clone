@@ -4,7 +4,7 @@
 #include "CommandQueue.hpp"
 #include "ResourceHolder.hpp"
 #include "SoundNode.hpp"
-#include "InvaderController.hpp"
+#include "InvadersController.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Texture.hpp>
@@ -16,7 +16,7 @@ namespace
 }
 
 
-Invader::Invader(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, InvaderController& InvaderController)
+Invader::Invader(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, InvadersController& InvadersController)
 	: mType(type)
 	, mSprite(textures.get(Table[type].texture), Table[type].textureRect)
 	, mExplosion(textures.get(Textures::EnemiesExplosion))
@@ -33,7 +33,7 @@ Invader::Invader(Type type, const TextureHolder& textures, const sf::FloatRect& 
 	, mAnimateCountdown(sf::Time::Zero)
 	, mAnimateRate(Table[type].animateRate)
 	, mBounds(bounds)
-	, mInvaderController(InvaderController)
+	, mInvadersController(InvadersController)
 	, mIsChangeDirection(false)
 {
 	using namespace utility;
@@ -171,7 +171,7 @@ void Invader::updateMovementPattern(sf::Time dt)
 	// Check if we can requst change direction
 	if (changeDirection && !mIsChangeDirection)
 	{
-		mInvaderController.requstChangeDirectionCommands();
+		mInvadersController.requstChangeDirectionCommands();
 		mIsChangeDirection = true;
 	}
 
