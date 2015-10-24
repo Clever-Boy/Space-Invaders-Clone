@@ -65,7 +65,7 @@ void Invaders::update(Player& player, float line, bool& end, bool& changeSpeed)
 	auto numberOfKilled = 0u;
 
 	std::for_each(mInvaders.begin(), mInvaders.end(),
-		[&](const auto& p)
+		[&numberOfKilled](const auto& p)
 	{
 		if (p->isDestroyed()) numberOfKilled++;
 	});
