@@ -256,10 +256,12 @@ void World::addEnemies()
 		if (i < 22)
 			mInvaders.addEnemy(	Invader::Enemy1, 
 								positionOfTopLeft.x + position.x,
-								positionOfTopLeft.y + position.y, mTextures,
+								positionOfTopLeft.y + position.y, 
+								mTextures,
 								getMovementsfieldBounds(),
 								mInvaders, 
 								mSceneLayers[Space]);
+
 		else if (i >= 22 && i < 44)
 			mInvaders.addEnemy(	Invader::Enemy2, 
 								positionOfTopLeft.x + position.x, 
@@ -268,6 +270,7 @@ void World::addEnemies()
 								getMovementsfieldBounds(), 
 								mInvaders, 
 								mSceneLayers[Space]);
+
 		else if (i >= 44)
 			mInvaders.addEnemy(	Invader::Enemy3, 
 								positionOfTopLeft.x + position.x, 
