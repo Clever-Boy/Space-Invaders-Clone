@@ -4,9 +4,8 @@
 
 
 Invaders::Invaders()
-	: mIsRequstCommand(false)
-	, mInvaders()
-
+	: mInvaders()
+	, mIsRequstCommand(false)
 {
 }
 
@@ -56,7 +55,6 @@ void Invaders::updateCommand(CommandQueue& commands)
 
 void Invaders::update(Player& player, float line, bool& end)
 {
-
 	std::sort(mInvaders.begin(), mInvaders.end(),
 		[this](const auto& lhs, const auto& rhs)
 	{

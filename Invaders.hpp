@@ -33,8 +33,8 @@ public:
 
 
 private:
-	bool					mIsRequstCommand;
 	InvadersNode			mInvaders;
+	bool					mIsRequstCommand;
 };
 
 
