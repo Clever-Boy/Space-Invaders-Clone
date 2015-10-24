@@ -48,8 +48,8 @@ void Invaders::addEnemy(Targs&&... args)
 											std::get<4>(tuple),
 											std::get<5>(tuple)));
 
-	auto Invader(enemy.get());
-	mInvaders.push_back(Invader);
+	auto invader(enemy.get());
+	mInvaders.push_back(invader);
 	mInvaders.back()->setPosition(std::get<1>(tuple), std::get<2>(tuple));
 
 	std::get<6>(tuple)->attachChild(std::move(enemy));
