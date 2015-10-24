@@ -1,10 +1,9 @@
 #pragma once
 
 
-#include "Invader.hpp"
 #include "CommandQueue.hpp"
 #include "QuadTree.hpp"
-#include "InvadersController.hpp"
+#include "Invaders.hpp"
 #include "ResourceHolder.hpp"
 #include "PlayerFactory.hpp"
 #include "BossFactory.hpp"
@@ -49,8 +48,8 @@ private:
 	void					addShield(float relX, float relY);
 
 	void					addEnemies();
-	void					addEnemy(Invader::Type type, float relX, float relY);
-	void					controlEnemyFire();
+
+	void					updateSpawns();
 
 	void					adaptPlayerPosition();
 
@@ -96,11 +95,10 @@ private:
 	QuadTree				mQuadTreePrimary;
 	QuadTree				mQuadTreeSecondary;
 
-	NodeContainer			mEnemyNodes;
 	NodeContainer			mPlayerBulletNodes;
 	NodeContainer			mEnemyBulletNodes;
 
-	InvadersController		mInvadersController;
+	Invaders				mInvaders;
 
 	std::size_t				mLivesCount;
 

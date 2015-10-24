@@ -5,7 +5,7 @@
 #include "Projectile.hpp"
 
 
-class InvadersController;
+class Invaders;
 
 
 class Invader final : public Entity
@@ -30,7 +30,7 @@ private:
 
 
 public:
-	explicit				Invader(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, InvadersController& InvadersController);
+	explicit				Invader(Type type, const TextureHolder& textures, const sf::FloatRect& bounds, Invaders& invaders);
 
 	unsigned int			getCategory() const override;
 	sf::FloatRect			getBoundingRect() const override;
@@ -82,6 +82,6 @@ private:
 	float					mMaxSpeed;
 
 	sf::FloatRect			mBounds;
-	InvadersController&		mInvadersController;
+	Invaders&				mInvaders;
 	bool					mIsChangeDirection;
 };

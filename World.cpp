@@ -70,10 +70,9 @@ World::World(sf::RenderTarget&	target, FontHolder& fonts, SoundPlayer& sounds)
 	, mScore(nullptr)
 	, mQuadTreePrimary(1, mWorldBounds)
 	, mQuadTreeSecondary(1, mWorldBounds)
-	, mEnemyNodes()
 	, mPlayerBulletNodes()
 	, mEnemyBulletNodes()
-	, mInvadersController()
+	, mInvaders()
 	, mLivesCount(3)
 	, mDeadLine(getBattlefieldBounds().height + getBattlefieldBounds().top - Padding / 2.f)
 	, mIsGameEnded(false)
@@ -102,15 +101,15 @@ void World::update(sf::Time dt)
 	// Update quadtree
 	checkForCollision();
 
-	// update Invader controller: Adapt Movements 
-	mInvadersController.update(mCommandQueue);
+	// update Invaders command: Adapt Movements 
+	mInvaders.updateCommand(mCommandQueue);
 
 	// Forward commands to scene graph
 	while (!mCommandQueue.isEmpty())
 		mSceneGraph.onCommand(mCommandQueue.pop());
 
-	// Control enemy fires
-	controlEnemyFire();
+	// Update Invasers: Control enemy fires, speed and check end of the game
+	mInvaders.update(*mPlayer, mDeadLine, mIsGameEnded);
 
 	// Collision detection and response (may destroy entities)
 	handleCollisions();
@@ -123,11 +122,7 @@ void World::update(sf::Time dt)
 
 	mSceneGraph.removeWrecks();
 
-	// Spawn Player
-	mPlayer = mPlayerFactory.spawn();
-
-	// Spawn Boss 
-	mBoss = mBossFactory.spawn();
+	updateSpawns();
 
 	// Regular update step
 	mSceneGraph.update(dt, mCommandQueue);
@@ -148,8 +143,9 @@ bool World::hasAlivePlayer() const
 
 bool World::hasPlayerWon() const
 {
-	if (mEnemyNodes.empty())
-		return (mBoss->isMarkedForRemoval());
+
+	if (mInvaders.empty())
+		return (mBoss == nullptr || mBoss->isMarkedForRemoval());
 
 	return false;
 }
@@ -258,48 +254,36 @@ void World::addEnemies()
 		sf::Vector2f position(horizontalSpacing * (i % enemiesPerRow), verticalSpacing * (i / enemiesPerRow));
 
 		if (i < 22)
-			addEnemy(Invader::Enemy1, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
+			mInvaders.addEnemy(	Invader::Enemy1, 
+								positionOfTopLeft.x + position.x,
+								positionOfTopLeft.y + position.y, mTextures,
+								getMovementsfieldBounds(),
+								mInvaders, 
+								mSceneLayers[Space]);
 		else if (i >= 22 && i < 44)
-			addEnemy(Invader::Enemy2, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
+			mInvaders.addEnemy(	Invader::Enemy2, 
+								positionOfTopLeft.x + position.x, 
+								positionOfTopLeft.y + position.y, 
+								mTextures, 
+								getMovementsfieldBounds(), 
+								mInvaders, 
+								mSceneLayers[Space]);
 		else if (i >= 44)
-			addEnemy(Invader::Enemy3, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
+			mInvaders.addEnemy(	Invader::Enemy3, 
+								positionOfTopLeft.x + position.x, 
+								positionOfTopLeft.y + position.y, 
+								mTextures, 
+								getMovementsfieldBounds(), 
+								mInvaders, 
+								mSceneLayers[Space]);
 	}
 }
 
-void World::addEnemy(Invader::Type type, float relX, float relY)
+void World::updateSpawns()
 {
-	auto enemy(std::make_unique<Invader>(type, mTextures, getMovementsfieldBounds(), mInvadersController));
-	enemy->setPosition(relX, relY);
-	mSceneLayers[Space]->attachChild(std::move(enemy));
-}
+	mPlayer = mPlayerFactory.spawn();
 
-void World::controlEnemyFire()
-{
-	std::sort(mEnemyNodes.begin(), mEnemyNodes.end(),
-		[this](const auto& lhs, const auto& rhs)
-	{
-		return lhs->getPosition().y > rhs->getPosition().y;
-	});
-
-	for (auto i = 0u, size = mEnemyNodes.size(); i < size; ++i)
-	{
-		auto& enemy(static_cast<Invader&>(*mEnemyNodes[i]));
-
-		if (enemy.isDestroyed())
-			continue;
-
-		if (enemy.getWorldPosition().y >= mDeadLine)
-		{
-			mPlayer->destroy();
-			mIsGameEnded = true;
-		}
-
-		if (mEnemyNodes.size() <= 3)
-			enemy.setMaxSpeed(enemy.getMaxSpeed() + 1.f);
-
-		if (i < 11)
-			enemy.fire();
-	}
+	mBoss = mBossFactory.spawn();
 }
 
 void World::adaptPlayerPosition()
@@ -362,9 +346,9 @@ void World::checkForCollision()
 	mQuadTreePrimary.clear();
 	mQuadTreeSecondary.clear();
 
-	mEnemyNodes.clear();
 	mPlayerBulletNodes.clear();
 	mEnemyBulletNodes.clear();
+	mInvaders.clear();
 
 	Command command;
 	command.category = Category::All;
@@ -381,8 +365,8 @@ void World::checkForCollision()
 		}
 		else if (node.getCategory() & Category::EnemySpaceship)
 		{
-			mEnemyNodes.push_back(&node);
 			mQuadTreePrimary.insert(&node);
+			mInvaders.push(&node);
 		}
 		else if (node.getCategory() & Category::Shield)
 		{
@@ -540,7 +524,7 @@ void World::enemyCollision()
 {
 	NodeContainer mCollidableNodes;
 
-	for (const auto& node1 : mEnemyNodes)
+	for (const auto& node1 : mInvaders)
 	{
 		if (node1->isDestroyed())
 			continue;
