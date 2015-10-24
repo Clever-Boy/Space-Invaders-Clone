@@ -40,7 +40,7 @@ class StateStack final : private sf::NonCopyable
 public:
 	explicit				StateStack(State::Context context);
 
-	template <typename T>
+							template <typename T>
 	void					registerState(States::ID stateID);
 
 	void					update(sf::Time dt);
