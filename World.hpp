@@ -1,6 +1,7 @@
 #pragma once
 
 
+#include "Invader.hpp"
 #include "CommandQueue.hpp"
 #include "QuadTree.hpp"
 #include "Invaders.hpp"
@@ -48,6 +49,7 @@ private:
 	void					addShield(float relX, float relY);
 
 	void					addEnemies();
+	void					addEnemy(Invader::Type type, float relX, float relY);
 
 	void					updateSpawns();
 

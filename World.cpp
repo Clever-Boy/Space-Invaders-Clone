@@ -255,32 +255,20 @@ void World::addEnemies()
 		sf::Vector2f position(horizontalSpacing * (i % enemiesPerRow), verticalSpacing * (i / enemiesPerRow));
 
 		if (i < 22)
-			mInvaders.addEnemy(	Invader::Enemy1, 
-								positionOfTopLeft.x + position.x,
-								positionOfTopLeft.y + position.y, 
-								mTextures,
-								getMovementsfieldBounds(),
-								mInvaders, 
-								mSceneLayers[Space]);
-
+			addEnemy(Invader::Enemy1, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
 		else if (i >= 22 && i < 44)
-			mInvaders.addEnemy(	Invader::Enemy2, 
-								positionOfTopLeft.x + position.x, 
-								positionOfTopLeft.y + position.y, 
-								mTextures, 
-								getMovementsfieldBounds(), 
-								mInvaders, 
-								mSceneLayers[Space]);
-
+			addEnemy(Invader::Enemy2, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
 		else if (i >= 44)
-			mInvaders.addEnemy(	Invader::Enemy3, 
-								positionOfTopLeft.x + position.x, 
-								positionOfTopLeft.y + position.y, 
-								mTextures, 
-								getMovementsfieldBounds(), 
-								mInvaders, 
-								mSceneLayers[Space]);
+			addEnemy(Invader::Enemy3, positionOfTopLeft.x + position.x, positionOfTopLeft.y + position.y);
 	}
+}
+
+void World::addEnemy(Invader::Type type, float relX, float relY)
+{
+	auto enemy(std::make_unique<Invader>(type, mTextures, getMovementsfieldBounds(), mInvaders));
+	enemy->setPosition(relX, relY);
+	mInvaders.push(enemy.get());
+	mSceneLayers[Space]->attachChild(std::move(enemy));
 }
 
 void World::updateSpawns()

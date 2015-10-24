@@ -1,5 +1,6 @@
 #include "Invaders.hpp"
 #include "CommandQueue.hpp"
+#include "Invader.hpp"
 #include "Player.hpp"
 
 
