@@ -42,7 +42,7 @@ template<typename... Targs>
 void Invaders::addEnemy(Targs&&... args)
 {
 	auto tuple(std::forward_as_tuple(std::forward<Targs>(args)...));
-	
+
 	auto enemy(
 				std::make_unique<Invader>
 				(

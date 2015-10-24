@@ -92,7 +92,7 @@ void Invaders::update(Player& player, float line, bool& end, bool& isChaneSpeed)
 
 		if (chaneSpeed)
 		{
-			auto total = (mInvaders.size() - numberOfKilled == 0) ? 1.f : mInvaders.size() - numberOfKilled;
+			auto total = (size - numberOfKilled == 0) ? 1.f : size - numberOfKilled;
 			auto speed = enemy.getMaxSpeed() + enemy.getMaxSpeed() * SpeedIncreaseMultiplier / total;
 			enemy.setMaxSpeed(speed);
 		}
