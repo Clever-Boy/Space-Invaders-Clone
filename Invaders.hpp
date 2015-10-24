@@ -29,7 +29,7 @@ public:
 
 	void					requstChangeDirectionCommands();
 	void					updateCommand(CommandQueue& commands);
-	void					update(Player& player, float line, bool& end, bool& isChaneSpeed);
+	void					update(Player& player, float line, bool& end, bool& changeSpeed);
 
 
 private:

@@ -102,7 +102,7 @@ private:
 
 	std::size_t				mLivesCount;
 
-	bool					mIsChaneSpeed;
+	bool					mChangeSpeed;
 
 	float					mDeadLine;
 	bool					mIsGameEnded;

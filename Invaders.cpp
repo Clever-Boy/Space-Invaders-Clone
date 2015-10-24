@@ -53,7 +53,7 @@ void Invaders::updateCommand(CommandQueue& commands)
 	commands.push(command);
 }
 
-void Invaders::update(Player& player, float line, bool& end, bool& isChaneSpeed)
+void Invaders::update(Player& player, float line, bool& end, bool& changeSpeed)
 {
 	std::sort(mInvaders.begin(), mInvaders.end(),
 		[this](const auto& lhs, const auto& rhs)
@@ -85,7 +85,7 @@ void Invaders::update(Player& player, float line, bool& end, bool& isChaneSpeed)
 			end = true;
 		}
 
-		if (isChaneSpeed)
+		if (changeSpeed)
 		{
 			auto speed = enemy.getMaxSpeed() + enemy.getMaxSpeed() * SpeedIncreaseMultiplier / total;
 			enemy.setMaxSpeed(speed);
@@ -95,6 +95,6 @@ void Invaders::update(Player& player, float line, bool& end, bool& isChaneSpeed)
 			enemy.fire();
 	}
 
-	if(isChaneSpeed)
-		isChaneSpeed = false;
+	if(changeSpeed)
+		changeSpeed = false;
 }
