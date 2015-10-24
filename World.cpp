@@ -74,6 +74,7 @@ World::World(sf::RenderTarget&	target, FontHolder& fonts, SoundPlayer& sounds)
 	, mEnemyBulletNodes()
 	, mInvaders()
 	, mLivesCount(3)
+	, mIsChaneSpeed(false)
 	, mDeadLine(getBattlefieldBounds().height + getBattlefieldBounds().top - Padding / 2.f)
 	, mIsGameEnded(false)
 {
@@ -109,7 +110,7 @@ void World::update(sf::Time dt)
 		mSceneGraph.onCommand(mCommandQueue.pop());
 
 	// Update Invasers: Control enemy fires, speed and check end of the game
-	mInvaders.update(*mPlayer, mDeadLine, mIsGameEnded);
+	mInvaders.update(*mPlayer, mDeadLine, mIsGameEnded, mIsChaneSpeed);
 
 	// Collision detection and response (may destroy entities)
 	handleCollisions();
@@ -469,6 +470,7 @@ void World::playerProjectileCollision()
 					mScore->increment(10);
 				}
 
+				mIsChaneSpeed = true;
 				enemy.destroy();
 				projectile.destroy();
 			}

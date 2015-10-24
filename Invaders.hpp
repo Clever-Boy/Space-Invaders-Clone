@@ -29,7 +29,7 @@ public:
 
 	void					requstChangeDirectionCommands();
 	void					updateCommand(CommandQueue& commands);
-	void					update(Player& player, float line, bool& end);
+	void					update(Player& player, float line, bool& end, bool& isChaneSpeed);
 
 
 private:
@@ -42,7 +42,7 @@ template<typename... Targs>
 void Invaders::addEnemy(Targs&&... args)
 {
 	auto tuple(std::forward_as_tuple(std::forward<Targs>(args)...));
-
+	
 	auto enemy(
 				std::make_unique<Invader>
 				(
