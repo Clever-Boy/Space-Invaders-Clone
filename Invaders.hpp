@@ -43,16 +43,15 @@ void Invaders::addEnemy(Targs&&... args)
 {
 	std::tuple<Targs...> tuple(std::forward<Targs>(args)...);
 
-	auto enemy
-		(
-			std::make_unique<Invader>
-			(
-				std::get<0>(tuple), 
-				std::get<3>(tuple), 
-				std::get<4>(tuple),
-				std::get<5>(tuple)
-			)
-		);
+	auto enemy(
+				std::make_unique<Invader>
+				(
+					std::get<0>(tuple), 
+					std::get<3>(tuple), 
+					std::get<4>(tuple),
+					std::get<5>(tuple)
+				)
+			);
 
 	auto invader(enemy.get());
 	mInvaders.push_back(invader);
