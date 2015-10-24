@@ -62,7 +62,7 @@ void Invaders::update(Player& player, float line, bool& end, bool& changeSpeed)
 	});
 
 	const auto SpeedIncreaseMultiplier = 0.5f;
-	auto numberOfKilled = 0;
+	auto numberOfKilled = 0u;
 
 	std::for_each(mInvaders.begin(), mInvaders.end(),
 		[&](const auto& p)
@@ -70,7 +70,7 @@ void Invaders::update(Player& player, float line, bool& end, bool& changeSpeed)
 		if (p->isDestroyed()) numberOfKilled++;
 	});
 
-	auto total = (mInvaders.size() - numberOfKilled == 0) ? 1.f : mInvaders.size() - numberOfKilled;
+	auto total = (mInvaders.size() - numberOfKilled == 0) ? 1u : mInvaders.size() - numberOfKilled;
 
 	for (auto i = 0u, size = mInvaders.size(); i < size; ++i)
 	{
