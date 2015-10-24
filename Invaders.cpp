@@ -61,7 +61,6 @@ void Invaders::update(Player& player, float line, bool& end, bool& isChaneSpeed)
 		return lhs->getPosition().y > rhs->getPosition().y;
 	});
 
-	bool chaneSpeed = false;
 	const auto SpeedIncreaseMultiplier = 0.5f;
 	auto numberOfKilled = 0;
 
@@ -71,11 +70,7 @@ void Invaders::update(Player& player, float line, bool& end, bool& isChaneSpeed)
 		if (p->isDestroyed()) numberOfKilled++;
 	});
 
-	if (isChaneSpeed)
-	{
-		chaneSpeed = true;
-		isChaneSpeed = false;
-	}
+	auto total = (mInvaders.size() - numberOfKilled == 0) ? 1.f : mInvaders.size() - numberOfKilled;
 
 	for (auto i = 0u, size = mInvaders.size(); i < size; ++i)
 	{
@@ -90,9 +85,8 @@ void Invaders::update(Player& player, float line, bool& end, bool& isChaneSpeed)
 			end = true;
 		}
 
-		if (chaneSpeed)
+		if (isChaneSpeed)
 		{
-			auto total = (size - numberOfKilled == 0) ? 1.f : size - numberOfKilled;
 			auto speed = enemy.getMaxSpeed() + enemy.getMaxSpeed() * SpeedIncreaseMultiplier / total;
 			enemy.setMaxSpeed(speed);
 		}
@@ -100,4 +94,7 @@ void Invaders::update(Player& player, float line, bool& end, bool& isChaneSpeed)
 		if (i < 11)
 			enemy.fire();
 	}
+
+	if(isChaneSpeed)
+		isChaneSpeed = false;
 }
