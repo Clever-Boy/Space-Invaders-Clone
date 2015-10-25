@@ -13,7 +13,7 @@ class Player;
 
 class Invaders final : private sf::NonCopyable
 {
-	using InvadersNode		= std::vector<SceneNode*>;
+	using InvadersContainer	= std::vector<SceneNode*>;
 	using ConstantIterator	= std::vector<SceneNode*>::const_iterator;
 
 
@@ -32,6 +32,6 @@ public:
 
 
 private:
-	InvadersNode			mInvaders;
+	InvadersContainer		mInvaders;
 	bool					mIsRequstCommand;
 };
