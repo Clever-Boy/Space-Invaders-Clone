@@ -3,9 +3,6 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 
-#include <random>
-#include <ctime>
-
 
 float utility::toDegree(float radian)
 {
