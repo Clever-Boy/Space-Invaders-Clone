@@ -18,6 +18,7 @@ public:
 							Random();
 
 	auto					operator()(T max);
+	auto					operator()(T min, T max);
 
 
 private:
