@@ -2,23 +2,26 @@
 
 
 #include <random>
+#include <type_traits>
 
 
 template<typename T>
 class Random
 {
-	template <typename U>
-	static auto dist() -> typename std::enable_if_t<std::is_integral<U>::value, std::uniform_int_distribution<U>>{};
+	static_assert(std::is_integral<T>::value || std::is_floating_point<T>::value, "!");
 
-	template <typename U>
-	static auto dist() -> typename std::enable_if_t<std::is_floating_point<U>::value, std::uniform_real_distribution<U>>{};
+	using dist_type = std::conditional_t<
+						std::is_integral<T>::value,
+						std::uniform_int_distribution<T>,
+						std::uniform_real_distribution<T>
+					>;
 
 
 public:
 							Random();
 
-	auto					operator()(T max);
-	auto					operator()(T min, T max);
+	T						operator()(T max);
+	T						operator()(T min, T max);
 
 
 private:
