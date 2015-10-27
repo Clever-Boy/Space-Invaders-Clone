@@ -8,10 +8,10 @@ template<typename T>
 class Random
 {
 	template <typename U>
-	static auto dist() -> typename std::enable_if<std::is_integral<U>::value, std::uniform_int_distribution<U>>::type;
+	static auto dist() -> typename std::enable_if_t<std::is_integral<U>::value, std::uniform_int_distribution<U>>{};
 
 	template <typename U>
-	static auto dist() -> typename std::enable_if<std::is_floating_point<U>::value, std::uniform_real_distribution<U>>::type;
+	static auto dist() -> typename std::enable_if_t<std::is_floating_point<U>::value, std::uniform_real_distribution<U>>{};
 
 
 public:
