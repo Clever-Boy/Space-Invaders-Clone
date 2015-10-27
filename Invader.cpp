@@ -205,10 +205,8 @@ void Invader::applyAnimation(sf::Time dt)
 
 void Invader::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 {
-	// Check for automatic gunfire, allow only in intervals
 	if (mIsFiring && mFireCountdown <= sf::Time::Zero)
 	{
-		// Interval expired: We can fire a new bullet
 		commands.push(mFireCommand);
 		playLocalSound(commands, SoundEffect::EnemiesGunfire);
 
@@ -217,7 +215,6 @@ void Invader::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 	}
 	else if (mFireCountdown > sf::Time::Zero)
 	{
-		// Interval not expired: Decrease it further
 		mFireCountdown -= dt;
 		mIsFiring = false;
 	}
