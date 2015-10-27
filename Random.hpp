@@ -15,17 +15,13 @@ class Random
 
 
 public:
-	Random()
-		: mRandomEngine(std::random_device()())
-	{}
+	Random();
 
-	auto operator()(T max)
-	{
-		decltype(dist<T>()) uniformDistribution(0, max - 1);
-		return uniformDistribution(mRandomEngine);
-	}
+	auto operator()(T max);
 
 
 private:
 	std::mt19937			mRandomEngine;
 };
+
+#include "Random.inl"
