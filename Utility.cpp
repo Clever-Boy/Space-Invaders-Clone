@@ -5,7 +5,6 @@
 
 #include <random>
 #include <ctime>
-#include <cassert>
 
 
 namespace utility
