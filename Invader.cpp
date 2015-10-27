@@ -106,8 +106,6 @@ void Invader::setMaxSpeed(float point)
 
 void Invader::fire()
 {
-	using namespace utility;
-
 	if (mRandom(100) == 0)
 		mIsFiring = true;
 }
