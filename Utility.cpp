@@ -30,8 +30,8 @@ int utility::randomInt(int max)
 void utility::setScaleSize(sf::Sprite& sprite, float x, float y)
 {
 	auto worldScale = 16u;
-	auto scaleX = (1.0f / sprite.getTextureRect().width) * x * worldScale;
-	auto scaleY = (1.0f / sprite.getTextureRect().height) * y * worldScale;
+	auto scaleX = (1.f / sprite.getTextureRect().width) * x * worldScale;
+	auto scaleY = (1.f / sprite.getTextureRect().height) * y * worldScale;
 	sprite.setScale(scaleX, scaleY);
 }
 

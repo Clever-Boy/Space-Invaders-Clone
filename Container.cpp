@@ -5,137 +5,134 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 
-namespace GUI
+GUI::Container::Container(SoundPlayer& soundplayer)
+	: mChildren()
+	, mSelectedChild(-1)
+	, mSounds(soundplayer)
+	, mHovered(nullptr)
 {
-	Container::Container(SoundPlayer& soundplayer)
-		: mChildren()
-		, mSelectedChild(-1)
-		, mSounds(soundplayer)
-		, mHovered(nullptr)
+}
+
+void GUI::Container::pack(Component::Ptr component)
+{
+	mChildren.push_back(std::move(component));
+
+	if (!hasSelection() && mChildren.back()->isSelectable())
+		select(mChildren.size() - 1);
+}
+
+bool GUI::Container::isSelectable() const
+{
+	return false;
+}
+
+void GUI::Container::handleEvent(const sf::Event& event, sf::Vector2f position)
+{
+	if (hasSelection() && mChildren[mSelectedChild]->isActive())
 	{
+		mChildren[mSelectedChild]->handleEvent(event, position);
 	}
-
-	void Container::pack(Component::Ptr component)
+	else if (event.type == sf::Event::KeyReleased)
 	{
-		mChildren.push_back(std::move(component));
-
-		if (!hasSelection() && mChildren.back()->isSelectable())
-			select(mChildren.size() - 1);
-	}
-
-	bool Container::isSelectable() const
-	{
-		return false;
-	}
-
-	void Container::handleEvent(const sf::Event& event, sf::Vector2f position)
-	{
-		if (hasSelection() && mChildren[mSelectedChild]->isActive())
+		if (event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::Up)
 		{
-			mChildren[mSelectedChild]->handleEvent(event, position);
+			selectPrevious();
+			mSounds.play(SoundEffect::Button);
 		}
-		else if (event.type == sf::Event::KeyReleased)
+		else if (event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::Down)
 		{
-			if (event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::Up)
-			{
-				selectPrevious();
-				mSounds.play(SoundEffect::Button);
-			}
-			else if (event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::Down)
-			{
-				selectNext();
-				mSounds.play(SoundEffect::Button);
-			}
-			else if (event.key.code == sf::Keyboard::Return || event.key.code == sf::Keyboard::Space)
-			{
-				if (hasSelection())
-					mChildren[mSelectedChild]->activate();
-			}
+			selectNext();
+			mSounds.play(SoundEffect::Button);
 		}
-		else if (event.type == sf::Event::MouseMoved)
+		else if (event.key.code == sf::Keyboard::Return || event.key.code == sf::Keyboard::Space)
 		{
-			validateChild(position);
-
-			if (mChildren[mSelectedChild] != nullptr && mChildren[mSelectedChild] != mHovered)
-			{
-				mHovered = mChildren[mSelectedChild];
-
-				if (mChildren[mSelectedChild]->contains(position))
-					mSounds.play(SoundEffect::Button);
-			}
-			else if (mChildren[mSelectedChild] == nullptr && mHovered != nullptr)
-			{
-				mHovered = nullptr;
-			}
-		}
-		else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
-		{
-			if (mChildren[mSelectedChild]->contains(position))
+			if (hasSelection())
 				mChildren[mSelectedChild]->activate();
 		}
 	}
-
-	void Container::draw(sf::RenderTarget& target, sf::RenderStates states) const
+	else if (event.type == sf::Event::MouseMoved)
 	{
-		for (const auto& child : mChildren)
-			target.draw(*child, states);
-	}
+		validateChild(position);
 
-	bool Container::hasSelection() const
-	{
-		return mSelectedChild >= 0;
-	}
-
-	void Container::select(std::size_t index)
-	{
-		if (mChildren[index]->isSelectable())
+		if (mChildren[mSelectedChild] != nullptr && mChildren[mSelectedChild] != mHovered)
 		{
-			if (hasSelection())
-				mChildren[mSelectedChild]->deselect();
+			mHovered = mChildren[mSelectedChild];
 
-			mChildren[index]->select();
-			mSelectedChild = index;
+			if (mChildren[mSelectedChild]->contains(position))
+				mSounds.play(SoundEffect::Button);
+		}
+		else if (mChildren[mSelectedChild] == nullptr && mHovered != nullptr)
+		{
+			mHovered = nullptr;
 		}
 	}
-
-	void Container::selectNext()
+	else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 	{
-		if (!hasSelection())
-			return;
-
-		// Search next component that is selectable, wrap around if necessary
-		auto next = mSelectedChild;
-
-		do
-			next = (next + 1) % mChildren.size();
-		while (!mChildren[next]->isSelectable());
-
-		// Select that component
-		select(next);
+		if (mChildren[mSelectedChild]->contains(position))
+			mChildren[mSelectedChild]->activate();
 	}
+}
 
-	void Container::selectPrevious()
+void GUI::Container::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	for (const auto& child : mChildren)
+		target.draw(*child, states);
+}
+
+bool GUI::Container::hasSelection() const
+{
+	return mSelectedChild >= 0;
+}
+
+void GUI::Container::select(std::size_t index)
+{
+	if (mChildren[index]->isSelectable())
 	{
-		if (!hasSelection())
-			return;
+		if (hasSelection())
+			mChildren[mSelectedChild]->deselect();
 
-		// Search previous component that is selectable, wrap around if necessary
-		auto prev = mSelectedChild;
-
-		do
-			prev = (prev + mChildren.size() - 1) % mChildren.size();
-		while (!mChildren[prev]->isSelectable());
-
-		// Select that component
-		select(prev);
+		mChildren[index]->select();
+		mSelectedChild = index;
 	}
+}
 
-	void Container::validateChild(sf::Vector2f position)
+void GUI::Container::selectNext()
+{
+	if (!hasSelection())
+		return;
+
+	// Search next component that is selectable, wrap around if necessary
+	auto next = mSelectedChild;
+
+	do
+		next = (next + 1) % mChildren.size();
+	while (!mChildren[next]->isSelectable());
+
+	// Select that component
+	select(next);
+}
+
+void GUI::Container::selectPrevious()
+{
+	if (!hasSelection())
+		return;
+
+	// Search previous component that is selectable, wrap around if necessary
+	auto prev = mSelectedChild;
+
+	do
+		prev = (prev + mChildren.size() - 1) % mChildren.size();
+	while (!mChildren[prev]->isSelectable());
+
+	// Select that component
+	select(prev);
+}
+
+void GUI::Container::validateChild(sf::Vector2f position)
+{
+	for (auto i = 0u, size = mChildren.size(); i < size; ++i)
 	{
-		for (auto i = 0u, size = mChildren.size(); i < size; ++i)
-		{
-			if (mChildren[i]->isSelectable() && mChildren[i]->contains(position))
-				select(i);
-		}
+		if (mChildren[i]->isSelectable() && mChildren[i]->contains(position))
+			select(i);
 	}
 }
