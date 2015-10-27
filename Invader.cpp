@@ -107,7 +107,7 @@ void Invader::fire()
 {
 	using namespace utility;
 
-	if (randomInt(50) == 0)
+	if (randomInt(100) == 0)
 		mIsFiring = true;
 }
 

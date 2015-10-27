@@ -11,15 +11,6 @@
 
 namespace utility
 {
-	std::default_random_engine createRandomEngine()
-	{
-		auto seed = static_cast<unsigned long>(std::time(nullptr));
-		return std::default_random_engine(seed);
-	}
-
-	auto RandomEngine = createRandomEngine();
-
-
 	float toDegree(float radian)
 	{
 		return 180.f / 3.141592653589793238462643383f * radian;
@@ -30,10 +21,14 @@ namespace utility
 		return 3.141592653589793238462643383f / 180.f * degree;
 	}
 
-	int randomInt(int exclusiveMax)
+	int randomInt(int max)
 	{
-		std::uniform_int_distribution<> distr(0, exclusiveMax - 1);
-		return distr(RandomEngine);
+		static auto seed = static_cast<unsigned long>(std::time(nullptr));
+		static auto RandomEngine = std::default_random_engine(seed);
+
+		std::uniform_int_distribution<> uniformDistribution(0, max - 1);
+
+		return uniformDistribution(RandomEngine);
 	}
 
 	float length(sf::Vector2f vector)
