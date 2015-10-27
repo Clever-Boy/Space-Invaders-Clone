@@ -20,12 +20,12 @@ class Random
 public:
 							Random();
 
-	T						operator()(T max);
-	T						operator()(T min, T max);
+	T						operator()(T max) const;
+	T						operator()(T min, T max) const;
 
 
 private:
-	std::mt19937			mRandomEngine;
+	mutable std::mt19937	mRandomEngine;
 };
 
 #include "Random.inl"
