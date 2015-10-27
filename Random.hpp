@@ -24,4 +24,10 @@ private:
 	mutable std::mt19937	mRandomEngine;
 };
 
+
+using RandomInt		= Random<int>;
+using RandomFloat	= Random<float>;
+using RandomDouble	= Random<double>;
+
+
 #include "Random.inl"
