@@ -4,7 +4,6 @@
 #include <SFML/Graphics/Text.hpp>
 
 #include <random>
-#include <cmath>
 #include <ctime>
 #include <cassert>
 
