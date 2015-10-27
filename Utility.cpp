@@ -17,16 +17,6 @@ float utility::toRadian(float degree)
 	return 3.141592653589793238462643383f / 180.f * degree;
 }
 
-int utility::randomInt(int max)
-{
-	static auto seed = static_cast<unsigned long>(std::time(nullptr));
-	static auto RandomEngine = std::default_random_engine(seed);
-
-	std::uniform_int_distribution<> uniformDistribution(0, max - 1);
-
-	return uniformDistribution(RandomEngine);
-}
-
 void utility::setScaleSize(sf::Sprite& sprite, float x, float y)
 {
 	auto worldScale = 16u;

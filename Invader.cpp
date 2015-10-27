@@ -35,6 +35,7 @@ Invader::Invader(Type type, const TextureHolder& textures, const sf::FloatRect& 
 	, mBounds(bounds)
 	, mInvaders(invaders)
 	, mIsChangeDirection(false)
+	, mRandom()
 {
 	using namespace utility;
 
@@ -107,7 +108,7 @@ void Invader::fire()
 {
 	using namespace utility;
 
-	if (randomInt(100) == 0)
+	if (mRandom(100) == 0)
 		mIsFiring = true;
 }
 

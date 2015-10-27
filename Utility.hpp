@@ -27,9 +27,6 @@ namespace utility
 	// Degree/radian conversion
 	float toDegree(float radian);
 	float toRadian(float degree);
-
-	// Random number generation
-	int randomInt(int max);
 }
 
 #include "Utility.inl"

@@ -3,6 +3,7 @@
 
 #include "Command.hpp"
 #include "Projectile.hpp"
+#include "Random.hpp"
 
 
 class Invaders;
@@ -84,4 +85,6 @@ private:
 	sf::FloatRect			mBounds;
 	Invaders&				mInvaders;
 	bool					mIsChangeDirection;
+
+	Random<int>				mRandom;
 };
