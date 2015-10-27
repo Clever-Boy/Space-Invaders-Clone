@@ -13,6 +13,6 @@ T Random<T>::operator()(T max) const
 template<typename T>
 T Random<T>::operator()(T min, T max) const
 {
-	dist_type uniformDistribution(min, max);
+	DistType uniformDistribution(min, max);
 	return uniformDistribution(mRandomEngine);
 }

@@ -10,11 +10,7 @@ class Random
 {
 	static_assert(std::is_integral<T>::value || std::is_floating_point<T>::value, "!");
 
-	using dist_type = std::conditional_t<
-											std::is_integral<T>::value,
-											std::uniform_int_distribution<T>,
-											std::uniform_real_distribution<T>
-										>;
+	using DistType = std::conditional_t<std::is_integral<T>::value, std::uniform_int_distribution<T>, std::uniform_real_distribution<T>>;
 
 
 public:
