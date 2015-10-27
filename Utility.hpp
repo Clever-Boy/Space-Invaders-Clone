@@ -29,7 +29,7 @@ namespace utility
 	float toRadian(float degree);
 
 	// Random number generation
-	int randomInt(int exclusiveMax);
+	int randomInt(int max);
 }
 
 #include "Utility.inl"

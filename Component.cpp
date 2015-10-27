@@ -1,50 +1,43 @@
 #include "Component.hpp"
 
 
-namespace GUI
+GUI::Component::Component()
+	: mIsSelected(false)
+	, mIsActive(false)
 {
-	Component::Component()
-		: mIsSelected(false)
-		, mIsActive(false)
-	{
-	}
+}
 
-	Component::~Component()
-	{
-	}
+bool GUI::Component::isSelected() const
+{
+	return mIsSelected;
+}
 
-	bool Component::isSelected() const
-	{
-		return mIsSelected;
-	}
+void GUI::Component::select()
+{
+	mIsSelected = true;
+}
 
-	void Component::select()
-	{
-		mIsSelected = true;
-	}
+void GUI::Component::deselect()
+{
+	mIsSelected = false;
+}
 
-	void Component::deselect()
-	{
-		mIsSelected = false;
-	}
+bool GUI::Component::isActive() const
+{
+	return mIsActive;
+}
 
-	bool Component::isActive() const
-	{
-		return mIsActive;
-	}
+void GUI::Component::activate()
+{
+	mIsActive = true;
+}
 
-	void Component::activate()
-	{
-		mIsActive = true;
-	}
+void GUI::Component::deactivate()
+{
+	mIsActive = false;
+}
 
-	void Component::deactivate()
-	{
-		mIsActive = false;
-	}
-
-	bool Component::contains(const sf::Vector2f& mousePos) const
-	{
-		return false;
-	}
+bool GUI::Component::contains(sf::Vector2f position) const
+{
+	return false;
 }

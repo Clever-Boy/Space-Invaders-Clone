@@ -50,7 +50,7 @@ namespace GUI
 		void					deactivate() override;
 
 		void					handleEvent(const sf::Event&, sf::Vector2f) override;
-		bool					contains(const sf::Vector2f&) const override;
+		bool					contains(sf::Vector2f) const override;
 
 
 	private:

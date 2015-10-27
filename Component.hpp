@@ -24,7 +24,7 @@ namespace GUI
 
 	public:
 								Component();
-		virtual					~Component();
+		virtual					~Component() = default;
 
 		virtual bool			isSelectable() const = 0;
 		bool					isSelected() const;
@@ -38,7 +38,7 @@ namespace GUI
 
 		virtual void			handleEvent(const sf::Event&, sf::Vector2f) = 0;
 
-		virtual bool			contains(const sf::Vector2f& mousePos) const;
+		virtual bool			contains(sf::Vector2f position) const;
 
 
 	private:

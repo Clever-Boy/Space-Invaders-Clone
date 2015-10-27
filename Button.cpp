@@ -108,7 +108,7 @@ void GUI::Button::changeTexture(Type buttonType)
 	mSprite.setTextureRect(textureRect);
 }
 
-bool GUI::Button::contains(const sf::Vector2f& position) const
+bool GUI::Button::contains(sf::Vector2f position) const
 {
 	return getTransform().transformRect(mSprite.getGlobalBounds()).contains(position);
 }
