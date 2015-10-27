@@ -15,9 +15,9 @@ class Random
 
 
 public:
-	Random();
+							Random();
 
-	auto operator()(T max);
+	auto					operator()(T max);
 
 
 private:
