@@ -31,20 +31,8 @@ namespace utility
 		return uniformDistribution(RandomEngine);
 	}
 
-	float length(sf::Vector2f vector)
-	{
-		return std::sqrt(vector.x * vector.x + vector.y * vector.y);
-	}
-
-	sf::Vector2f unitVector(sf::Vector2f vector)
-	{
-		assert(vector != sf::Vector2f(0.f, 0.f));
-		return vector / length(vector);
-	}
-
 	void setScaleSize(sf::Sprite& sprite, float x, float y)
 	{
-		//sf::Vector2f size(x, y);
 		auto worldScale = 16u;
 		auto scaleX = (1.0f / sprite.getTextureRect().width) * x * worldScale;
 		auto scaleY = (1.0f / sprite.getTextureRect().height) * y * worldScale;
