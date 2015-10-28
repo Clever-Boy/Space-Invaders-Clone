@@ -83,7 +83,8 @@ void Invaders::update(Player& player, float line, bool& end, bool& changeSpeed)
 
 		if (changeSpeed)
 		{
-			auto speed = enemy.getMaxSpeed() + enemy.getMaxSpeed() * SpeedIncreaseMultiplier / total;
+			auto ratio = SpeedIncreaseMultiplier / total;
+			auto speed = enemy.getMaxSpeed() * (1 + ratio);
 			enemy.setMaxSpeed(speed);
 		}
 
