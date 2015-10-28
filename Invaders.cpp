@@ -66,7 +66,7 @@ void Invaders::update(Player& player, float line, bool& end, bool& changeSpeed)
 
 	auto numberOfKilled = std::count_if(mInvaders.begin(), mInvaders.end(), std::bind(&SceneNode::isDestroyed, std::placeholders::_1));
 
-	auto total = (mInvaders.size() - numberOfKilled == 0) ? 1u : mInvaders.size() - numberOfKilled;
+	auto total = std::max(1u, mInvaders.size() - numberOfKilled);
 
 	for (auto i = 0u, size = mInvaders.size(); i < size; ++i)
 	{
