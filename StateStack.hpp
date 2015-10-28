@@ -71,6 +71,8 @@ private:
 template <typename T>
 void StateStack::registerState(States::ID stateID)
 {
+	static_assert(std::is_base_of<State, T>::value, "!");
+
 	mFactories.emplace(std::make_pair(stateID, [this]()
 	{
 		return std::move(std::make_unique<T>(*this, mContext));

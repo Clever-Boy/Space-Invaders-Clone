@@ -10,6 +10,8 @@
 namespace sf
 {
 	class Sprite;
+	class Text;
+	class CircleShape;
 }
 
 

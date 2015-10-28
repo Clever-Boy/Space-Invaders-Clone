@@ -57,19 +57,14 @@ void Invaders::updateCommand(CommandQueue& commands)
 void Invaders::update(Player& player, float line, bool& end, bool& changeSpeed)
 {
 	std::sort(mInvaders.begin(), mInvaders.end(),
-		[this](const auto& lhs, const auto& rhs)
+		[](const auto& lhs, const auto& rhs)
 	{
 		return lhs->getPosition().y > rhs->getPosition().y;
 	});
 
 	const auto SpeedIncreaseMultiplier = 0.5f;
-	auto numberOfKilled = 0u;
 
-	std::for_each(mInvaders.begin(), mInvaders.end(),
-		[&numberOfKilled](const auto& p)
-	{
-		if (p->isDestroyed()) numberOfKilled++;
-	});
+	auto numberOfKilled = std::count_if(mInvaders.begin(), mInvaders.end(), std::bind(&SceneNode::isDestroyed, std::placeholders::_1));
 
 	auto total = (mInvaders.size() - numberOfKilled == 0) ? 1u : mInvaders.size() - numberOfKilled;
 
@@ -92,10 +87,10 @@ void Invaders::update(Player& player, float line, bool& end, bool& changeSpeed)
 			enemy.setMaxSpeed(speed);
 		}
 
-		if (i < 11)
+		if (i < 11)	
 			enemy.fire();
 	}
 
-	if(changeSpeed)
+	if(changeSpeed)	
 		changeSpeed = false;
 }

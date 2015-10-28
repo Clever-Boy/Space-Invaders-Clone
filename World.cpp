@@ -17,7 +17,7 @@ namespace
 		return lhs.getBoundingRect().intersects(rhs.getBoundingRect());
 	}
 
-	template <typename GameObject>
+	template <typename GameObject, typename = std::enable_if_t<std::is_base_of<SceneNode, GameObject>::value>>
 	auto collision(const Shield& shield, const GameObject& object) -> bool
 	{
 		auto shieldBounds(static_cast<sf::Rect<std::size_t>>(shield.getBoundingRect()));
