@@ -29,11 +29,9 @@ sf::Vector2f SceneNode::getWorldPosition() const
 
 void SceneNode::onCommand(const Command& command)
 {
-	// Command current node, if category matches
 	if (command.category & getCategory())
 		command.action(*this);
 
-	// Command children
 	for (const auto& child : mChildren)
 		child->onCommand(command);
 }
@@ -45,13 +43,11 @@ unsigned int SceneNode::getCategory() const
 
 void SceneNode::removeWrecks()
 {
-	// Remove all children which request so
 	mChildren.erase(
 		std::remove_if(mChildren.begin(), mChildren.end(), 
 			std::mem_fn(&SceneNode::isMarkedForRemoval)), 
 		mChildren.end());
 
-	// Call function recursively for all remaining children
 	std::for_each(mChildren.begin(), mChildren.end(), std::mem_fn(&SceneNode::removeWrecks));
 }
 
@@ -62,7 +58,6 @@ sf::FloatRect SceneNode::getBoundingRect() const
 
 bool SceneNode::isDestroyed() const
 {
-	// By default, scene node needn't be removed
 	return false;
 }
 
@@ -83,7 +78,6 @@ sf::Transform SceneNode::getWorldTransform() const
 
 void SceneNode::updateCurrent(sf::Time dt, CommandQueue& commands)
 {
-	// do nothing
 }
 
 void SceneNode::updateChildren(sf::Time dt, CommandQueue& commands)
@@ -103,7 +97,6 @@ void SceneNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void SceneNode::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	// do nothing
 }
 
 void SceneNode::drawChildren(sf::RenderTarget& target, sf::RenderStates states) const
@@ -114,6 +107,5 @@ void SceneNode::drawChildren(sf::RenderTarget& target, sf::RenderStates states) 
 
 bool SceneNode::isMarkedForRemoval() const
 {
-	// By default, remove node if entity is destroyed
 	return isDestroyed();
 }
