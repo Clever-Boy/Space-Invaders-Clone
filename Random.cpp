@@ -1,5 +1,6 @@
 #include "Random.hpp"
 
+
 Random::Random()
 	: mRandomEngine(std::random_device{}())
 {
