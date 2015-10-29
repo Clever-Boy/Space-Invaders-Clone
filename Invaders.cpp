@@ -63,6 +63,7 @@ void Invaders::update(Player& player, float line, bool& end, bool& changeSpeed)
 	});
 
 	const auto SpeedIncreaseMultiplier = 0.5f;
+
 	auto total = mInvaders.size();
 	auto numberOfKilled = std::count_if(mInvaders.begin(), mInvaders.end(), std::bind(&SceneNode::isDestroyed, std::placeholders::_1));
 	auto numberOfAlive = std::max(1u, total - numberOfKilled);

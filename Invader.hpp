@@ -86,5 +86,5 @@ private:
 	Invaders&				mInvaders;
 	bool					mIsChangeDirection;
 
-	RandomInt				mRandom;
+	Random					mRandom;
 };
