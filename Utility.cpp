@@ -1,18 +1,7 @@
 #include "Utility.hpp"
 
 #include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Text.hpp>
 
-
-float utility::toDegree(float radian)
-{
-	return 180.f / 3.141592653589793238462643383f * radian;
-}
-
-float utility::toRadian(float degree)
-{
-	return 3.141592653589793238462643383f / 180.f * degree;
-}
 
 void utility::setScaleSize(sf::Sprite& sprite, float x, float y)
 {

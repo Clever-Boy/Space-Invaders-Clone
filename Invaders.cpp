@@ -64,11 +64,11 @@ void Invaders::update(Player& player, float line, bool& end, bool& changeSpeed)
 
 	const auto SpeedIncreaseMultiplier = 0.5f;
 
+	auto total			= mInvaders.size();
 	auto numberOfKilled = std::count_if(mInvaders.begin(), mInvaders.end(), std::bind(&SceneNode::isDestroyed, std::placeholders::_1));
+	auto numberOfAlive	= std::max(1u, total - numberOfKilled);
 
-	auto total = std::max(1u, mInvaders.size() - numberOfKilled);
-
-	for (auto i = 0u, size = mInvaders.size(); i < size; ++i)
+	for (auto i = 0u; i < total; ++i)
 	{
 		auto& enemy(static_cast<Invader&>(*mInvaders[i]));
 
@@ -83,8 +83,8 @@ void Invaders::update(Player& player, float line, bool& end, bool& changeSpeed)
 
 		if (changeSpeed)
 		{
-			auto ratio = SpeedIncreaseMultiplier / total;
-			auto speed = enemy.getMaxSpeed() * (1 + ratio);
+			auto ratio = SpeedIncreaseMultiplier / numberOfAlive + 1;
+			auto speed = enemy.getMaxSpeed() * ratio;
 			enemy.setMaxSpeed(speed);
 		}
 

@@ -2,32 +2,20 @@
 
 
 #include <random>
-#include <type_traits>
 
 
-template<typename T>
 class Random
 {
-	static_assert(std::is_integral<T>::value || std::is_floating_point<T>::value, "!");
-
-	using DistType = std::conditional_t<std::is_integral<T>::value, std::uniform_int_distribution<T>, std::uniform_real_distribution<T>>;
+	using DistType = std::uniform_int_distribution<>;
 
 
 public:
-							Random();
+	explicit				Random(int max);
 
-	T						operator()(T max) const;
-	T						operator()(T min, T max) const;
+	int						operator()() const;
 
 
 private:
 	mutable std::mt19937	mRandomEngine;
+	DistType				mUniformDistribution;
 };
-
-
-using RandomInt		= Random<int>;
-using RandomFloat	= Random<float>;
-using RandomDouble	= Random<double>;
-
-
-#include "Random.inl"
