@@ -102,7 +102,7 @@ void World::update(sf::Time dt)
 	// Update quadtree
 	checkForCollision();
 
-	// update Invaders command: Adapt Movements 
+	// Update Invaders command: Adapt Movements 
 	mInvaders.updateCommand(mCommandQueue);
 
 	// Forward commands to scene graph
@@ -144,9 +144,11 @@ bool World::hasAlivePlayer() const
 
 bool World::hasPlayerWon() const
 {
-
 	if (mInvaders.empty())
-		return (mBoss == nullptr || mBoss->isMarkedForRemoval());
+	{
+		mBoss->destroy();
+		return (mBoss->isDestroyed());
+	}
 
 	return false;
 }
@@ -410,7 +412,7 @@ void World::playerProjectileCollision()
 				if (!collision(shield, projectile))
 					continue;
 
-				shield.onHit(projectile.getBoundingRect(), projectile.getPosition(), projectile.getCategory());
+				shield.onHit(projectile.getBoundingRect(), projectile.getWorldPosition(), projectile.getCategory());
 				projectile.destroy();
 
 			}

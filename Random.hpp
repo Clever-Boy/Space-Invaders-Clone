@@ -4,18 +4,37 @@
 #include <random>
 
 
+template<typename T, class R = std::mt19937>
 class Random
 {
-	using DistType = std::uniform_int_distribution<>;
+	static_assert(std::is_integral<T>::value || std::is_floating_point<T>::value, "!");
+
+	using UniformInt	= std::uniform_int_distribution<T>;
+	using UniformReal	= std::uniform_real_distribution<T>;
+	using DistType		= std::conditional_t<std::is_integral<T>::value, UniformInt, UniformReal>;
 
 
 public:
-	explicit				Random(int max);
+							Random();
 
-	int						operator()() const;
+	T						operator()(T max) const;
+
+	T						operator()(T min, T max) const;
 
 
 private:
-	mutable std::mt19937	mRandomEngine;
-	DistType				mUniformDistribution;
+							template<class U = R, std::size_t N = U::state_size>
+	static auto				ProperlySeededRandomEngine() -> typename std::enable_if_t<!!N, U>;
+
+
+private:
+	mutable R				mRandomEngine;
 };
+
+
+using RandomInt		= Random<int>;
+using RandomFloat	= Random<float>;
+using RandomDouble	= Random<double>;
+
+
+#include "Random.inl"

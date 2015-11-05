@@ -29,7 +29,6 @@ public:
 
 	unsigned int			getCategory() const override;
 	sf::FloatRect			getBoundingRect() const override;
-	bool 					isMarkedForRemoval() const override;
 
 
 private:
@@ -39,6 +38,7 @@ private:
 	void					updateMovementPattern(sf::Time dt);
 	float					getMaxSpeed() const;
 	void					remove() override;
+	bool 					isMarkedForRemoval() const override;
 
 	void					playLocalSound(CommandQueue& commands);
 	void					stopLocalSound(CommandQueue& commands);

@@ -35,7 +35,7 @@ Invader::Invader(Type type, const TextureHolder& textures, const sf::FloatRect& 
 	, mBounds(bounds)
 	, mInvaders(invaders)
 	, mIsChangeDirection(false)
-	, mRandom(100)
+	, mRandom()
 {
 	using namespace utility;
 
@@ -106,7 +106,7 @@ void Invader::setMaxSpeed(float point)
 
 void Invader::fire()
 {
-	if (mRandom() == 0)
+	if (mRandom(100) == 0)
 		mIsFiring = true;
 }
 
