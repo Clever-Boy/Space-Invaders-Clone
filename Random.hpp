@@ -24,11 +24,11 @@ public:
 
 private:
 							template<class U = R, std::size_t N = U::state_size>
-	static auto				ProperlySeededRandomEngine() -> typename std::enable_if_t<!!N, U>;
+	static auto				randomEngine() -> std::enable_if_t<!!N, U>;
 
 
 private:
-	mutable R				mRandomEngine;
+	R&						mRandomEngine;
 };
 
 
