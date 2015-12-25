@@ -7,9 +7,9 @@ PlayerController::PlayerController()
 	: mCurrentMissionStatus(MissionRunning)
 {
 	// Set initial key bindings
-	mKeyBinding.insert(std::make_pair(sf::Keyboard::Left, MoveLeft));
-	mKeyBinding.insert(std::make_pair(sf::Keyboard::Right, MoveRight));
-	mKeyBinding.insert(std::make_pair(sf::Keyboard::Space, Fire));
+	mKeyBinding.emplace(sf::Keyboard::Left, MoveLeft);
+	mKeyBinding.emplace(sf::Keyboard::Right, MoveRight);
+	mKeyBinding.emplace(sf::Keyboard::Space, Fire);
 
 	// Set initial action bindings
 	initializeActions();
@@ -53,7 +53,7 @@ void PlayerController::assignKey(Action action, sf::Keyboard::Key key)
 	}
 
 	// Insert new binding
-	mKeyBinding.insert(std::make_pair(key, action));
+	mKeyBinding.emplace(key, action);
 }
 
 sf::Keyboard::Key PlayerController::getAssignedKey(Action action) const

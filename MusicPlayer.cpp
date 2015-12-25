@@ -6,7 +6,7 @@ MusicPlayer::MusicPlayer()
 	, mFilenames()
 	, mVolume(100.f)
 {
-	mFilenames.emplace(std::make_pair(Music::MenuTheme,"Media/Musics/MenuTheme.ogg"));
+	mFilenames.emplace(Music::MenuTheme,"Media/Musics/MenuTheme.ogg");
 }
 
 void MusicPlayer::play(Music::ID theme)

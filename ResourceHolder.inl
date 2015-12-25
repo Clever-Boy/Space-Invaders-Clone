@@ -33,6 +33,6 @@ template <typename Resource, typename Identifier>
 void ResourceHolder<Resource, Identifier>::insertResource(Identifier id, std::unique_ptr<Resource> resource)
 {
 	// Insert and check success
-	auto inserted(mResourceMap.emplace(std::make_pair(id, std::move(resource))));
+	auto inserted(mResourceMap.emplace(id, std::move(resource)));
 	assert(inserted.second);
 }
