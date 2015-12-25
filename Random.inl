@@ -16,8 +16,8 @@ T Random<T, R>::operator()(T max) const
 template<typename T, class R>
 T Random<T, R>::operator()(T min, T max) const
 {
-	DistType mUniformDistribution(min, max);
-	return mUniformDistribution(mRandomEngine);
+	DistType uniformDistribution(min, max);
+	return uniformDistribution(mRandomEngine);
 }
 
 template<typename T, class R>
