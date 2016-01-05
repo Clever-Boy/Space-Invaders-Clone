@@ -75,7 +75,6 @@ private:
 	float					mTravelledDistance;
 	Direction				mCurrentDirection;
 	Direction				mPreviousDirection;
-	sf::Vector2f			mMovement;
 
 	std::size_t				mAnimateRate;
 	sf::Time				mAnimateCountdown;

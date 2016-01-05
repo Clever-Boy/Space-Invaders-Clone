@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics/Sprite.hpp>
 
+#include <array>
+
 
 void utility::setScaleSize(sf::Sprite& sprite, float x, float y)
 {
@@ -9,6 +11,19 @@ void utility::setScaleSize(sf::Sprite& sprite, float x, float y)
 	auto scaleX = (1.f / sprite.getTextureRect().width) * x * worldScale;
 	auto scaleY = (1.f / sprite.getTextureRect().height) * y * worldScale;
 	sprite.setScale(scaleX, scaleY);
+}
+
+float utility::radian(std::size_t direction)
+{
+	constexpr static auto Ratio = 0.0174532925f; //pi/180
+	constexpr static std::array<float, 3> Radians
+	{
+		90 * Ratio,
+		270 * Ratio,
+		0
+	};
+
+	return Radians[direction];
 }
 
 std::string utility::toString(sf::Keyboard::Key key)

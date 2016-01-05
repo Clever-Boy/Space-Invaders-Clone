@@ -20,8 +20,6 @@ struct BossData
 
 struct InvaderData
 {
-	using MovementContainer = std::vector<sf::Vector2f>;
-
 	float				speed;
 	Textures::ID		texture;
 	sf::IntRect			textureRect;
@@ -31,7 +29,6 @@ struct InvaderData
 	std::size_t			fireRate;
 	sf::Time			animationInterval;
 	std::size_t			animateRate;
-	MovementContainer	movement;
 };
 
 struct PlayerData

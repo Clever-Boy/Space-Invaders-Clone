@@ -30,9 +30,6 @@ std::vector<InvaderData> data::initializeInvaderData()
 	data[Invader::Enemy1].fireInterval = sf::seconds(6.f);
 	data[Invader::Enemy1].animationInterval = sf::seconds(2.f);
 	data[Invader::Enemy1].animateRate = 1u;
-	data[Invader::Enemy1].movement.push_back(sf::Vector2f(1.f, 0.f));
-	data[Invader::Enemy1].movement.push_back(sf::Vector2f(-1.f, 0.f));
-	data[Invader::Enemy1].movement.push_back(sf::Vector2f(0.f, 1.f));
 
 	data[Invader::Enemy2].color = sf::Color(255, 255, 255);
 	data[Invader::Enemy2].size = sf::Vector2f(1.5f, 1.5f);
@@ -43,9 +40,6 @@ std::vector<InvaderData> data::initializeInvaderData()
 	data[Invader::Enemy2].fireInterval = sf::seconds(6.f);
 	data[Invader::Enemy2].animationInterval = sf::seconds(2.f);
 	data[Invader::Enemy2].animateRate = 1u;
-	data[Invader::Enemy2].movement.push_back(sf::Vector2f(1.f, 0.f));
-	data[Invader::Enemy2].movement.push_back(sf::Vector2f(-1.f, 0.f));
-	data[Invader::Enemy2].movement.push_back(sf::Vector2f(0.f, 1.f));
 
 	data[Invader::Enemy3].color = sf::Color(255, 255, 255);
 	data[Invader::Enemy3].size = sf::Vector2f(1.5f, 1.5f);
@@ -56,9 +50,6 @@ std::vector<InvaderData> data::initializeInvaderData()
 	data[Invader::Enemy3].fireInterval = sf::seconds(6.f);
 	data[Invader::Enemy3].animationInterval = sf::seconds(2.f);
 	data[Invader::Enemy3].animateRate = 1u;
-	data[Invader::Enemy3].movement.push_back(sf::Vector2f(1.f, 0.f));
-	data[Invader::Enemy3].movement.push_back(sf::Vector2f(-1.f, 0.f));
-	data[Invader::Enemy3].movement.push_back(sf::Vector2f(0.f, 1.f));
 
 	return data;
 }

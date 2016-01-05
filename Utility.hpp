@@ -21,6 +21,8 @@ namespace utility
 
 	void setScaleSize(sf::Sprite& sprite, float x, float y);
 
+	float radian(std::size_t direction);
+
 	std::string	toString(sf::Keyboard::Key key);
 }
 

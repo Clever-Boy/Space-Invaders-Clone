@@ -28,7 +28,6 @@ Invader::Invader(Type type, const TextureHolder& textures, const sf::FloatRect& 
 	, mTravelledDistance()
 	, mCurrentDirection(Direction::MovingRight)
 	, mPreviousDirection(Direction::MovingRight)
-	, mMovement(Table[type].movement[MovingRight])
 	, mMaxSpeed(Table[type].speed)
 	, mAnimateCountdown(sf::Time::Zero)
 	, mAnimateRate(Table[type].animateRate)
@@ -112,33 +111,23 @@ void Invader::fire()
 
 void Invader::requstChangeDirection()
 {
-	const std::vector<sf::Vector2f>& movement = Table[mType].movement;
-
 	switch (mCurrentDirection)
 	{
 	case MovingRight:
 		mCurrentDirection = MovingDown;
 		mPreviousDirection = MovingRight;
 		mTravelledDistance = 0.f;
-		mMovement = movement[MovingDown];
 		break;
 	case MovingLeft:
 		mCurrentDirection = MovingDown;
 		mPreviousDirection = MovingLeft;
 		mTravelledDistance = 0.f;
-		mMovement = movement[MovingDown];
 		break;
 	case MovingDown:
 		if (mPreviousDirection == MovingLeft)
-		{
 			mCurrentDirection = MovingRight;
-			mMovement = movement[MovingRight];
-		}
 		else
-		{
 			mCurrentDirection = MovingLeft;
-			mMovement = movement[MovingLeft];
-		}
 
 		mPreviousDirection = MovingDown;
 		mTravelledDistance = 0.f;
@@ -175,7 +164,9 @@ void Invader::updateMovementPattern(sf::Time dt)
 	}
 
 	// Update velocity
-	setVelocity(mMovement * getMaxSpeed());
+	auto vx = std::sin(utility::radian(mCurrentDirection)) * getMaxSpeed();
+	auto vy = std::cos(utility::radian(mCurrentDirection)) * getMaxSpeed();
+	setVelocity(vx, vy);
 
 	// Update travel distance
 	mTravelledDistance += getMaxSpeed() * dt.asSeconds();
